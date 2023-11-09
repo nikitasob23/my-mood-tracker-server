@@ -61,7 +61,7 @@ public class SignupControllerTest {
                 .body(Mono.just(wrongUserInfoDto), UserInfoDto.class)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
-                .expectStatus().is5xxServerError()
+                .expectStatus().is4xxClientError()
                 .returnResult(ErrorDetails.class)
                 .getResponseBody()
                 .blockLast();
