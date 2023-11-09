@@ -6,9 +6,9 @@ import com.niksob.domain.model.user.Nickname;
 import com.niksob.domain.model.user.Password;
 import com.niksob.domain.model.user.UserInfo;
 import com.niksob.domain.model.user.Username;
-import com.niksob.logger.object_state.AppLogger;
-import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,7 +22,7 @@ public class UserServiceConfig {
     public UserService getUserService() {
         return new UserService() {
 
-            private final AppLogger log = ObjectStateLoggerFactory.create(UserService.class);
+            private final Logger log = LoggerFactory.getLogger(UserService.class);
 
             @Override
             public UserInfo load(Username username) {
@@ -32,7 +32,7 @@ public class UserServiceConfig {
                         .map(String::toUpperCase)
                         .anyMatch(u -> u.contains("THROW"))) {
                     final IllegalUserAccessException e = new IllegalUserAccessException(username, "User is trying to access someone else's data");
-                    log.debug("Failed loading of user info", e, username);
+                    log.debug("Failed loading of user info", e);
                     throw e;
                 }
                 return new UserInfo()

@@ -1,6 +1,0 @@
-logger:
-  message:
-    masked:
-      field-names:
-        - password
-        - refreshToken
