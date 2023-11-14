@@ -1,43 +1,48 @@
 package com.niksob.logger.service.masking;
 
+import com.niksob.logger.model.json.Json;
 import com.niksob.logger.model.masking.MaskedPattern;
 import lombok.AllArgsConstructor;
 
-import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @AllArgsConstructor
 public class MaskingStringFieldServiceImpl implements MaskingStringFieldService {
 
     private final Set<MaskedPattern> maskedPatterns;
 
-//    @Override
-//    public String mask(String src) {
-//        return maskedPatterns.stream()
-//                .flatMap(maskedPattern -> mask(src, maskedPattern))
-//                .collect(Collectors.joining());
-//    }
-//
-//    private Stream<String> mask(String src, MaskedPattern maskedPattern) {
-//        return Stream.of(maskedPattern)
-//                .map(MaskedPattern::pattern)
-//                .map(pattern -> pattern.matcher(src))
-//                .filter(Matcher::find)
-//                .map(Matcher::group)
-//                .map(replaceable -> src.replace(replaceable, maskedPattern.mask()));
-//    }
-
     @Override
-    public String mask(String src) {
+    public Json mask(Json json) {
+        String src = json.value();
         for (MaskedPattern maskedPattern : maskedPatterns) {
             src = mask(src, maskedPattern);
         }
-        return src;
+        return new Json(src);
+    }
+
+    @Override
+    public Json mask(Object o) {
+        String src = o.toString();
+        for (MaskedPattern maskedPattern : maskedPatterns) {
+            src = mask(src, maskedPattern);
+        }
+        return new Json(src);
+    }
+
+    @Override
+    public boolean haveKeywords(Object o) {
+        return maskedPatterns.stream()
+                .map(MaskedPattern::keyword)
+                .anyMatch(o.toString()::contains);
+    }
+
+    @Override
+    public boolean haveKeywords(Json json) {
+        return maskedPatterns.stream()
+                .map(MaskedPattern::keyword)
+                .anyMatch(json.value()::contains);
     }
 
     private String mask(String src, MaskedPattern maskedPattern) {

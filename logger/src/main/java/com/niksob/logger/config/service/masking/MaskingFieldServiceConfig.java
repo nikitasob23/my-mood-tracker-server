@@ -6,8 +6,8 @@ import com.niksob.logger.model.masking.StringType;
 import com.niksob.logger.service.masking.MaskingStringFieldService;
 import com.niksob.logger.service.masking.MaskingStringFieldServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 public class MaskingFieldServiceConfig {
     public static final String MASKED_JSON_OBJECT_PATTERN_TEMPLATE = "\\\"%s\\\":\\{.+?\\}";
     public static final String MASKED_JSON_STRING_PATTERN_TEMPLATE = "\\\"%s\\\":\\\".+?\\\"";
-    public static final String MASKED_OBJECT_STRING_PATTERN_TEMPLATE = "%s=.+?(?=,|\\)\\])";
+    public static final String MASKED_OBJECT_STRING_PATTERN_TEMPLATE = "%s=.+?(?=,|\\)$)";
     public static final String MASK = "*****";
 
     public static final String JSON_STRING_TO_REPLACE_TEMPLATE = "\"%s\":\"%s\"";
