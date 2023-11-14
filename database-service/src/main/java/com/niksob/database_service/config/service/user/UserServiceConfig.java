@@ -32,7 +32,7 @@ public class UserServiceConfig {
                         .map(String::toUpperCase)
                         .anyMatch(u -> u.contains("THROW"))) {
                     final IllegalUserAccessException e = new IllegalUserAccessException(username, "User is trying to access someone else's data");
-                    log.debug("Failed loading of user info", e);
+                    log.debug("Failed loading of user info", e, username);
                     throw e;
                 }
                 return new UserInfo()
@@ -46,7 +46,7 @@ public class UserServiceConfig {
                 if (userInfo.getPassword()
                         .getValue()
                         .equals("0000")) {
-                    final IllegalArgumentException e = new IllegalArgumentException("Unsafe password");
+                    final IllegalArgumentException e = new IllegalArgumentException("Unsecure password");
                     log.debug("Failed saving user", e, userInfo);
                     throw e;
                 }

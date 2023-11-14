@@ -66,6 +66,6 @@ public class SignupControllerTest {
                 .getResponseBody()
                 .blockLast();
 
-        assertThat(errorDetails.getMessage()).isEqualTo("Unsafe password");
+        assertThat(errorDetails.getMessage()).isEqualTo("Unsecure password");
     }
 }
