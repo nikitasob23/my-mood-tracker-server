@@ -1,26 +1,40 @@
 package com.niksob.logger.object_state.factory;
 
-import com.niksob.logger.mapper.json.MaskedAppJsonMapper;
-import com.niksob.logger.object_state.AppLogger;
-import com.niksob.logger.object_state.ObjectStateAppLoggerImpl;
+import com.niksob.logger.mapper.json.AppJsonMapper;
+import com.niksob.logger.object_state.ObjectStateLogger;
+import com.niksob.logger.object_state.ObjectStateLoggerImpl;
+import com.niksob.logger.service.masking.MaskingStringFieldService;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ObjectStateLoggerFactory {
+public class ObjectStateLoggerFactory implements ILoggerFactory {
+    private static MaskingStringFieldService maskingStringFieldService;
+    private static AppJsonMapper jsonMapper;
 
-    private static MaskedAppJsonMapper jsonMapper;
-
-    public ObjectStateLoggerFactory(@Qualifier("app_json_mapper") MaskedAppJsonMapper jsonMapper) {
+    public ObjectStateLoggerFactory(MaskingStringFieldService maskingStringFieldService, AppJsonMapper jsonMapper) {
+        ObjectStateLoggerFactory.maskingStringFieldService = maskingStringFieldService;
         ObjectStateLoggerFactory.jsonMapper = jsonMapper;
     }
 
-    public static AppLogger create(Class<?> clazz) {
-        if (jsonMapper == null) {
+    @Override
+    public Logger getLogger(String s) {
+        throwIfMaskingServiceIsNull();
+        final Logger logger = LoggerFactory.getLogger(s);
+        return new ObjectStateLoggerImpl(logger, maskingStringFieldService, jsonMapper);
+    }
+
+    public static ObjectStateLogger getLogger(Class<?> clazz) {
+        throwIfMaskingServiceIsNull();
+        final Logger logger = LoggerFactory.getLogger(clazz);
+        return new ObjectStateLoggerImpl(logger, maskingStringFieldService, jsonMapper);
+    }
+
+    private static void throwIfMaskingServiceIsNull() {
+        if (maskingStringFieldService == null && jsonMapper == null) {
             throw new IllegalStateException("Static logger tries to be created when app context is not yet been initialized");
         }
-        final org.slf4j.Logger logger = LoggerFactory.getLogger(clazz);
-        return new ObjectStateAppLoggerImpl(logger, jsonMapper);
     }
 }

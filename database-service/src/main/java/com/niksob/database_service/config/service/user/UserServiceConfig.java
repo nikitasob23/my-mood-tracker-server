@@ -6,7 +6,7 @@ import com.niksob.domain.model.user.Nickname;
 import com.niksob.domain.model.user.Password;
 import com.niksob.domain.model.user.UserInfo;
 import com.niksob.domain.model.user.Username;
-import com.niksob.logger.object_state.AppLogger;
+import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +22,7 @@ public class UserServiceConfig {
     public UserService getUserService() {
         return new UserService() {
 
-            private final AppLogger log = ObjectStateLoggerFactory.create(UserService.class);
+            private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserService.class);
 
             @Override
             public UserInfo load(Username username) {
