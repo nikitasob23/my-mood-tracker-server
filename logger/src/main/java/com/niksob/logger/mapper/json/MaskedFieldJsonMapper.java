@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
-public class MaskedFieldJsonMapper implements AppJsonMapper {
+public class MaskedFieldJsonMapper implements MaskedAppJsonMapper {
 
     protected final Gson gson;
 

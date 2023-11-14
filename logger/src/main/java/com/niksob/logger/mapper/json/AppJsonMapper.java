@@ -1,5 +1,7 @@
 package com.niksob.logger.mapper.json;
 
+import com.niksob.logger.model.json.Json;
+
 public interface AppJsonMapper {
-    String toJson(Object src);
+    Json toJson(Object... objects);
 }

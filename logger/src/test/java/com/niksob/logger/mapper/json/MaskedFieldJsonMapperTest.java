@@ -36,7 +36,7 @@ public class MaskedFieldJsonMapperTest {
 
     @Autowired
     @Qualifier("masked_field_json_mapper")
-    private AppJsonMapper jsonMapper;
+    private MaskedAppJsonMapper jsonMapper;
 
     @Autowired
     private Gson gson;

@@ -1,6 +1,6 @@
 package com.niksob.logger.object_state.factory;
 
-import com.niksob.logger.mapper.json.AppJsonMapper;
+import com.niksob.logger.mapper.json.MaskedAppJsonMapper;
 import com.niksob.logger.object_state.AppLogger;
 import com.niksob.logger.object_state.ObjectStateAppLoggerImpl;
 import org.slf4j.LoggerFactory;
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ObjectStateLoggerFactory {
 
-    private static AppJsonMapper jsonMapper;
+    private static MaskedAppJsonMapper jsonMapper;
 
-    public ObjectStateLoggerFactory(@Qualifier("app_json_mapper") AppJsonMapper jsonMapper) {
+    public ObjectStateLoggerFactory(@Qualifier("app_json_mapper") MaskedAppJsonMapper jsonMapper) {
         ObjectStateLoggerFactory.jsonMapper = jsonMapper;
     }
 

@@ -1,6 +1,6 @@
 package com.niksob.logger.object_state;
 
-import com.niksob.logger.mapper.json.AppJsonMapper;
+import com.niksob.logger.mapper.json.MaskedAppJsonMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.MDC;
 
@@ -11,7 +11,7 @@ public class ObjectStateAppLoggerImpl implements AppLogger {
 
     private final org.slf4j.Logger log;
 
-    private final AppJsonMapper jsonMapper;
+    private final MaskedAppJsonMapper jsonMapper;
 
     @Override
     public void debug(String message, Throwable throwable, Object objectState) {
