@@ -46,7 +46,7 @@ public class UserServiceConfig {
                 if (userInfo.getPassword()
                         .getValue()
                         .equals("0000")) {
-                    final IllegalArgumentException e = new IllegalArgumentException("Unsafe password");
+                    final IllegalArgumentException e = new IllegalArgumentException("Unsecure password");
                     log.debug("Failed saving user", e, userInfo);
                     throw e;
                 }

@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class SignupControllerTest {
+public class UserControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 

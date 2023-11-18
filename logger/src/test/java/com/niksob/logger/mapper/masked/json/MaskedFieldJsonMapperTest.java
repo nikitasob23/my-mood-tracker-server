@@ -64,3 +64,4 @@ public class MaskedFieldJsonMapperTest extends MainContextTest {
                 );
     }
 }
+
