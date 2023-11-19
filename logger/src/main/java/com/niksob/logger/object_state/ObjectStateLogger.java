@@ -1,11 +1,11 @@
 package com.niksob.logger.object_state;
 
-import org.slf4j.Marker;
-
 public interface ObjectStateLogger {
     void trace(String s, Throwable throwable, Object o);
 
     void trace(String s, Throwable throwable, Object... objects);
+
+    void debug(String s, Object o);
 
     void debug(String s, Throwable throwable, Object o);
 
