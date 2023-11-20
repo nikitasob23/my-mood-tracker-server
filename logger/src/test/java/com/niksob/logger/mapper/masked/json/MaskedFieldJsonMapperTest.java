@@ -1,18 +1,19 @@
-package com.niksob.logger.mapper.json;
+package com.niksob.logger.mapper.masked.json;
 
 import com.google.gson.Gson;
+import com.niksob.logger.MainContextTest;
+import com.niksob.logger.mapper.json.AppJsonMapper;
 import com.niksob.logger.model.*;
+import com.niksob.logger.model.json.Json;
+import com.niksob.logger.service.masking.MaskingStringFieldService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-public class MaskedFieldJsonMapperTest {
+public class MaskedFieldJsonMapperTest extends MainContextTest {
     private static final String MASK = "*****";
     private final String testUsernameValue = "TEST_USERNAME";
     private final String testPasswordValue = "TEST_PASSWORD";
@@ -28,36 +29,38 @@ public class MaskedFieldJsonMapperTest {
     private final TestStringUser expectedStringUser = new TestStringUser(
             testUsernameValue, MASK, MASK
     );
-    private final TestObjectUser expectedObjectUser = new TestObjectUser(
-            new TestUsername(testUsernameValue),
-            new TestPassword(MASK),
-            new TestRefreshToken(MASK)
-    );
 
     @Autowired
-    @Qualifier("masked_field_json_mapper")
+    private MaskingStringFieldService maskingStringFieldService;
+    @Autowired
     private AppJsonMapper jsonMapper;
-
     @Autowired
     private Gson gson;
 
     @Test
     public void testJsonMaskingWithStringFields() {
 
-        final TestStringUser resStringUser = Stream.of(stringUser)
-                .map(jsonMapper::toJson)
-                .map(json -> gson.fromJson(json, TestStringUser.class))
+        final Json objectJson = Stream.of(stringUser)
+                .map(Object::toString)
+                .map(Json::new)
+                .map(maskingStringFieldService::mask)
                 .findFirst().get();
 
-        assertThat(resStringUser).isEqualTo(expectedStringUser);
+        assertThat(objectJson.value()).isEqualTo(expectedStringUser.toString());
     }
 
     @Test
     public void testJsonMaskingWithObjectFields() {
-        assertThat(
-                jsonMapper.toJson(objectUser)
-        ).isEqualTo( // the json that the method jsonMapper.toJson() returns does not involve a reverse conversion. If the field for masking is an object, then it will be completely replaced with a mask
-                "{\"password\":\"*****\",\"username\":{\"value\":\"TEST_USERNAME\"},\"refreshToken\":\"*****\"}"
-        );
+        Stream.of(objectUser)
+                .map(jsonMapper::toJson)
+                .map(maskingStringFieldService::mask)
+                .forEach(masked ->
+                        assertThat(masked.value()).isEqualTo(
+                                "{\"TestObjectUser\":" +
+                                        "{\"username\":{\"value\":\"TEST_USERNAME\"}," +
+                                        "\"password\":\"*****\"," +
+                                        "\"refreshToken\":\"*****\"}" + "}"
+                        )
+                );
     }
 }

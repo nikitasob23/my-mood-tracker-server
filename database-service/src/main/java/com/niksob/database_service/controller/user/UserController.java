@@ -63,7 +63,7 @@ public class UserController {
     private Mono<Void> createSavingError(Throwable throwable) {
         if (throwable instanceof IllegalArgumentException) {
             return Mono.error(new ControllerResponseException(
-                    throwable, HttpStatus.INTERNAL_SERVER_ERROR,
+                    throwable, HttpStatus.BAD_REQUEST,
                     String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)
             ));
         }
