@@ -45,7 +45,7 @@ public class UserDaoImpl implements UserDao {
 
     private EntityNotFoundException createEntityNotFoundException(Username username) {
         final EntityNotFoundException e = new EntityNotFoundException("Username not found by username");
-        log.info("Failed loading user", e, username);
+        log.error("Failed loading user by username from repository", e, username);
         return e;
     }
 }

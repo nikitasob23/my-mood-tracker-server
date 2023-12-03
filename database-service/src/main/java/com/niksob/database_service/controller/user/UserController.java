@@ -8,14 +8,13 @@ import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;
 import com.niksob.domain.mapper.user.UserInfoDtoMapper;
 import com.niksob.domain.mapper.user.UsernameDtoMapper;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import reactor.core.publisher.Mono;
-
-import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
@@ -54,6 +53,11 @@ public class UserController {
         if (throwable instanceof IllegalUserAccessException) {
             return Mono.error(new ControllerResponseException(
                     throwable, HttpStatus.FORBIDDEN,
+                    String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)
+            ));
+        } else if (throwable instanceof EntityNotFoundException) {
+            return Mono.error(new ControllerResponseException(
+                    throwable, HttpStatus.NOT_FOUND,
                     String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)
             ));
         }
