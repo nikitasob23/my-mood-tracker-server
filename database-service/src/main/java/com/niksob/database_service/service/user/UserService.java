@@ -9,4 +9,6 @@ public interface UserService {
     void save(UserInfo userInfo);
 
     void update(UserInfo userInfo);
+
+    void delete(Username username);
 }

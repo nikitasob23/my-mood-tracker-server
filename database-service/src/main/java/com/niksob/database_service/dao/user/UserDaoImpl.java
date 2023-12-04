@@ -1,6 +1,7 @@
 package com.niksob.database_service.dao.user;
 
 import com.niksob.database_service.cache.cleaner.BaseCacheCleaner;
+import com.niksob.database_service.exception.entity.EntityNotDeletedException;
 import com.niksob.database_service.exception.entity.EntitySavingException;
 import com.niksob.database_service.exception.entity.EntityUpdatingException;
 import com.niksob.database_service.mapper.dao.user.UserEntityMapper;
@@ -11,6 +12,7 @@ import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import lombok.AllArgsConstructor;
@@ -83,9 +85,30 @@ public class UserDaoImpl extends BaseCacheCleaner implements UserDao {
         }
     }
 
+    @Override
+    @CacheEvict(value = UserDaoImpl.USER_CACHE_ENTITY_NAME, key = "#userInfo.username.value")
+    public UserInfo delete(UserInfo userInfo) {
+        log.debug("Start deleting user info by userInfo from repository", userInfo);
+
+        return Stream.of(userInfo)
+                .map(userEntityMapper::toEntity)
+                .peek(userRepository::delete)
+                .map(userEntityMapper::fromEntity)
+                .filter(Objects::nonNull)
+                .peek(u -> log.debug("User info deleted from repository", u))
+                .peek(u -> log.debug("Deleted user info cache", u))
+                .findFirst().orElseThrow(() -> createEntityNotDeletedException(userInfo));
+    }
+
     private EntityNotFoundException createEntityNotFoundException(Username username) {
         final EntityNotFoundException e = new EntityNotFoundException("Username not found by username");
         log.error("Failed loading user by username from repository", e, username);
+        return e;
+    }
+
+    private EntityNotDeletedException createEntityNotDeletedException(UserInfo userInfo) {
+        final EntityNotDeletedException e = new EntityNotDeletedException("User info not delete", userInfo);
+        log.error("Failed deleting user by username from repository", e, userInfo);
         return e;
     }
 

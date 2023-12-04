@@ -36,4 +36,12 @@ public class UserServiceImpl implements UserService {
         userDao.update(userInfo);
         log.debug("Update user info to user DAO", userInfo);
     }
+
+    @Override
+    public void delete(Username username) {
+        Stream.of(username)
+                .map(this::load)
+                .map(userDao::delete)
+                .forEach(userInfo -> log.debug("Deleted user info from user DAO", userInfo));
+    }
 }

@@ -1,5 +1,6 @@
 package com.niksob.database_service.controller.user;
 
+import com.niksob.database_service.exception.entity.EntityNotDeletedException;
 import com.niksob.database_service.exception.entity.EntitySavingException;
 import com.niksob.database_service.exception.entity.EntityUpdatingException;
 import com.niksob.domain.exception.rest.controller.response.ControllerResponseException;
@@ -52,12 +53,23 @@ public class UserController {
     }
 
     @PutMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> update(@RequestBody UserInfoDto userInfoDto) {
         return Mono.just(userInfoDto)
                 .map(userInfoDtoMapper::fromDto)
                 .doOnNext(userService::update)
                 .then()
                 .onErrorResume(this::createUpdatingError);
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> delete(@RequestParam("username") UsernameDto usernameDto) {
+        return Mono.just(usernameDto)
+                .map(usernameDtoMapper::fromDto)
+                .doOnNext(userService::delete)
+                .then()
+                .onErrorResume(this::createDeleteError);
     }
 
     private Mono<UserInfoDto> createLoadingError(Throwable throwable) {
@@ -87,6 +99,16 @@ public class UserController {
 
     private Mono<Void> createUpdatingError(Throwable throwable) {
         if (throwable instanceof EntityUpdatingException) {
+            return Mono.error(new ControllerResponseException(
+                    throwable, HttpStatus.BAD_REQUEST,
+                    String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)
+            ));
+        }
+        return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+    private Mono<Void> createDeleteError(Throwable throwable) {
+        if (throwable instanceof EntityNotDeletedException) {
             return Mono.error(new ControllerResponseException(
                     throwable, HttpStatus.BAD_REQUEST,
                     String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)

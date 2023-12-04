@@ -8,6 +8,7 @@ import com.niksob.database_service.repository.user.UserRepository;
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;
 import com.niksob.domain.path.controller.database_service.signup.UserControllerPaths;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -22,6 +23,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ContextConfiguration(classes = {UserTestConfig.class, UserEntityTestConfig.class})
 public class UserControllerTest extends MainContextTest {
+    @MockBean
+    private static UserRepository userRepository;
+    private boolean userRepoMocked = false;
+
     @Autowired
     private WebTestClient webTestClient;
 
@@ -31,11 +36,6 @@ public class UserControllerTest extends MainContextTest {
     private UserInfoDto userInfoDto;
     @Autowired
     private UserEntity userEntity;
-
-    @MockBean
-    private UserRepository userRepository;
-
-    private boolean userRepoMocked = false;
 
     @BeforeEach
     public void mockUserRepo() {
@@ -62,7 +62,6 @@ public class UserControllerTest extends MainContextTest {
                 .blockLast();
         assertThat(resUserInfoDto).isEqualTo(userInfoDto);
     }
-
     @Test
     public void testSavingNewUser() {
         webTestClient.post()
@@ -78,6 +77,17 @@ public class UserControllerTest extends MainContextTest {
         webTestClient.put()
                 .uri(String.format("/%s", UserControllerPaths.BASE_URI))
                 .body(Mono.just(userInfoDto), UserInfoDto.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isNoContent();
+    }
+
+    @Test
+    public void testDeletingExistsUserByUsername() {
+        final String paramUri = String.format("/%s?username=%s", UserControllerPaths.BASE_URI, usernameDto.getValue());
+
+        webTestClient.delete()
+                .uri(paramUri)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isNoContent();

@@ -58,4 +58,15 @@ public class UserDaoCacheTest extends MainContextTest {
         userDao.load(userInfo.getUsername());
         Mockito.verify(userRepository, Mockito.times(0)).getByUsername(userEntity.getUsername());
     }
+
+    @Test
+    public void testCachingUserInfoAfterDeleting() {
+        userDao.load(userInfo.getUsername()); // userInfo is caching
+        userDao.load(userInfo.getUsername()); // Checks that userInfo is cached. If not, the userRepository.getByUsername() method will be called 2 times, not 1
+        Mockito.verify(userRepository, Mockito.times(1)).getByUsername(userEntity.getUsername());
+
+        userDao.delete(userInfo);
+        userDao.load(userInfo.getUsername()); // Checks that userInfo not cached. If cached, the userRepository.getByUsername() method will be called 3 times, not 2
+        Mockito.verify(userRepository, Mockito.times(2)).getByUsername(userEntity.getUsername());
+    }
 }
