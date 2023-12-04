@@ -2,6 +2,7 @@ package com.niksob.database_service.dao.user;
 
 import com.niksob.database_service.cache.cleaner.BaseCacheCleaner;
 import com.niksob.database_service.exception.entity.EntitySavingException;
+import com.niksob.database_service.exception.entity.EntityUpdatingException;
 import com.niksob.database_service.mapper.dao.user.UserEntityMapper;
 import com.niksob.database_service.repository.user.UserRepository;
 import com.niksob.domain.model.user.UserInfo;
@@ -59,6 +60,26 @@ public class UserDaoImpl extends BaseCacheCleaner implements UserDao {
             final EntitySavingException entitySavingException = new EntitySavingException(userInfo.getUsername(), e);
             log.error("User info has not been saved", e, userInfo);
             throw entitySavingException;
+        }
+    }
+
+    @Override
+    @CachePut(value = UserDaoImpl.USER_CACHE_ENTITY_NAME, key = "#userInfo.username.value")
+    public UserInfo update(UserInfo userInfo) {
+        log.debug("Updating user info", userInfo);
+        try {
+            return Stream.of(userInfo)
+                    .map(userEntityMapper::toEntity)
+                    .peek(userRepository::save)
+                    .map(userEntityMapper::fromEntity)
+                    .peek(userEntity -> log.debug("User info updated", userEntity))
+                    .peek(userEntity -> log.debug("User info cache updated", userEntity))
+                    .findFirst().get();
+        } catch (Exception e) {
+            final EntityUpdatingException entityUpdatingException =
+                    new EntityUpdatingException(userInfo.getUsername(), e);
+            log.error("User info has not been updated", e, userInfo);
+            throw entityUpdatingException;
         }
     }
 

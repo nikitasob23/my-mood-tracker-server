@@ -51,4 +51,11 @@ public class UserDaoCacheTest extends MainContextTest {
         userDao.load(userInfo.getUsername());
         Mockito.verify(userRepository, Mockito.times(0)).getByUsername(userEntity.getUsername());
     }
+
+    @Test
+    public void testCachingUserInfoAfterUpdating() {
+        userDao.update(userInfo);
+        userDao.load(userInfo.getUsername());
+        Mockito.verify(userRepository, Mockito.times(0)).getByUsername(userEntity.getUsername());
+    }
 }

@@ -30,4 +30,10 @@ public class UserServiceImpl implements UserService {
         userDao.save(userInfo);
         log.debug("Save user info to user DAO", userInfo);
     }
+
+    @Override
+    public void update(UserInfo userInfo) {
+        userDao.update(userInfo);
+        log.debug("Update user info to user DAO", userInfo);
+    }
 }

@@ -8,4 +8,6 @@ public interface UserDao extends CacheCleaner {
     UserInfo load(Username username);
 
     UserInfo save(UserInfo userInfo);
+
+    UserInfo update(UserInfo userInfo);
 }

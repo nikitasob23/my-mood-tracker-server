@@ -7,4 +7,6 @@ public interface UserService {
     UserInfo load(Username username);
 
     void save(UserInfo userInfo);
+
+    void update(UserInfo userInfo);
 }

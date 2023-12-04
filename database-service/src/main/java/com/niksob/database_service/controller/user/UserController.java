@@ -1,5 +1,7 @@
 package com.niksob.database_service.controller.user;
 
+import com.niksob.database_service.exception.entity.EntitySavingException;
+import com.niksob.database_service.exception.entity.EntityUpdatingException;
 import com.niksob.domain.exception.rest.controller.response.ControllerResponseException;
 import com.niksob.domain.exception.user.data.access.IllegalUserAccessException;
 import com.niksob.domain.path.controller.database_service.signup.UserControllerPaths;
@@ -49,6 +51,15 @@ public class UserController {
                 .onErrorResume(this::createSavingError);
     }
 
+    @PutMapping
+    public Mono<Void> update(@RequestBody UserInfoDto userInfoDto) {
+        return Mono.just(userInfoDto)
+                .map(userInfoDtoMapper::fromDto)
+                .doOnNext(userService::update)
+                .then()
+                .onErrorResume(this::createUpdatingError);
+    }
+
     private Mono<UserInfoDto> createLoadingError(Throwable throwable) {
         if (throwable instanceof IllegalUserAccessException) {
             return Mono.error(new ControllerResponseException(
@@ -65,7 +76,17 @@ public class UserController {
     }
 
     private Mono<Void> createSavingError(Throwable throwable) {
-        if (throwable instanceof IllegalArgumentException) {
+        if (throwable instanceof EntitySavingException) {
+            return Mono.error(new ControllerResponseException(
+                    throwable, HttpStatus.BAD_REQUEST,
+                    String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)
+            ));
+        }
+        return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+    private Mono<Void> createUpdatingError(Throwable throwable) {
+        if (throwable instanceof EntityUpdatingException) {
             return Mono.error(new ControllerResponseException(
                     throwable, HttpStatus.BAD_REQUEST,
                     String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)
