@@ -1,36 +1,34 @@
 package com.niksob.database_service.exception.entity;
 
-import com.niksob.domain.model.user.UserInfo;
-
 public class EntityNotDeletedException extends RuntimeException {
-    private final UserInfo userInfo;
-    public EntityNotDeletedException(UserInfo userInfo) {
-        this.userInfo = userInfo;
+    private final String username;
+    public EntityNotDeletedException(String username) {
+        this.username = username;
     }
 
-    public EntityNotDeletedException(String message, UserInfo userInfo) {
+    public EntityNotDeletedException(String message, String username) {
         super(message);
-        this.userInfo = userInfo;
+        this.username = username;
     }
 
-    public EntityNotDeletedException(String message, UserInfo userInfo, Throwable cause) {
+    public EntityNotDeletedException(String message, String username, Throwable cause) {
         super(message, cause);
-        this.userInfo = userInfo;
+        this.username = username;
     }
 
-    public EntityNotDeletedException(UserInfo userInfo, Throwable cause) {
+    public EntityNotDeletedException(String username, Throwable cause) {
         super(cause);
-        this.userInfo = userInfo;
+        this.username = username;
     }
 
     public EntityNotDeletedException(
             String message,
-            UserInfo userInfo,
+            String username,
             Throwable cause,
             boolean enableSuppression,
             boolean writableStackTrace
     ) {
         super(message, cause, enableSuppression, writableStackTrace);
-        this.userInfo = userInfo;
+        this.username = username;
     }
 }

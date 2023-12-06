@@ -1,6 +1,7 @@
 package com.niksob.database_service.service.user;
 
 import com.niksob.database_service.dao.user.UserDao;
+import com.niksob.database_service.mapper.dao.user.UserEntityMapper;
 import com.niksob.domain.model.user.UserInfo;
 import com.niksob.domain.model.user.Username;
 import com.niksob.logger.object_state.ObjectStateLogger;
@@ -15,33 +16,41 @@ import java.util.stream.Stream;
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
 
+    private final UserEntityMapper userEntityMapper;
+
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
     public UserInfo load(Username username) {
         return Stream.of(username)
+                .map(userEntityMapper::toEntityUsername)
                 .map(userDao::load)
+                .map(userEntityMapper::fromEntity)
                 .peek(userInfo -> log.debug("Get user info from user DAO", userInfo))
                 .findFirst().get();
     }
 
     @Override
     public void save(UserInfo userInfo) {
-        userDao.save(userInfo);
+        Stream.of(userInfo)
+                .map(userEntityMapper::toEntity)
+                .forEach(userDao::save);
         log.debug("Save user info to user DAO", userInfo);
     }
 
     @Override
     public void update(UserInfo userInfo) {
-        userDao.update(userInfo);
+        Stream.of(userInfo)
+                .map(userEntityMapper::toEntity)
+                .forEach(userDao::update);
         log.debug("Update user info to user DAO", userInfo);
     }
 
     @Override
     public void delete(Username username) {
         Stream.of(username)
-                .map(this::load)
-                .map(userDao::delete)
+                .map(userEntityMapper::toEntityUsername)
+                .peek(userDao::delete)
                 .forEach(userInfo -> log.debug("Deleted user info from user DAO", userInfo));
     }
 }

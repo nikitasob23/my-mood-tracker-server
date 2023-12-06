@@ -2,11 +2,9 @@ package com.niksob.database_service.dao.user.cache;
 
 import com.niksob.database_service.MainContextTest;
 import com.niksob.database_service.config.user.UserEntityTestConfig;
-import com.niksob.database_service.config.user.UserTestConfig;
 import com.niksob.database_service.dao.user.UserDao;
 import com.niksob.database_service.entity.user.UserEntity;
 import com.niksob.database_service.repository.user.UserRepository;
-import com.niksob.domain.model.user.UserInfo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,14 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 
-@ContextConfiguration(classes = {UserTestConfig.class, UserEntityTestConfig.class})
+@ContextConfiguration(classes = {UserEntityTestConfig.class})
 public class UserDaoCacheTest extends MainContextTest {
     @Autowired
     private UserDao userDao;
     @Autowired
     private UserEntity userEntity;
-    @Autowired
-    private UserInfo userInfo;
     @MockBean
     private UserRepository userRepository;
 
@@ -39,34 +35,34 @@ public class UserDaoCacheTest extends MainContextTest {
 
     @Test
     public void testCachingUserInfoAfterLoading() {
-        userDao.load(userInfo.getUsername());
-        userDao.load(userInfo.getUsername());
+        userDao.load(userEntity.getUsername());
+        userDao.load(userEntity.getUsername());
 
         Mockito.verify(userRepository, Mockito.times(1)).getByUsername(userEntity.getUsername());
     }
 
     @Test
     public void testCachingUserInfoAfterSaving() {
-        userDao.save(userInfo);
-        userDao.load(userInfo.getUsername());
+        userDao.save(userEntity);
+        userDao.load(userEntity.getUsername());
         Mockito.verify(userRepository, Mockito.times(0)).getByUsername(userEntity.getUsername());
     }
 
     @Test
     public void testCachingUserInfoAfterUpdating() {
-        userDao.update(userInfo);
-        userDao.load(userInfo.getUsername());
+        userDao.update(userEntity);
+        userDao.load(userEntity.getUsername());
         Mockito.verify(userRepository, Mockito.times(0)).getByUsername(userEntity.getUsername());
     }
 
     @Test
     public void testCachingUserInfoAfterDeleting() {
-        userDao.load(userInfo.getUsername()); // userInfo is caching
-        userDao.load(userInfo.getUsername()); // Checks that userInfo is cached. If not, the userRepository.getByUsername() method will be called 2 times, not 1
+        userDao.load(userEntity.getUsername()); // userEntity is caching
+        userDao.load(userEntity.getUsername()); // Checks that userEntity is cached. If not, the userRepository.getByUsername() method will be called 2 times, not 1
         Mockito.verify(userRepository, Mockito.times(1)).getByUsername(userEntity.getUsername());
 
-        userDao.delete(userInfo);
-        userDao.load(userInfo.getUsername()); // Checks that userInfo not cached. If cached, the userRepository.getByUsername() method will be called 3 times, not 2
+        userDao.delete(userEntity.getUsername());
+        userDao.load(userEntity.getUsername()); // Checks that userEntity not cached. If cached, the userRepository.getByUsername() method will be called 3 times, not 2
         Mockito.verify(userRepository, Mockito.times(2)).getByUsername(userEntity.getUsername());
     }
 }

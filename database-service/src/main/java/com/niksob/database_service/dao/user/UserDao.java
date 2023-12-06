@@ -1,16 +1,14 @@
 package com.niksob.database_service.dao.user;
 
 import com.niksob.database_service.cache.cleaner.CacheCleaner;
-import com.niksob.domain.model.user.UserInfo;
-import com.niksob.domain.model.user.Username;
-import org.springframework.cache.annotation.CacheEvict;
+import com.niksob.database_service.entity.user.UserEntity;
 
 public interface UserDao extends CacheCleaner {
-    UserInfo load(Username username);
+    UserEntity load(String username);
 
-    UserInfo save(UserInfo userInfo);
+    UserEntity save(UserEntity userEntity);
 
-    UserInfo update(UserInfo userInfo);
+    UserEntity update(UserEntity userEntity);
 
-    UserInfo delete(UserInfo userInfo);
+    void delete(String username);
 }
