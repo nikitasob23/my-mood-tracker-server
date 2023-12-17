@@ -1,17 +1,13 @@
 package com.niksob.mapping_wrapper.processor;
 
 import com.google.auto.service.AutoService;
-import com.niksob.mapping_wrapper.ProcessorLogger;
-import com.niksob.mapping_wrapper.service.code_builder.class_code.MappingWrapperClassCodeBuilderImpl;
-import com.niksob.mapping_wrapper.service.code_builder.method_code.MappingWrapperMethodCodeBuilderImpl;
+import com.niksob.mapping_wrapper.di.component.MappingWrapperProcessorDIComponent;
+import com.niksob.mapping_wrapper.di.module.LoggerDIModule;
 import com.niksob.mapping_wrapper.model.mapping_wrapper.marker.Marker;
 import com.niksob.mapping_wrapper.model.mapping_wrapper.*;
 import com.niksob.mapping_wrapper.service.annotation.mapping_wrapper.MappingWrapperAnnotationService;
 import com.niksob.mapping_wrapper.service.code_generation.MappingWrapperClassCodeGenerator;
 import com.niksob.mapping_wrapper.service.element.ElementMethodService;
-import com.niksob.mapping_wrapper.service.element.ElementMethodServiceImpl;
-import com.niksob.mapping_wrapper.service.code_generation.MappingWrapperClassCodeGeneratorImpl;
-import com.niksob.mapping_wrapper.service.annotation.mapping_wrapper.MappingWrapperAnnotationServiceImpl;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -29,8 +25,8 @@ import java.util.stream.Stream;
 @Setter
 @Accessors(chain = true)
 public class MappingWrapperProcessor extends AbstractProcessor {
-    private MappingWrapperClassCodeGenerator mappingWrapperClassCodeGenerator;
-    private MappingWrapperAnnotationService mappingWrapperAnnotationService;
+    private MappingWrapperClassCodeGenerator mappingWrapperImplClassCodeService;
+    private MappingWrapperAnnotationService mappingWrapperService;
     private ElementMethodService elementMethodService;
 
     private boolean processorEnable;
@@ -38,14 +34,10 @@ public class MappingWrapperProcessor extends AbstractProcessor {
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
-
-        var methodCodeBuilder = new MappingWrapperMethodCodeBuilderImpl();
-        var mappingWrapperClassCodeBuilder = new MappingWrapperClassCodeBuilderImpl(methodCodeBuilder);
-        var logger = new ProcessorLogger(processingEnv);
-
-        this.mappingWrapperClassCodeGenerator = new MappingWrapperClassCodeGeneratorImpl(mappingWrapperClassCodeBuilder);
-        this.mappingWrapperAnnotationService = new MappingWrapperAnnotationServiceImpl(logger);
-        this.elementMethodService = new ElementMethodServiceImpl(logger);
+        MappingWrapperProcessorDIComponent.builder()
+                .loggerDIModule(new LoggerDIModule(processingEnv))
+                .build()
+                .inject(this);
     }
 
     @Override
@@ -61,7 +53,7 @@ public class MappingWrapperProcessor extends AbstractProcessor {
     }
 
     private void generateMappingWrapperClass(Element e) {
-        var annotationDetails = mappingWrapperAnnotationService.extractAnnotationDetails(e);
+        var annotationDetails = mappingWrapperService.extractAnnotationDetails(e);
         var interfaceMethodSignatures =
                 elementMethodService.extractSignature(e, Marker.INTERFACE);
         var sourceMethodSignatureSet = Stream.of(annotationDetails.getSourceTypeElement())
@@ -71,16 +63,15 @@ public class MappingWrapperProcessor extends AbstractProcessor {
                 .findFirst().get();
 
         var details = MappingWrapperDetails.builder()
-                .mappingWrapperNameDetails(mappingWrapperAnnotationService.extractDetails(e))
-                .annotationParamFullNames(
-                        mappingWrapperAnnotationService.extractAnnotationParamFullNames(annotationDetails)
-                ).interfaceMethodSignatures(interfaceMethodSignatures)
+                .mappingWrapperNameDetails(mappingWrapperService.extractDetails(e))
+                .annotationParamFullNames(mappingWrapperService.extractAnnotationParamFullNames(annotationDetails))
+                .interfaceMethodSignatures(interfaceMethodSignatures)
                 .sourceMethodSignatures(sourceMethodSignatureSet)
                 .mapperMethodSignatures(
                         elementMethodService.extractSignature(annotationDetails.getMapperTypeElement(), Marker.MAPPER)
                 ).build();
 
-        var classText = mappingWrapperClassCodeGenerator.generateClassCode(details);
+        final String classText = mappingWrapperImplClassCodeService.generateClassCode(details);
 
         createMappingWrapperImplementationClass(
                 details.getMappingWrapperNameDetails().getImplementationFullName(), classText
@@ -97,4 +88,3 @@ public class MappingWrapperProcessor extends AbstractProcessor {
         }
     }
 }
-
