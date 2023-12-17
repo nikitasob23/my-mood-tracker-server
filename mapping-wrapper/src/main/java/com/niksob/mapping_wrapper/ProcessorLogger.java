@@ -1,11 +1,13 @@
 package com.niksob.mapping_wrapper;
 
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.Diagnostic;
 
+@Component
 @AllArgsConstructor
 public class ProcessorLogger implements Logger {
     private ProcessingEnvironment processingEnv;

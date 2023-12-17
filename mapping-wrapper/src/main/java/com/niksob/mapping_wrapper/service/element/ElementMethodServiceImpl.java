@@ -4,6 +4,7 @@ import com.niksob.mapping_wrapper.Logger;
 import com.niksob.mapping_wrapper.model.executable_element.MethodSignature;
 import com.niksob.mapping_wrapper.model.mapping_wrapper.marker.Marker;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeMirror;
@@ -12,6 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Service
 @AllArgsConstructor
 public class ElementMethodServiceImpl implements ElementMethodService {
     private final Logger log;

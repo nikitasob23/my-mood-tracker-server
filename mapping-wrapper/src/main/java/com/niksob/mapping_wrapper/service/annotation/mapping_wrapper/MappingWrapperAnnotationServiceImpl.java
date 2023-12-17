@@ -6,6 +6,7 @@ import com.niksob.mapping_wrapper.model.mapping_wrapper.MappingWrapperAnnotation
 import com.niksob.mapping_wrapper.model.mapping_wrapper.MappingWrapperNameDetails;
 import com.niksob.mapping_wrapper.processor.MappingWrapper;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -13,6 +14,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.MirroredTypeException;
 import java.util.function.Supplier;
 
+@Service
 @AllArgsConstructor
 public class MappingWrapperAnnotationServiceImpl implements MappingWrapperAnnotationService {
     private final Logger log;
