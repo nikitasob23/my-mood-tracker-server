@@ -1,5 +1,6 @@
 package com.niksob.mapping_wrapper.service.annotation.mapping_wrapper;
 
+import com.niksob.mapping_wrapper.Logger;
 import com.niksob.mapping_wrapper.model.mapping_wrapper.MappingWrapperAnnotationDetails;
 import com.niksob.mapping_wrapper.model.mapping_wrapper.MappingWrapperAnnotationParamFullNames;
 import com.niksob.mapping_wrapper.model.mapping_wrapper.MappingWrapperNameDetails;
@@ -14,13 +15,19 @@ import java.util.function.Supplier;
 
 @AllArgsConstructor
 public class MappingWrapperAnnotationServiceImpl implements MappingWrapperAnnotationService {
+    private final Logger log;
+
     @Override
     public MappingWrapperAnnotationDetails extractAnnotationDetails(Element element) {
         final MappingWrapper annotation = element.getAnnotation(MappingWrapper.class);
 
         final TypeElement sourceTypeElement = extractTypeElement(annotation::source);
         final TypeElement mapperTypeElement = extractTypeElement(annotation::mapper);
-        return new MappingWrapperAnnotationDetails(sourceTypeElement, mapperTypeElement);
+        final MappingWrapperAnnotationDetails annotationDetails =
+                new MappingWrapperAnnotationDetails(sourceTypeElement, mapperTypeElement);
+
+        log.warn("MappingWrapperAnnotationDetails was extracted. ObjectState = " + annotationDetails);
+        return annotationDetails;
     }
 
     @Override
@@ -33,14 +40,22 @@ public class MappingWrapperAnnotationServiceImpl implements MappingWrapperAnnota
         String mapperClassFullName = annotationDetails.getMapperTypeElement()
                 .getQualifiedName()
                 .toString();
-        return new MappingWrapperAnnotationParamFullNames(sourceClassFullName, mapperClassFullName);
+        final MappingWrapperAnnotationParamFullNames annotationParamFullNames =
+                new MappingWrapperAnnotationParamFullNames(sourceClassFullName, mapperClassFullName);
+
+        log.warn("MappingWrapperAnnotationParamFullNames was extracted. ObjectState = " + annotationParamFullNames);
+        return annotationParamFullNames;
     }
 
     @Override
     public MappingWrapperNameDetails extractDetails(Element element) {
         final String interfaceName = element.getSimpleName().toString();
         final String packageInterfaceName = element.getEnclosingElement().toString();
-        return new MappingWrapperNameDetails(interfaceName, packageInterfaceName);
+        final MappingWrapperNameDetails mappingWrapperNameDetails =
+                new MappingWrapperNameDetails(interfaceName, packageInterfaceName);
+
+        log.warn("MappingWrapperNameDetails was extracted. ObjectState = " + mappingWrapperNameDetails);
+        return mappingWrapperNameDetails;
     }
 
     @Override

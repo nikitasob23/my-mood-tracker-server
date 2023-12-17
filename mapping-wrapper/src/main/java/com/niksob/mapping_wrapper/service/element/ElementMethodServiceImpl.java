@@ -1,5 +1,6 @@
 package com.niksob.mapping_wrapper.service.element;
 
+import com.niksob.mapping_wrapper.Logger;
 import com.niksob.mapping_wrapper.model.executable_element.MethodSignature;
 import com.niksob.mapping_wrapper.model.mapping_wrapper.marker.Marker;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,8 @@ import java.util.stream.Stream;
 
 @AllArgsConstructor
 public class ElementMethodServiceImpl implements ElementMethodService {
+    private final Logger log;
+
     private final Set<String> objectStandardMethodNames = Stream.of(Object.class)
             .map(Class::getDeclaredMethods)
             .flatMap(Arrays::stream)
@@ -21,15 +24,16 @@ public class ElementMethodServiceImpl implements ElementMethodService {
 
     @Override
     public Set<MethodSignature> extractSignature(Element element, Marker marker) {
-        return Stream.of(element)
+        final Set<MethodSignature> methodSignatures = Stream.of(element)
                 .map(this::filterUniqueExecutable)
                 .flatMap(Collection::stream)
                 .map(this::extractSignature)
                 .collect(Collectors.toSet());
+        log.warn("%s method signatures was extracted. ObjectState = %s".formatted(marker.name(), methodSignatures));
+        return methodSignatures;
     }
 
-    @Override
-    public MethodSignature extractSignature(ExecutableElement e) {
+    private MethodSignature extractSignature(ExecutableElement e) {
         final String methodName = e.getSimpleName().toString();
         final String returnTypeName = e.getReturnType().toString();
         final String paramNames = e.getParameters().stream()

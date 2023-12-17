@@ -1,6 +1,7 @@
 package com.niksob.mapping_wrapper.processor;
 
 import com.google.auto.service.AutoService;
+import com.niksob.mapping_wrapper.ProcessorLogger;
 import com.niksob.mapping_wrapper.service.code_builder.class_code.MappingWrapperClassCodeBuilderImpl;
 import com.niksob.mapping_wrapper.service.code_builder.method_code.MappingWrapperMethodCodeBuilderImpl;
 import com.niksob.mapping_wrapper.model.mapping_wrapper.marker.Marker;
@@ -34,12 +35,17 @@ public class MappingWrapperProcessor extends AbstractProcessor {
 
     private boolean processorEnable;
 
-    public MappingWrapperProcessor() {
+    @Override
+    public synchronized void init(ProcessingEnvironment processingEnv) {
+        super.init(processingEnv);
+
         var methodCodeBuilder = new MappingWrapperMethodCodeBuilderImpl();
         var mappingWrapperClassCodeBuilder = new MappingWrapperClassCodeBuilderImpl(methodCodeBuilder);
+        var logger = new ProcessorLogger(processingEnv);
+
         this.mappingWrapperClassCodeGenerator = new MappingWrapperClassCodeGeneratorImpl(mappingWrapperClassCodeBuilder);
-        this.mappingWrapperAnnotationService = new MappingWrapperAnnotationServiceImpl();
-        this.elementMethodService = new ElementMethodServiceImpl();
+        this.mappingWrapperAnnotationService = new MappingWrapperAnnotationServiceImpl(logger);
+        this.elementMethodService = new ElementMethodServiceImpl(logger);
     }
 
     @Override
