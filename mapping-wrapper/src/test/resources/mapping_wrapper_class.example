@@ -1,0 +1,53 @@
+package com.niksob.mapping_wrapper.model;
+
+public class UserDaoMappingWrapper implements com.niksob.mapping_wrapper.model.UserDao {
+    private final com.niksob.mapping_wrapper.model.UserEntityDaoImpl source;
+    private final com.niksob.mapping_wrapper.model.UserEntityMapper mapper;
+
+    public UserDaoMappingWrapper(
+            com.niksob.mapping_wrapper.model.UserEntityDaoImpl source,
+            com.niksob.mapping_wrapper.model.UserEntityMapper mapper
+    ) {
+        this.source = source;
+        this.mapper = mapper;
+    }
+
+    @Override
+    public java.lang.String get(java.lang.String value) {
+        return source.get(value);
+    }
+
+    @Override
+    public com.niksob.domain.model.user.UserInfo load(com.niksob.domain.model.user.Username value) {
+        final java.lang.String mapped = mapper.toEntityUsername(value);
+        final com.niksob.mapping_wrapper.model.UserEntity result = source.load(mapped);
+        return mapper.fromEntity(result);
+    }
+
+    @Override
+    public com.niksob.domain.model.user.UserInfo update(com.niksob.domain.model.user.UserInfo value) {
+        final com.niksob.mapping_wrapper.model.UserEntity mapped = mapper.toEntity(value);
+        final com.niksob.mapping_wrapper.model.UserEntity result = source.update(mapped);
+        return mapper.fromEntity(result);
+    }
+
+    @Override
+    public void save(com.niksob.domain.model.user.UserInfo value) {
+        final com.niksob.mapping_wrapper.model.UserEntity mapped = mapper.toEntity(value);
+        source.save(mapped);
+    }
+
+    @Override
+    public com.niksob.domain.model.user.UserInfo delete(com.niksob.domain.model.user.Username value) {
+        final java.lang.String mapped = mapper.toEntityUsername(value);
+        final com.niksob.mapping_wrapper.model.UserEntity result = source.delete(mapped);
+        return mapper.fromEntity(result);
+    }
+
+    @Override
+    public com.niksob.domain.model.user.UserInfo getCurrentUser() {
+        final com.niksob.mapping_wrapper.model.UserEntity result = source.getCurrentUser();
+        return mapper.fromEntity(result);
+    }
+
+}
