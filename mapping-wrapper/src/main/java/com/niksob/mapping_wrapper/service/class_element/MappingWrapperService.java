@@ -1,6 +1,6 @@
 package com.niksob.mapping_wrapper.service.class_element;
 
-import com.niksob.mapping_wrapper.model.mapping_wrapper.MappingWrapperClassDetails;
+import com.niksob.mapping_wrapper.model.class_details.MappingWrapperClassDetails;
 
 import javax.lang.model.element.Element;
 

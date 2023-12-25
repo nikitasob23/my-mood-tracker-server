@@ -1,4 +1,4 @@
-package com.niksob.mapping_wrapper.processor;
+package com.niksob.mapping_wrapper.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

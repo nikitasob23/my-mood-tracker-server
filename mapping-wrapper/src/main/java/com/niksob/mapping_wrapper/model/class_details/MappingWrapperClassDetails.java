@@ -1,4 +1,4 @@
-package com.niksob.mapping_wrapper.model.mapping_wrapper;
+package com.niksob.mapping_wrapper.model.class_details;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

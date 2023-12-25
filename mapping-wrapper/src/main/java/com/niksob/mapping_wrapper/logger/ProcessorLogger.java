@@ -1,4 +1,4 @@
-package com.niksob.mapping_wrapper;
+package com.niksob.mapping_wrapper.logger;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;

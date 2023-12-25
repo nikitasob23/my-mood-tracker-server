@@ -1,8 +1,8 @@
 package com.niksob.mapping_wrapper.service.class_element;
 
-import com.niksob.mapping_wrapper.model.mapping_wrapper.ClassDetails;
-import com.niksob.mapping_wrapper.model.mapping_wrapper.MappingWrapperClassDetails;
-import com.niksob.mapping_wrapper.model.mapping_wrapper.marker.Marker;
+import com.niksob.mapping_wrapper.model.class_details.ClassDetails;
+import com.niksob.mapping_wrapper.model.class_details.MappingWrapperClassDetails;
+import com.niksob.mapping_wrapper.model.class_details.Marker;
 import com.niksob.mapping_wrapper.service.annotation.mapping_wrapper.MappingWrapperAnnotationService;
 import com.niksob.mapping_wrapper.service.element.ElementMethodService;
 import lombok.AllArgsConstructor;

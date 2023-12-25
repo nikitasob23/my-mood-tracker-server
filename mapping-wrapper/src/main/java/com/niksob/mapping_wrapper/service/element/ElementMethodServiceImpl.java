@@ -1,8 +1,8 @@
 package com.niksob.mapping_wrapper.service.element;
 
-import com.niksob.mapping_wrapper.Logger;
-import com.niksob.mapping_wrapper.model.executable_element.MethodSignature;
-import com.niksob.mapping_wrapper.model.mapping_wrapper.marker.Marker;
+import com.niksob.mapping_wrapper.logger.Logger;
+import com.niksob.mapping_wrapper.model.method_details.MethodSignature;
+import com.niksob.mapping_wrapper.model.class_details.Marker;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

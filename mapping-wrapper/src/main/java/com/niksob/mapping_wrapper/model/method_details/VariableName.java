@@ -1,4 +1,4 @@
-package com.niksob.mapping_wrapper.model.mapping_wrapper;
+package com.niksob.mapping_wrapper.model.method_details;
 
 import lombok.Getter;
 

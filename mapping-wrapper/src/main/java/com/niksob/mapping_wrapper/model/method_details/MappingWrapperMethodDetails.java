@@ -1,6 +1,5 @@
-package com.niksob.mapping_wrapper.model.mapping_wrapper;
+package com.niksob.mapping_wrapper.model.method_details;
 
-import com.niksob.mapping_wrapper.model.executable_element.MethodSignature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

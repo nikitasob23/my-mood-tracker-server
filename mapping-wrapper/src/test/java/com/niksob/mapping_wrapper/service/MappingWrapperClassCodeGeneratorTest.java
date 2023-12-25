@@ -1,11 +1,12 @@
 package com.niksob.mapping_wrapper.service;
 
 import com.niksob.domain.model.user.Nickname;
-import com.niksob.mapping_wrapper.Logger;
+import com.niksob.mapping_wrapper.logger.Logger;
 import com.niksob.mapping_wrapper.MainContextTest;
 import com.niksob.mapping_wrapper.model.*;
-import com.niksob.mapping_wrapper.model.executable_element.MethodSignature;
-import com.niksob.mapping_wrapper.model.mapping_wrapper.*;
+import com.niksob.mapping_wrapper.model.method_details.MethodSignature;
+import com.niksob.mapping_wrapper.model.class_details.ClassDetails;
+import com.niksob.mapping_wrapper.model.class_details.MappingWrapperClassDetails;
 import com.niksob.mapping_wrapper.service.code_generation.class_code.GenerateMappingWrapperCodeService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;

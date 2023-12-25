@@ -1,8 +1,8 @@
 package com.niksob.mapping_wrapper.service.code_generation.class_code.method_code.builder;
 
-import com.niksob.mapping_wrapper.model.executable_element.MethodSignature;
-import com.niksob.mapping_wrapper.model.mapping_wrapper.MappingWrapperMethodDetails;
-import com.niksob.mapping_wrapper.model.mapping_wrapper.VariableName;
+import com.niksob.mapping_wrapper.model.method_details.MethodSignature;
+import com.niksob.mapping_wrapper.model.method_details.MappingWrapperMethodDetails;
+import com.niksob.mapping_wrapper.model.method_details.VariableName;
 import com.niksob.mapping_wrapper.util.ClassUtil;
 import org.springframework.stereotype.Component;
 

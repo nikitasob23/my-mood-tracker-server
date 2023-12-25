@@ -18,7 +18,7 @@ import java.util.Set;
 
 @AutoService(Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
-@SupportedAnnotationTypes("com.niksob.mapping_wrapper.processor.MappingWrapper")
+@SupportedAnnotationTypes("com.niksob.mapping_wrapper.annotation.MappingWrapper")
 @Setter
 @Accessors(chain = true)
 public class MappingWrapperProcessor extends AbstractProcessor {

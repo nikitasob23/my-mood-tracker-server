@@ -1,6 +1,6 @@
 package com.niksob.mapping_wrapper.service.code_generation.class_code.builder;
 
-import com.niksob.mapping_wrapper.model.mapping_wrapper.MappingWrapperClassDetails;
+import com.niksob.mapping_wrapper.model.class_details.MappingWrapperClassDetails;
 import com.niksob.mapping_wrapper.service.code_generation.class_code.method_code.MappingWrapperMethodCodeGenerator;
 import com.niksob.mapping_wrapper.util.ClassUtil;
 import org.springframework.stereotype.Component;

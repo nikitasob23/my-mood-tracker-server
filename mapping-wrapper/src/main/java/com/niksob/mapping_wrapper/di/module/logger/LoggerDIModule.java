@@ -1,7 +1,7 @@
 package com.niksob.mapping_wrapper.di.module.logger;
 
-import com.niksob.mapping_wrapper.Logger;
-import com.niksob.mapping_wrapper.ProcessorLogger;
+import com.niksob.mapping_wrapper.logger.Logger;
+import com.niksob.mapping_wrapper.logger.ProcessorLogger;
 import lombok.AllArgsConstructor;
 
 import javax.annotation.processing.ProcessingEnvironment;

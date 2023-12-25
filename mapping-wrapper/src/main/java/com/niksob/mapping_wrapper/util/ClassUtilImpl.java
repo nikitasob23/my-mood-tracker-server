@@ -1,6 +1,6 @@
 package com.niksob.mapping_wrapper.util;
 
-import com.niksob.mapping_wrapper.model.executable_element.MethodSignature;
+import com.niksob.mapping_wrapper.model.method_details.MethodSignature;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 

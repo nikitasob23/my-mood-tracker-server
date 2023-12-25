@@ -1,8 +1,8 @@
 package com.niksob.mapping_wrapper.service.code_generation.class_code.method_code;
 
-import com.niksob.mapping_wrapper.model.executable_element.MethodSignature;
-import com.niksob.mapping_wrapper.model.mapping_wrapper.MappingWrapperClassDetails;
-import com.niksob.mapping_wrapper.model.mapping_wrapper.MappingWrapperMethodDetails;
+import com.niksob.mapping_wrapper.model.method_details.MethodSignature;
+import com.niksob.mapping_wrapper.model.class_details.MappingWrapperClassDetails;
+import com.niksob.mapping_wrapper.model.method_details.MappingWrapperMethodDetails;
 import com.niksob.mapping_wrapper.service.code_generation.class_code.method_code.builder.MapperWrapperMethodCodeBuilder;
 import com.niksob.mapping_wrapper.util.ClassUtil;
 import lombok.AllArgsConstructor;
