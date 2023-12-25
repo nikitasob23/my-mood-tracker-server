@@ -13,41 +13,46 @@ public class UserDaoMappingWrapper implements com.niksob.mapping_wrapper.model.U
     }
 
     @Override
-    public java.lang.String get(java.lang.String value) {
-        return source.get(value);
-    }
-
-    @Override
     public com.niksob.domain.model.user.UserInfo load(com.niksob.domain.model.user.Username value) {
-        final java.lang.String mapped = mapper.toEntityUsername(value);
-        final com.niksob.mapping_wrapper.model.UserEntity result = source.load(mapped);
-        return mapper.fromEntity(result);
+        java.lang.String mapped = mapper.toEntityUsername(value);
+        com.niksob.mapping_wrapper.model.UserEntity result = source.load(mapped);
+        com.niksob.domain.model.user.UserInfo mappedResult = mapper.fromEntity(result);
+        return mappedResult;
     }
 
     @Override
     public com.niksob.domain.model.user.UserInfo update(com.niksob.domain.model.user.UserInfo value) {
-        final com.niksob.mapping_wrapper.model.UserEntity mapped = mapper.toEntity(value);
-        final com.niksob.mapping_wrapper.model.UserEntity result = source.update(mapped);
-        return mapper.fromEntity(result);
+        com.niksob.mapping_wrapper.model.UserEntity mapped = mapper.toEntity(value);
+        com.niksob.mapping_wrapper.model.UserEntity result = source.update(mapped);
+        com.niksob.domain.model.user.UserInfo mappedResult = mapper.fromEntity(result);
+        return mappedResult;
     }
 
     @Override
     public void save(com.niksob.domain.model.user.UserInfo value) {
-        final com.niksob.mapping_wrapper.model.UserEntity mapped = mapper.toEntity(value);
+        com.niksob.mapping_wrapper.model.UserEntity mapped = mapper.toEntity(value);
         source.save(mapped);
     }
 
     @Override
+    public java.lang.String get(java.lang.String value) {
+        java.lang.String result = source.get(value);
+        return result;
+    }
+
+    @Override
     public com.niksob.domain.model.user.UserInfo delete(com.niksob.domain.model.user.Username value) {
-        final java.lang.String mapped = mapper.toEntityUsername(value);
-        final com.niksob.mapping_wrapper.model.UserEntity result = source.delete(mapped);
-        return mapper.fromEntity(result);
+        java.lang.String mapped = mapper.toEntityUsername(value);
+        com.niksob.mapping_wrapper.model.UserEntity result = source.delete(mapped);
+        com.niksob.domain.model.user.UserInfo mappedResult = mapper.fromEntity(result);
+        return mappedResult;
     }
 
     @Override
     public com.niksob.domain.model.user.UserInfo getCurrentUser() {
-        final com.niksob.mapping_wrapper.model.UserEntity result = source.getCurrentUser();
-        return mapper.fromEntity(result);
+        com.niksob.mapping_wrapper.model.UserEntity result = source.getCurrentUser();
+        com.niksob.domain.model.user.UserInfo mappedResult = mapper.fromEntity(result);
+        return mappedResult;
     }
 
 }
