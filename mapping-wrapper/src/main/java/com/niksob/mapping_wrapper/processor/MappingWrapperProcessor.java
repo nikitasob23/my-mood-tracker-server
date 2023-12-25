@@ -2,12 +2,10 @@ package com.niksob.mapping_wrapper.processor;
 
 import com.google.auto.service.AutoService;
 import com.niksob.mapping_wrapper.di.component.MappingWrapperProcessorDIComponent;
-import com.niksob.mapping_wrapper.di.module.LoggerDIModule;
-import com.niksob.mapping_wrapper.model.mapping_wrapper.marker.Marker;
-import com.niksob.mapping_wrapper.model.mapping_wrapper.*;
-import com.niksob.mapping_wrapper.service.annotation.mapping_wrapper.MappingWrapperAnnotationService;
-import com.niksob.mapping_wrapper.service.code_generation.MappingWrapperClassCodeGenerator;
-import com.niksob.mapping_wrapper.service.element.ElementMethodService;
+import com.niksob.mapping_wrapper.di.module.logger.LoggerDIModule;
+import com.niksob.mapping_wrapper.service.class_element.MappingWrapperService;
+import com.niksob.mapping_wrapper.service.code_generation.class_code.GenerateMappingWrapperCodeService;
+import com.niksob.mapping_wrapper.util.ClassUtil;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -17,7 +15,6 @@ import javax.lang.model.element.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Set;
-import java.util.stream.Stream;
 
 @AutoService(Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
@@ -25,9 +22,9 @@ import java.util.stream.Stream;
 @Setter
 @Accessors(chain = true)
 public class MappingWrapperProcessor extends AbstractProcessor {
-    private MappingWrapperClassCodeGenerator mappingWrapperImplClassCodeService;
-    private MappingWrapperAnnotationService mappingWrapperService;
-    private ElementMethodService elementMethodService;
+    private GenerateMappingWrapperCodeService generateMappingWrapperCodeService;
+    private MappingWrapperService mappingWrapperService;
+    private ClassUtil classUtil;
 
     private boolean processorEnable;
 
@@ -53,29 +50,13 @@ public class MappingWrapperProcessor extends AbstractProcessor {
     }
 
     private void generateMappingWrapperClass(Element e) {
-        var annotationDetails = mappingWrapperService.extractAnnotationDetails(e);
-        var interfaceMethodSignatures =
-                elementMethodService.extractSignature(e, Marker.INTERFACE);
-        var sourceMethodSignatureSet = Stream.of(annotationDetails.getSourceTypeElement())
-                .map(sourceElement -> elementMethodService.extractSignature(sourceElement, Marker.SOURCE))
-                .map(sourceMethods ->
-                        ElementMethodService.filterMethodSignaturesByNames(sourceMethods, interfaceMethodSignatures))
-                .findFirst().get();
-
-        var details = MappingWrapperDetails.builder()
-                .mappingWrapperNameDetails(mappingWrapperService.extractDetails(e))
-                .annotationParamFullNames(mappingWrapperService.extractAnnotationParamFullNames(annotationDetails))
-                .interfaceMethodSignatures(interfaceMethodSignatures)
-                .sourceMethodSignatures(sourceMethodSignatureSet)
-                .mapperMethodSignatures(
-                        elementMethodService.extractSignature(annotationDetails.getMapperTypeElement(), Marker.MAPPER)
-                ).build();
-
-        final String classText = mappingWrapperImplClassCodeService.generateClassCode(details);
-
-        createMappingWrapperImplementationClass(
-                details.getMappingWrapperNameDetails().getImplementationFullName(), classText
+        var mappingWrapperClassDetails = mappingWrapperService.extractClassDetails(e);
+        var classCode = generateMappingWrapperCodeService.generateClassCode(mappingWrapperClassDetails);
+        var mappingWrapperName = classUtil.stickNames(
+                mappingWrapperClassDetails.getInterfaceDetails().getName(),
+                MappingWrapperService.MAPPING_WRAPPER_NAME_POSTFIX
         );
+        createMappingWrapperImplementationClass(mappingWrapperName, classCode);
     }
 
     private void createMappingWrapperImplementationClass(String implementationFullName, String s) {

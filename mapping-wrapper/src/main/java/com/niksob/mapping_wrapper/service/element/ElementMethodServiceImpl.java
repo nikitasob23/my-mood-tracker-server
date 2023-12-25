@@ -35,6 +35,16 @@ public class ElementMethodServiceImpl implements ElementMethodService {
         return methodSignatures;
     }
 
+    @Override
+    public boolean filterMethodSignaturesByNames(
+            MethodSignature source, Set<MethodSignature> filterParam
+    ) {
+        final Set<String> names = filterParam.stream()
+                .map(MethodSignature::getMethodName)
+                .collect(Collectors.toSet());
+        return names.contains(source.getMethodName());
+    }
+
     private MethodSignature extractSignature(ExecutableElement e) {
         final String methodName = e.getSimpleName().toString();
         final String returnTypeName = e.getReturnType().toString();

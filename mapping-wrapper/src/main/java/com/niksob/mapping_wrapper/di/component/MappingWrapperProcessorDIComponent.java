@@ -1,34 +1,74 @@
 package com.niksob.mapping_wrapper.di.component;
 
-import com.niksob.mapping_wrapper.di.module.LoggerDIModule;
-import com.niksob.mapping_wrapper.di.module.MappingWrapperImplClassCodeServiceDIModule;
-import com.niksob.mapping_wrapper.di.module.MappingWrapperProcessorDIModule;
-import com.niksob.mapping_wrapper.di.module.MappingWrapperProcessorEnableDIModule;
+import com.niksob.mapping_wrapper.di.module.*;
+import com.niksob.mapping_wrapper.di.module.code_generation.MappingWrapperClassCodeGeneratorDIModule;
+import com.niksob.mapping_wrapper.di.module.code_generation.MappingWrapperMethodCodeGeneratorDIModule;
+import com.niksob.mapping_wrapper.di.module.code_generation.builder.MapperWrapperMethodCodeBuilderDIModule;
+import com.niksob.mapping_wrapper.di.module.code_generation.builder.MappingWrapperClassCodeBuilderDIModule;
+import com.niksob.mapping_wrapper.di.module.logger.LoggerDIModule;
+import com.niksob.mapping_wrapper.di.module.service.MappingWrapperServiceDIModule;
+import com.niksob.mapping_wrapper.di.module.service.annotation.MappingWrapperAnnotationServiceDIModule;
+import com.niksob.mapping_wrapper.di.module.service.element.ElementMethodServiceDIModule;
+import com.niksob.mapping_wrapper.di.module.util.ClassUtilDIModule;
 import com.niksob.mapping_wrapper.processor.MappingWrapperProcessor;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 
-@AllArgsConstructor
 @Builder
 public class MappingWrapperProcessorDIComponent {
-    private MappingWrapperImplClassCodeServiceDIModule mappingWrapperImplClassCodeServiceDIModule;
-    private MappingWrapperProcessorDIModule mappingWrapperProcessorDIModule;
+    private MappingWrapperClassCodeGeneratorDIModule mappingWrapperClassCodeGeneratorDIModule;
+    @Builder.Default
+    private ClassUtilDIModule classUtilDIModule = new ClassUtilDIModule();
+    @Builder.Default
+    private MappingWrapperProcessorEnableDIModule mappingWrapperProcessorEnableDIModule =
+            new MappingWrapperProcessorEnableDIModule();
     private LoggerDIModule loggerDIModule;
-    private MappingWrapperProcessorEnableDIModule mappingWrapperProcessorEnableDIModule;
+    private MappingWrapperServiceDIModule mappingWrapperServiceDIModule;
+
+    public MappingWrapperProcessorDIComponent(
+            MappingWrapperClassCodeGeneratorDIModule mappingWrapperClassCodeGeneratorDIModule,
+            ClassUtilDIModule classUtilDIModule,
+            MappingWrapperProcessorEnableDIModule mappingWrapperProcessorEnableDIModule,
+            LoggerDIModule loggerDIModule,
+            MappingWrapperServiceDIModule mappingWrapperServiceDIModule
+    ) {
+        this.classUtilDIModule = classUtilDIModule;
+        this.mappingWrapperProcessorEnableDIModule = mappingWrapperProcessorEnableDIModule;
+        this.mappingWrapperClassCodeGeneratorDIModule = mappingWrapperClassCodeGeneratorDIModule == null
+                ? setMappingWrapperClassCodeGeneratorDIModule() : mappingWrapperClassCodeGeneratorDIModule;
+        if (loggerDIModule == null) {
+            throw new IllegalArgumentException("loggerDIModule must be initialized");
+        }
+        this.loggerDIModule = loggerDIModule;
+        this.mappingWrapperServiceDIModule = mappingWrapperServiceDIModule == null
+                ? setMappingWrapperServiceDIModule() : mappingWrapperServiceDIModule;
+    }
 
     public void inject(MappingWrapperProcessor mappingWrapperProcessor) {
-        mappingWrapperImplClassCodeServiceDIModule = mappingWrapperImplClassCodeServiceDIModule == null ?
-                new MappingWrapperImplClassCodeServiceDIModule() : mappingWrapperImplClassCodeServiceDIModule;
-        mappingWrapperProcessorDIModule = mappingWrapperProcessorDIModule == null ?
-                new MappingWrapperProcessorDIModule(loggerDIModule) : mappingWrapperProcessorDIModule;
-        mappingWrapperProcessorEnableDIModule = mappingWrapperProcessorEnableDIModule == null ?
-                new MappingWrapperProcessorEnableDIModule() : mappingWrapperProcessorEnableDIModule;
 
-        mappingWrapperProcessor.setMappingWrapperImplClassCodeService(
-                        mappingWrapperImplClassCodeServiceDIModule.provide()
-                )
-                .setMappingWrapperService(mappingWrapperProcessorDIModule.provideMappingWrapperService())
-                .setElementMethodService(mappingWrapperProcessorDIModule.provideElementMethodService())
+        mappingWrapperProcessor.setMappingWrapperService(mappingWrapperServiceDIModule.provide())
+                .setClassUtil(classUtilDIModule.provide())
+                .setGenerateMappingWrapperCodeService(mappingWrapperClassCodeGeneratorDIModule.provide())
                 .setProcessorEnable(mappingWrapperProcessorEnableDIModule.provide());
     }
+
+
+    private MappingWrapperServiceDIModule setMappingWrapperServiceDIModule() {
+        var mappingWrapperAnnotationServiceDIModule = new MappingWrapperAnnotationServiceDIModule(loggerDIModule);
+        var elementMethodServiceDIModule = new ElementMethodServiceDIModule(loggerDIModule);
+        return new MappingWrapperServiceDIModule(
+                mappingWrapperAnnotationServiceDIModule, elementMethodServiceDIModule
+        );
+    }
+
+    private MappingWrapperClassCodeGeneratorDIModule setMappingWrapperClassCodeGeneratorDIModule() {
+        var mapperWrapperMethodCodeBuilderDIModule = new MapperWrapperMethodCodeBuilderDIModule(classUtilDIModule);
+        var mappingWrapperMethodCodeGeneratorDIModule =
+                new MappingWrapperMethodCodeGeneratorDIModule(
+                        mapperWrapperMethodCodeBuilderDIModule, classUtilDIModule);
+        var mappingWrapperClassCodeBuilderDIModule = new MappingWrapperClassCodeBuilderDIModule(
+                mappingWrapperMethodCodeGeneratorDIModule, classUtilDIModule
+        );
+        return new MappingWrapperClassCodeGeneratorDIModule(mappingWrapperClassCodeBuilderDIModule);
+    }
 }
+
