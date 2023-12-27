@@ -35,18 +35,32 @@ public class MappingWrapperClassCodeBuilderImpl implements MappingWrapperClassCo
     }
 
     @Override
-    public MappingWrapperClassCodeBuilder addClassName() {
+    public MappingWrapperClassCodeBuilder addPackageName() {
         final String interfaceFullName = details.getInterfaceDetails().getName();
         classCode.append("""
                 package %s;
+                
+                """.formatted(classUtil.getPackageName(interfaceFullName)));
+        return this;
+    }
 
+    @Override
+    public MappingWrapperClassCodeBuilder addComponentAnnotation() {
+        if (details.isSpringComponentEnabled()) {
+            classCode.append("""
+                    @org.springframework.stereotype.Component
+                    """);
+        }
+        return this;
+    }
+
+    @Override
+    public MappingWrapperClassCodeBuilder addClassName() {
+        final String interfaceFullName = details.getInterfaceDetails().getName();
+        classCode.append("""
                 public class %sMappingWrapper implements %s {
                 """
-                .formatted(
-                        classUtil.getPackageName(interfaceFullName),
-                        classUtil.getShortClassName(interfaceFullName),
-                        interfaceFullName
-                )
+                .formatted(classUtil.getShortClassName(interfaceFullName), interfaceFullName)
         );
         return this;
     }

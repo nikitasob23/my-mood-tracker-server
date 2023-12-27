@@ -1,5 +1,6 @@
 package com.niksob.mapping_wrapper.model;
 
+@org.springframework.stereotype.Component
 public class UserDaoMappingWrapper implements com.niksob.mapping_wrapper.model.UserDao {
     private final com.niksob.mapping_wrapper.model.UserEntityDaoImpl source;
     private final com.niksob.mapping_wrapper.model.UserEntityMapper mapper;

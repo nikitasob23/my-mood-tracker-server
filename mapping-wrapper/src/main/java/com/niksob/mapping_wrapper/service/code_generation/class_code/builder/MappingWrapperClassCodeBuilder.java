@@ -5,6 +5,10 @@ import com.niksob.mapping_wrapper.model.class_details.MappingWrapperClassDetails
 public interface MappingWrapperClassCodeBuilder {
     MappingWrapperClassCodeBuilder builder(MappingWrapperClassDetails details);
 
+    MappingWrapperClassCodeBuilder addPackageName();
+
+    MappingWrapperClassCodeBuilder addComponentAnnotation();
+
     MappingWrapperClassCodeBuilder addClassName();
 
     MappingWrapperClassCodeBuilder addFields();

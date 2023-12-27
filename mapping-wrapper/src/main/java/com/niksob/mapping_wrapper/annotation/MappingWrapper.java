@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface MappingWrapper {
     Class<?> source();
     Class<?> mapper();
+    boolean isSpringComponentEnabled() default true;
 }

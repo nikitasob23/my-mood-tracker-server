@@ -10,4 +10,5 @@ import javax.lang.model.element.TypeElement;
 public class MappingWrapperAnnotationDetails {
     private final TypeElement sourceTypeElement;
     private final TypeElement mapperTypeElement;
+    private final boolean springComponentEnabled;
 }

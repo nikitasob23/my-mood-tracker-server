@@ -14,6 +14,8 @@ public class MappingWrapperCodeGeneratorImpl implements MappingWrapperCodeGenera
     public String generateClassCode(MappingWrapperClassDetails details) {
         try {
             return mappingWrapperClassCodeBuilder.builder(details)
+                    .addPackageName()
+                    .addComponentAnnotation()
                     .addClassName()
                     .addFields()
                     .addConstructor()

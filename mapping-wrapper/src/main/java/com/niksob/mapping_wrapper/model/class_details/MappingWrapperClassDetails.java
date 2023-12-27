@@ -9,4 +9,5 @@ public class MappingWrapperClassDetails {
     private final ClassDetails interfaceDetails;
     private final ClassDetails sourceDetails;
     private final ClassDetails mapperDetails;
+    private final boolean springComponentEnabled;
 }

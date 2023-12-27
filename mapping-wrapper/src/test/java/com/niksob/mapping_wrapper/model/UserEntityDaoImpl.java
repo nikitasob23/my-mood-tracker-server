@@ -1,7 +1,9 @@
 package com.niksob.mapping_wrapper.model;
 
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @AllArgsConstructor
 public class UserEntityDaoImpl implements UserEntityDao, CacheCleaner {
     @Override

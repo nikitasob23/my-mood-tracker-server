@@ -19,12 +19,13 @@ public class MappingWrapperAnnotationServiceImpl implements MappingWrapperAnnota
 
     @Override
     public MappingWrapperAnnotationDetails extractAnnotationDetails(Element element) {
-        final MappingWrapper annotation = element.getAnnotation(MappingWrapper.class);
+        var annotation = element.getAnnotation(MappingWrapper.class);
 
-        final TypeElement sourceTypeElement = extractTypeElement(annotation::source);
-        final TypeElement mapperTypeElement = extractTypeElement(annotation::mapper);
-        final MappingWrapperAnnotationDetails annotationDetails =
-                new MappingWrapperAnnotationDetails(sourceTypeElement, mapperTypeElement);
+        var sourceTypeElement = extractTypeElement(annotation::source);
+        var mapperTypeElement = extractTypeElement(annotation::mapper);
+        var springComponentEnabled = annotation.isSpringComponentEnabled();
+        var annotationDetails =
+                new MappingWrapperAnnotationDetails(sourceTypeElement, mapperTypeElement, springComponentEnabled);
 
         log.warn("MappingWrapperAnnotationDetails was extracted. ObjectState = " + annotationDetails);
         return annotationDetails;

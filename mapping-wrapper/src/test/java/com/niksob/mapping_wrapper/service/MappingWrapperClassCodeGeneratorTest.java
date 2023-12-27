@@ -117,7 +117,7 @@ public class MappingWrapperClassCodeGeneratorTest extends MainContextTest {
                         .collect(Collectors.toSet()));
 
         mappingWrapperClassDetails = new MappingWrapperClassDetails(
-                interfaceClassDetails, sourceClassDetails, mapperClassDetails
+                interfaceClassDetails, sourceClassDetails, mapperClassDetails, true
         );
     }
 

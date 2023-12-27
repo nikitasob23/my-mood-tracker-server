@@ -39,7 +39,10 @@ public class MappingWrapperServiceImpl implements MappingWrapperService {
                 extractFullClassName(annotationDetails.getMapperTypeElement()),
                 elementMethodService.extractSignature(annotationDetails.getMapperTypeElement(), Marker.MAPPER)
         );
-        return new MappingWrapperClassDetails(interfaceClassDetails, sourceClassDetails, mapperClassDetails);
+        return new MappingWrapperClassDetails(
+                interfaceClassDetails, sourceClassDetails, mapperClassDetails,
+                annotationDetails.isSpringComponentEnabled()
+        );
     }
 
     private String extractFullClassName(TypeElement e) {
