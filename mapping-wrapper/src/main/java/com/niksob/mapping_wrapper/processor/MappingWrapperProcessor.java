@@ -4,7 +4,7 @@ import com.google.auto.service.AutoService;
 import com.niksob.mapping_wrapper.di.component.MappingWrapperProcessorDIComponent;
 import com.niksob.mapping_wrapper.di.module.logger.LoggerDIModule;
 import com.niksob.mapping_wrapper.service.class_element.MappingWrapperService;
-import com.niksob.mapping_wrapper.service.code_generation.class_code.GenerateMappingWrapperCodeService;
+import com.niksob.mapping_wrapper.service.code_generation.class_code.MappingWrapperCodeGenerator;
 import com.niksob.mapping_wrapper.util.ClassUtil;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -22,7 +22,7 @@ import java.util.Set;
 @Setter
 @Accessors(chain = true)
 public class MappingWrapperProcessor extends AbstractProcessor {
-    private GenerateMappingWrapperCodeService generateMappingWrapperCodeService;
+    private MappingWrapperCodeGenerator mappingWrapperCodeGenerator;
     private MappingWrapperService mappingWrapperService;
     private ClassUtil classUtil;
 
@@ -51,7 +51,7 @@ public class MappingWrapperProcessor extends AbstractProcessor {
 
     private void generateMappingWrapperClass(Element e) {
         var mappingWrapperClassDetails = mappingWrapperService.extractClassDetails(e);
-        var classCode = generateMappingWrapperCodeService.generateClassCode(mappingWrapperClassDetails);
+        var classCode = mappingWrapperCodeGenerator.generateClassCode(mappingWrapperClassDetails);
         var mappingWrapperName = classUtil.stickNames(
                 mappingWrapperClassDetails.getInterfaceDetails().getName(),
                 MappingWrapperService.MAPPING_WRAPPER_NAME_POSTFIX

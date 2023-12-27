@@ -7,7 +7,7 @@ import com.niksob.mapping_wrapper.model.*;
 import com.niksob.mapping_wrapper.model.method_details.MethodSignature;
 import com.niksob.mapping_wrapper.model.class_details.ClassDetails;
 import com.niksob.mapping_wrapper.model.class_details.MappingWrapperClassDetails;
-import com.niksob.mapping_wrapper.service.code_generation.class_code.GenerateMappingWrapperCodeService;
+import com.niksob.mapping_wrapper.service.code_generation.class_code.MappingWrapperCodeGenerator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ public class MappingWrapperClassCodeGeneratorTest extends MainContextTest {
     private static String MAPPING_WRAPPER_CLASS_EXAMPLE;
 
     @Autowired
-    private GenerateMappingWrapperCodeService generateMappingWrapperCodeService;
+    private MappingWrapperCodeGenerator mappingWrapperCodeGenerator;
 
     @MockBean
     private Logger log;
@@ -52,7 +52,7 @@ public class MappingWrapperClassCodeGeneratorTest extends MainContextTest {
                 /*sourceClass = */UserEntityDaoImpl.class,
                 /*mapperClass = */UserEntityMapper.class
         );
-        final String classCode = generateMappingWrapperCodeService.generateClassCode(mappingWrapperClassDetails);
+        final String classCode = mappingWrapperCodeGenerator.generateClassCode(mappingWrapperClassDetails);
         assertThat(classCode).isEqualTo(MAPPING_WRAPPER_CLASS_EXAMPLE);
     }
 
@@ -62,7 +62,7 @@ public class MappingWrapperClassCodeGeneratorTest extends MainContextTest {
                 /*sourceClass = */Nickname.class,
                 /*mapperClass = */UserEntityMapper.class
         );
-        Assertions.assertThatThrownBy(() -> generateMappingWrapperCodeService.generateClassCode(mappingWrapperClassDetails))
+        Assertions.assertThatThrownBy(() -> mappingWrapperCodeGenerator.generateClassCode(mappingWrapperClassDetails))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Didn't find source method to mapping parameter: com.niksob.domain.model.user.Username of com.niksob.domain.model.user.Nickname class's method load");
     }
@@ -73,7 +73,7 @@ public class MappingWrapperClassCodeGeneratorTest extends MainContextTest {
                 /*sourceClass = */UserEntityDaoImpl.class,
                 /*mapperClass = */TestWrongUserMapper.class
         );
-        Assertions.assertThatThrownBy(() -> generateMappingWrapperCodeService.generateClassCode(mappingWrapperClassDetails))
+        Assertions.assertThatThrownBy(() -> mappingWrapperCodeGenerator.generateClassCode(mappingWrapperClassDetails))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Mapper %s does not have a method for mapping all values"
                         .formatted(TestWrongUserMapper.class.getCanonicalName()));
@@ -85,7 +85,7 @@ public class MappingWrapperClassCodeGeneratorTest extends MainContextTest {
                 /*sourceClass = */UserEntityDaoImpl.class,
                 /*mapperClass = */TestUserMapperWithSeveralReturnTypes.class
         );
-        Assertions.assertThatThrownBy(() -> generateMappingWrapperCodeService.generateClassCode(mappingWrapperClassDetails))
+        Assertions.assertThatThrownBy(() -> mappingWrapperCodeGenerator.generateClassCode(mappingWrapperClassDetails))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("The mapper %s has duplicates among the conversion methods"
                         .formatted(TestUserMapperWithSeveralReturnTypes.class.getCanonicalName()));

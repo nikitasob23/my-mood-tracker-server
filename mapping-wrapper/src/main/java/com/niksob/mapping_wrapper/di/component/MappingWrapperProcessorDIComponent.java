@@ -47,7 +47,7 @@ public class MappingWrapperProcessorDIComponent {
 
         mappingWrapperProcessor.setMappingWrapperService(mappingWrapperServiceDIModule.provide())
                 .setClassUtil(classUtilDIModule.provide())
-                .setGenerateMappingWrapperCodeService(mappingWrapperClassCodeGeneratorDIModule.provide())
+                .setMappingWrapperCodeGenerator(mappingWrapperClassCodeGeneratorDIModule.provide())
                 .setProcessorEnable(mappingWrapperProcessorEnableDIModule.provide());
     }
 

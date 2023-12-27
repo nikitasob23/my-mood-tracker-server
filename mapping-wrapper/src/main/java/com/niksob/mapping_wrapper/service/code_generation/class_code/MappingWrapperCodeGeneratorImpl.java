@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class GenerateMappingWrapperCodeServiceImpl implements GenerateMappingWrapperCodeService {
+public class MappingWrapperCodeGeneratorImpl implements MappingWrapperCodeGenerator {
     private final MappingWrapperClassCodeBuilder mappingWrapperClassCodeBuilder;
 
     @Override
