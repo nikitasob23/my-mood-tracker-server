@@ -1,6 +1,7 @@
 package com.niksob.mapping_wrapper.util;
 
 import com.niksob.mapping_wrapper.model.method_details.MethodSignature;
+import com.niksob.mapping_wrapper.model.method_details.VoidReturnType;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +10,6 @@ import java.util.stream.Stream;
 @Component
 @NoArgsConstructor
 public class ClassUtilImpl implements ClassUtil {
-    public static final String VOID_RETURN_TYPE = "void";
     private static final String SPLIT_CLASS_NAME_SYM = ".";
 
     @Override
@@ -29,7 +29,8 @@ public class ClassUtilImpl implements ClassUtil {
 
     @Override
     public boolean returnVoid(MethodSignature method) {
-        return method.getReturnType().equals(VOID_RETURN_TYPE);
+        return method.getReturnType().equals(VoidReturnType.VOID.getValue())
+                || returnVoidObject(method.getReturnType());
     }
 
     @Override
@@ -51,6 +52,11 @@ public class ClassUtilImpl implements ClassUtil {
                 .filter(this::symExists)
                 .map(i -> name.substring(0, i))
                 .findFirst().orElseThrow(() -> new IllegalStateException("The package name of the class was not found"));
+    }
+
+    private boolean returnVoidObject(String returnType) {
+        return returnType.contains(VoidReturnType.GENERIC_PARAM.getValue())
+                || returnType.equals(VoidReturnType.VOID_OBJECT.getValue());
     }
 
     private boolean symExists(Integer symNum) {

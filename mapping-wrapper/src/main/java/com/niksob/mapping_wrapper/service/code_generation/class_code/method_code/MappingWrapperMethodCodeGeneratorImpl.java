@@ -3,6 +3,7 @@ package com.niksob.mapping_wrapper.service.code_generation.class_code.method_cod
 import com.niksob.mapping_wrapper.model.method_details.MethodSignature;
 import com.niksob.mapping_wrapper.model.class_details.MappingWrapperClassDetails;
 import com.niksob.mapping_wrapper.model.method_details.MappingWrapperMethodDetails;
+import com.niksob.mapping_wrapper.model.method_details.VoidReturnType;
 import com.niksob.mapping_wrapper.service.code_generation.class_code.method_code.builder.MapperWrapperMethodCodeBuilder;
 import com.niksob.mapping_wrapper.util.ClassUtil;
 import lombok.AllArgsConstructor;
@@ -14,8 +15,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static com.niksob.mapping_wrapper.util.ClassUtilImpl.VOID_RETURN_TYPE;
 
 @Service
 @AllArgsConstructor
@@ -65,7 +64,7 @@ public class MappingWrapperMethodCodeGeneratorImpl implements MappingWrapperMeth
                 .findFirst().orElse(null);
 
         var mapperMethodForSourceReturnType = Stream.of(interfaceMethod.getReturnType())
-                .filter(returnType -> !returnType.equals(VOID_RETURN_TYPE))
+                .filter(returnType -> !returnType.equals(VoidReturnType.VOID.getValue()))
                 .flatMap(ignore -> details.getMapperDetails().getMethods().stream())
                 .filter(m -> m.getParamType().equals(sourceMethod.getReturnType()))
                 .filter(m -> m.getReturnType().equals(interfaceMethod.getReturnType()))
