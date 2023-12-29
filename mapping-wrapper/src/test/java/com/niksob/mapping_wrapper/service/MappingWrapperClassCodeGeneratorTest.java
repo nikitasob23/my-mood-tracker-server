@@ -1,9 +1,9 @@
 package com.niksob.mapping_wrapper.service;
 
-import com.niksob.domain.model.user.Nickname;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.niksob.mapping_wrapper.logger.Logger;
 import com.niksob.mapping_wrapper.MainContextTest;
-import com.niksob.mapping_wrapper.model.*;
+import com.niksob.mapping_wrapper.model.ClassCodeExample;
 import com.niksob.mapping_wrapper.model.method_details.MethodSignature;
 import com.niksob.mapping_wrapper.model.class_details.ClassDetails;
 import com.niksob.mapping_wrapper.model.class_details.MappingWrapperClassDetails;
@@ -14,19 +14,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 
 public class MappingWrapperClassCodeGeneratorTest extends MainContextTest {
-    private static String MAPPING_WRAPPER_CLASS_EXAMPLE;
+    private static ClassCodeExample CLASS_CODE_EXAMPLE;
 
     @Autowired
     private MappingWrapperCodeGenerator mappingWrapperCodeGenerator;
@@ -34,115 +30,116 @@ public class MappingWrapperClassCodeGeneratorTest extends MainContextTest {
     @MockBean
     private Logger log;
 
-    private MappingWrapperClassDetails mappingWrapperClassDetails;
+    private final ClassDetails interfaceDetails = new ClassDetails(
+            "com.niksob.mapping_wrapper.dao.user.UserDao",
+            Set.of(
+                    new MethodSignature("load", "com.niksob.domain.model.user.UserInfo", "com.niksob.domain.model.user.Username"),
+                    new MethodSignature("save", "void", "com.niksob.domain.model.user.UserInfo"),
+                    new MethodSignature("update", "com.niksob.domain.model.user.UserInfo", "com.niksob.domain.model.user.UserInfo"),
+                    new MethodSignature("delete", "com.niksob.domain.model.user.UserInfo", "com.niksob.domain.model.user.Username"),
+                    new MethodSignature("get", "java.lang.String", "java.lang.String"),
+                    new MethodSignature("getCurrentUser", "com.niksob.domain.model.user.UserInfo", null)
+            ));
+
+    private final ClassDetails sourceDetails = new ClassDetails(
+            "com.niksob.mapping_wrapper.dao.user.UserEntityDaoImpl",
+            Set.of(
+                    new MethodSignature("load", "com.niksob.mapping_wrapper.entity.user.UserEntity", "java.lang.String"),
+                    new MethodSignature("save", "void", "com.niksob.mapping_wrapper.entity.user.UserEntity"),
+                    new MethodSignature("update", "com.niksob.mapping_wrapper.entity.user.UserEntity", "com.niksob.mapping_wrapper.entity.user.UserEntity"),
+                    new MethodSignature("delete", "com.niksob.mapping_wrapper.entity.user.UserEntity", "java.lang.String"),
+                    new MethodSignature("getCurrentUser", "com.niksob.mapping_wrapper.entity.user.UserEntity", null),
+                    new MethodSignature("clearCache", "void", null),
+                    new MethodSignature("get", "java.lang.String", "java.lang.String"),
+                    new MethodSignature("createEntityNotFoundException", "RuntimeException", "java.lang.String")
+            ));
+
+    private final ClassDetails mapperDetails = new ClassDetails(
+            "com.niksob.mapping_wrapper.mapper.user.UserEntityMapper",
+            Set.of(
+                    new MethodSignature("toEntityUsername", "java.lang.String", "com.niksob.domain.model.user.Username"),
+                    new MethodSignature("toEntityUsername", "com.niksob.domain.model.user.Username", "java.lang.String"),
+                    new MethodSignature("toEntity", "com.niksob.mapping_wrapper.entity.user.UserEntity", "com.niksob.domain.model.user.UserInfo"),
+                    new MethodSignature("fromEntity", "com.niksob.domain.model.user.UserInfo", "com.niksob.mapping_wrapper.entity.user.UserEntity")
+            ));
+    private final ClassDetails wrongSourceDetails = new ClassDetails(
+            "com.niksob.mapping_wrapper.dao.user.UserEntityDaoImpl",
+            Set.of(new MethodSignature("getValue", "java.lang.String", null))
+    );
+    private final ClassDetails incompleteMapperDetails = new ClassDetails(
+            "com.niksob.mapping_wrapper.mapper.user.UserEntityMapper",
+            Set.of(new MethodSignature("toEntityUsername", "java.lang.String", "com.niksob.domain.model.user.Username"))
+    );
+
+    private final ClassDetails mapperWithIdenticalReturnTypes = new ClassDetails(
+            "com.niksob.mapping_wrapper.mapper.user.UserEntityMapper",
+            Set.of(
+                    new MethodSignature("toEntityUsername", "java.lang.String", "com.niksob.domain.model.user.Username"),
+                    new MethodSignature("toEntityUsername2", "java.lang.String", "com.niksob.domain.model.user.Username"),
+                    new MethodSignature("toEntityUsername", "com.niksob.domain.model.user.Username", "java.lang.String"),
+                    new MethodSignature("toEntity", "com.niksob.mapping_wrapper.entity.user.UserEntity", "com.niksob.domain.model.user.UserInfo"),
+                    new MethodSignature("fromEntity", "com.niksob.domain.model.user.UserInfo", "com.niksob.mapping_wrapper.entity.user.UserEntity")
+            ));
 
     @BeforeAll
     public static void readExampleMappingWrapperClassCodeExamples() {
-        String filePath = "./src/test/resources/mapping_wrapper_class.example";
+        String jsonMappingWrapperCodeFilePath = "./src/test/resources/mapping_wrapper_class.example";
+        ObjectMapper objectMapper = new ObjectMapper();
+
         try {
-            MAPPING_WRAPPER_CLASS_EXAMPLE = new String(Files.readAllBytes(Paths.get(filePath)));
+            CLASS_CODE_EXAMPLE = objectMapper.readValue(
+                    new File(jsonMappingWrapperCodeFilePath), ClassCodeExample.class
+            );
         } catch (IOException e) {
-            throw new RuntimeException("Failed to read MappingWrapper class text example", e);
+            e.printStackTrace();
         }
     }
 
     @Test
     public void testClassCodeGeneration() {
-        prepare(
-                /*sourceClass = */UserEntityDaoImpl.class,
-                /*mapperClass = */UserEntityMapper.class
+        var mappingWrapperClassDetails = new MappingWrapperClassDetails(
+                interfaceDetails, sourceDetails, mapperDetails, true
         );
-        final String classCode = mappingWrapperCodeGenerator.generateClassCode(mappingWrapperClassDetails);
-        assertThat(classCode).isEqualTo(MAPPING_WRAPPER_CLASS_EXAMPLE);
+        final java.lang.String classCode = mappingWrapperCodeGenerator.generateClassCode(mappingWrapperClassDetails);
+
+        assertThat(classCode, containsString(CLASS_CODE_EXAMPLE.getClassBeginning()));
+        CLASS_CODE_EXAMPLE.getMethods().forEach(methodExample ->
+                assertThat(classCode, containsString(methodExample))
+        );
+        assertThat(classCode, containsString(CLASS_CODE_EXAMPLE.getClassEnding()));
     }
 
     @Test
     public void testGeneratedClassTextWithWrongSourceClass() {
-        prepare(
-                /*sourceClass = */Nickname.class,
-                /*mapperClass = */UserEntityMapper.class
+        var mappingWrapperClassDetails = new MappingWrapperClassDetails(
+                interfaceDetails, wrongSourceDetails, mapperDetails, true
         );
         Assertions.assertThatThrownBy(() -> mappingWrapperCodeGenerator.generateClassCode(mappingWrapperClassDetails))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Didn't find source method to mapping parameter: com.niksob.domain.model.user.Username of com.niksob.domain.model.user.Nickname class's method load");
+                .hasMessage("There are fewer methods declared in the source class %s than in the MappingWrapper interface %s. Remove unnecessary methods in the MappingWrapper or add-ons to the source class"
+                        .formatted(
+                                sourceDetails.getName(),
+                                interfaceDetails.getName()
+                        ));
     }
 
     @Test
-    public void testWithMapperWithIncompletedMethodsForConverting() {
-        prepare(
-                /*sourceClass = */UserEntityDaoImpl.class,
-                /*mapperClass = */TestWrongUserMapper.class
+    public void testWithMapperWithIncompleteMethodsForConverting() {
+        var mappingWrapperClassDetails = new MappingWrapperClassDetails(
+                interfaceDetails, sourceDetails, incompleteMapperDetails, true
         );
         Assertions.assertThatThrownBy(() -> mappingWrapperCodeGenerator.generateClassCode(mappingWrapperClassDetails))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Mapper %s does not have a method for mapping all values"
-                        .formatted(TestWrongUserMapper.class.getCanonicalName()));
+                .hasMessage("Mapper com.niksob.mapping_wrapper.mapper.user.UserEntityMapper does not have a method for mapping all values");
     }
 
     @Test
     public void testWithSeveralIdenticalMapperReturnTypes() {
-        prepare(
-                /*sourceClass = */UserEntityDaoImpl.class,
-                /*mapperClass = */TestUserMapperWithSeveralReturnTypes.class
+        var mappingWrapperClassDetails = new MappingWrapperClassDetails(
+                interfaceDetails, sourceDetails, mapperWithIdenticalReturnTypes, true
         );
         Assertions.assertThatThrownBy(() -> mappingWrapperCodeGenerator.generateClassCode(mappingWrapperClassDetails))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("The mapper %s has duplicates among the conversion methods"
-                        .formatted(TestUserMapperWithSeveralReturnTypes.class.getCanonicalName()));
-    }
-
-    private void prepare(Class<?> sourceClass, Class<?> mapperClass) {
-        final Class<?> interfaceClass = UserDao.class;
-
-        var interfaceClassDetails = new ClassDetails(
-                interfaceClass.getCanonicalName(),
-                getMethods(interfaceClass)
-        );
-
-        var sourceClassDetails = new ClassDetails(
-                sourceClass.getCanonicalName(),
-                getMethods(sourceClass).stream()
-                        .filter(methodDetails -> interfaceClassDetails.getMethods().stream()
-                                .map(MethodSignature::getMethodName)
-                                .anyMatch(methodDetails.getMethodName()::equals)
-                        )
-                        .collect(Collectors.toSet()));
-
-        var mapperClassDetails = new ClassDetails(
-                mapperClass.getCanonicalName(),
-                Stream.of(mapperClass)
-                        .map(Class::getDeclaredMethods)
-                        .flatMap(Arrays::stream)
-                        .map(this::extractMethodDetails)
-                        .collect(Collectors.toSet()));
-
-        mappingWrapperClassDetails = new MappingWrapperClassDetails(
-                interfaceClassDetails, sourceClassDetails, mapperClassDetails, true
-        );
-    }
-
-    private Set<MethodSignature> getMethods(Class<?> clazz) {
-        return Stream.of(clazz)
-                .map(Class::getDeclaredMethods)
-                .flatMap(Arrays::stream)
-                .map(m -> {
-                    final String methodName = m.getName();
-                    final String returnTypeName = m.getReturnType().getCanonicalName();
-                    final String paramNames = Arrays.stream(m.getParameterTypes())
-                            .map(Class::getCanonicalName)
-                            .findFirst().orElse(null);
-                    return new MethodSignature(methodName, returnTypeName, paramNames);
-                })
-                .collect(Collectors.toSet());
-    }
-
-    private MethodSignature extractMethodDetails(Method method) {
-        final String returnTypeName = method.getReturnType().getCanonicalName();
-        final String paramNames = Stream.of(method)
-                .map(Method::getParameterTypes)
-                .flatMap(Arrays::stream)
-                .map(Class::getCanonicalName)
-                .findFirst().orElse(null);
-        return new MethodSignature(method.getName(), returnTypeName, paramNames);
+                .hasMessage("The mapper com.niksob.mapping_wrapper.mapper.user.UserEntityMapper has duplicates among the conversion methods");
     }
 }

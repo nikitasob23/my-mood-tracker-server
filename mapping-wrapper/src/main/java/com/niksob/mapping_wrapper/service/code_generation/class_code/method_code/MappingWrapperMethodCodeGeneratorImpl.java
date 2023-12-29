@@ -54,7 +54,7 @@ public class MappingWrapperMethodCodeGeneratorImpl implements MappingWrapperMeth
         var sourceMethod = details.getSourceDetails()
                 .getMethods().stream()
                 .filter(s -> s.getMethodName().equals(interfaceMethod.getMethodName()))
-                .findFirst().orElseThrow(() -> notFoundSourceMethod(interfaceMethod, details));
+                .findFirst().orElseThrow(() -> notFoundSourceMethod(details));
 
         var mapperMethodForSourceParam = Stream.of(interfaceMethod.getParamType())
                 .filter(Objects::nonNull)
@@ -128,13 +128,11 @@ public class MappingWrapperMethodCodeGeneratorImpl implements MappingWrapperMeth
                 .build();
     }
 
-    private IllegalStateException notFoundSourceMethod(
-            MethodSignature interfaceMethod, MappingWrapperClassDetails details
-    ) {
-        return new IllegalStateException(
-                "Didn't find source method to mapping parameter: %s of %s class's method %s".formatted(
-                        interfaceMethod.getParamType(),
+    private IllegalStateException notFoundSourceMethod(MappingWrapperClassDetails details) {
+        return new IllegalStateException("There are fewer methods declared in the source class %s than in the MappingWrapper interface %s. Remove unnecessary methods in the MappingWrapper or add-ons to the source class"
+                .formatted(
                         details.getSourceDetails().getName(),
-                        interfaceMethod.getMethodName()));
+                        details.getInterfaceDetails().getName()
+                ));
     }
 }
