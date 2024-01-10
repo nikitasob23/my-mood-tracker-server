@@ -5,6 +5,7 @@ import com.niksob.mapping_wrapper.di.module.code_generation.MappingWrapperClassC
 import com.niksob.mapping_wrapper.di.module.code_generation.MappingWrapperMethodCodeGeneratorDIModule;
 import com.niksob.mapping_wrapper.di.module.code_generation.builder.MapperWrapperMethodCodeBuilderDIModule;
 import com.niksob.mapping_wrapper.di.module.code_generation.builder.MappingWrapperClassCodeBuilderDIModule;
+import com.niksob.mapping_wrapper.di.module.code_generation.builder.string_builder.MappingWrapperCodeStringBuilderDIModule;
 import com.niksob.mapping_wrapper.di.module.logger.LoggerDIModule;
 import com.niksob.mapping_wrapper.di.module.service.MappingWrapperServiceDIModule;
 import com.niksob.mapping_wrapper.di.module.service.annotation.MappingWrapperAnnotationServiceDIModule;
@@ -19,6 +20,9 @@ public class MappingWrapperProcessorDIComponent {
     @Builder.Default
     private ClassUtilDIModule classUtilDIModule = new ClassUtilDIModule();
     @Builder.Default
+    private MappingWrapperCodeStringBuilderDIModule mappingWrapperCodeStringBuilderDIModule =
+            new MappingWrapperCodeStringBuilderDIModule();
+    @Builder.Default
     private MappingWrapperProcessorEnableDIModule mappingWrapperProcessorEnableDIModule =
             new MappingWrapperProcessorEnableDIModule();
     private LoggerDIModule loggerDIModule;
@@ -27,11 +31,13 @@ public class MappingWrapperProcessorDIComponent {
     public MappingWrapperProcessorDIComponent(
             MappingWrapperClassCodeGeneratorDIModule mappingWrapperClassCodeGeneratorDIModule,
             ClassUtilDIModule classUtilDIModule,
+            MappingWrapperCodeStringBuilderDIModule mappingWrapperCodeStringBuilderDIModule,
             MappingWrapperProcessorEnableDIModule mappingWrapperProcessorEnableDIModule,
             LoggerDIModule loggerDIModule,
             MappingWrapperServiceDIModule mappingWrapperServiceDIModule
     ) {
         this.classUtilDIModule = classUtilDIModule;
+        this.mappingWrapperCodeStringBuilderDIModule = mappingWrapperCodeStringBuilderDIModule;
         this.mappingWrapperProcessorEnableDIModule = mappingWrapperProcessorEnableDIModule;
         this.mappingWrapperClassCodeGeneratorDIModule = mappingWrapperClassCodeGeneratorDIModule == null
                 ? setMappingWrapperClassCodeGeneratorDIModule() : mappingWrapperClassCodeGeneratorDIModule;
@@ -66,7 +72,7 @@ public class MappingWrapperProcessorDIComponent {
                 new MappingWrapperMethodCodeGeneratorDIModule(
                         mapperWrapperMethodCodeBuilderDIModule, classUtilDIModule);
         var mappingWrapperClassCodeBuilderDIModule = new MappingWrapperClassCodeBuilderDIModule(
-                mappingWrapperMethodCodeGeneratorDIModule, classUtilDIModule
+                mappingWrapperMethodCodeGeneratorDIModule, classUtilDIModule, mappingWrapperCodeStringBuilderDIModule
         );
         return new MappingWrapperClassCodeGeneratorDIModule(mappingWrapperClassCodeBuilderDIModule);
     }

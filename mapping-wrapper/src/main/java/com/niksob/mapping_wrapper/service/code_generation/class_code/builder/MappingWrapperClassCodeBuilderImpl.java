@@ -1,26 +1,31 @@
 package com.niksob.mapping_wrapper.service.code_generation.class_code.builder;
 
+import com.niksob.mapping_wrapper.model.MappingWrapperClassCode;
 import com.niksob.mapping_wrapper.model.class_details.MappingWrapperClassDetails;
+import com.niksob.mapping_wrapper.service.code_generation.class_code.builder.string_builder.MappingWrapperCodeStringBuilder;
 import com.niksob.mapping_wrapper.service.code_generation.class_code.method_code.MappingWrapperMethodCodeGenerator;
 import com.niksob.mapping_wrapper.util.ClassUtil;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Stream;
+import java.util.Set;
 
 @Component("MappingWrapperClassCodeBuilder")
 public class MappingWrapperClassCodeBuilderImpl implements MappingWrapperClassCodeBuilder {
-    private final StringBuilder classCode = new StringBuilder();
+    private MappingWrapperClassCode classCode = new MappingWrapperClassCode();
     private final MappingWrapperMethodCodeGenerator mappingWrapperMethodCodeGenerator;
     private final ClassUtil classUtil;
+    private final MappingWrapperCodeStringBuilder mappingWrapperCodeStringBuilder;
     private MappingWrapperClassDetails details;
     private boolean wasInitialized;
 
     public MappingWrapperClassCodeBuilderImpl(
             MappingWrapperMethodCodeGenerator mappingWrapperMethodCodeGenerator,
-            ClassUtil classUtil
+            ClassUtil classUtil,
+            MappingWrapperCodeStringBuilder mappingWrapperCodeStringBuilder
     ) {
         this.mappingWrapperMethodCodeGenerator = mappingWrapperMethodCodeGenerator;
         this.classUtil = classUtil;
+        this.mappingWrapperCodeStringBuilder = mappingWrapperCodeStringBuilder;
     }
 
     @Override
@@ -37,19 +42,14 @@ public class MappingWrapperClassCodeBuilderImpl implements MappingWrapperClassCo
     @Override
     public MappingWrapperClassCodeBuilder addPackageName() {
         final String interfaceFullName = details.getInterfaceDetails().getName();
-        classCode.append("""
-                package %s;
-                
-                """.formatted(classUtil.getPackageName(interfaceFullName)));
+        classCode.setPackageName(String.format("package %s;", classUtil.getPackageName(interfaceFullName)));
         return this;
     }
 
     @Override
     public MappingWrapperClassCodeBuilder addComponentAnnotation() {
         if (details.isSpringComponentEnabled()) {
-            classCode.append("""
-                    @org.springframework.stereotype.Component
-                    """);
+            classCode.setComponentAnnotation("@org.springframework.stereotype.Component");
         }
         return this;
     }
@@ -57,39 +57,34 @@ public class MappingWrapperClassCodeBuilderImpl implements MappingWrapperClassCo
     @Override
     public MappingWrapperClassCodeBuilder addClassName() {
         final String interfaceFullName = details.getInterfaceDetails().getName();
-        classCode.append("""
-                public class %sMappingWrapper implements %s {
-                """
-                .formatted(classUtil.getShortClassName(interfaceFullName), interfaceFullName)
-        );
+        classCode.setClassName(String.format(
+                "public class %sMappingWrapper implements %s {",
+                classUtil.getShortClassName(interfaceFullName), interfaceFullName
+        ));
         return this;
     }
 
     @Override
     public MappingWrapperClassCodeBuilder addFields() {
-        classCode.append("""
-                    private final %s source;
-                    private final %s mapper;
-                    
-                """.formatted(
-                details.getSourceDetails().getName(),
-                details.getMapperDetails().getName())
+        var fields = Set.of(
+                String.format("    private final %s source;", details.getSourceDetails().getName()),
+                String.format("    private final %s mapper;", details.getMapperDetails().getName())
         );
+        classCode.setFields(fields);
         return this;
     }
 
     @Override
     public MappingWrapperClassCodeBuilder addConstructor() {
-        classCode.append("""
-                    public %sMappingWrapper(
-                            %s source,
-                            %s mapper
-                    ) {
-                        this.source = source;
-                        this.mapper = mapper;
-                    }
-                    
-                """.formatted(
+        classCode.setConstructor(String.format("""
+                            public %sMappingWrapper(
+                                %s source,
+                                %s mapper
+                            ) {
+                                this.source = source;
+                                this.mapper = mapper;
+                            }
+                        """,
                 classUtil.getShortClassName(details.getInterfaceDetails().getName()),
                 details.getSourceDetails().getName(),
                 details.getMapperDetails().getName())
@@ -99,23 +94,23 @@ public class MappingWrapperClassCodeBuilderImpl implements MappingWrapperClassCo
 
     @Override
     public MappingWrapperClassCodeBuilder addMethods() {
-        Stream.of(details)
-                .map(mappingWrapperMethodCodeGenerator::generate)
-                .forEach(classCode::append);
+        var methods = mappingWrapperMethodCodeGenerator.generate(details);
+        classCode.setMethods(methods);
         return this;
     }
 
     @Override
     public String build() {
-        final String classCode = this.classCode.append("}").toString();
+        classCode.setEndChar("}");
+        var codeStr = mappingWrapperCodeStringBuilder.build(classCode);
         clear();
-        return classCode;
+        return codeStr;
     }
 
     @Override
     public void clear() {
         mappingWrapperMethodCodeGenerator.clear();
-        classCode.setLength(0);
+        classCode = new MappingWrapperClassCode();
         wasInitialized = false;
         details = null;
     }

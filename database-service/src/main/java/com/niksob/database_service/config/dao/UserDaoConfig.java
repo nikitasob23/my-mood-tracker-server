@@ -1,7 +1,7 @@
 package com.niksob.database_service.config.dao;
 
-import com.niksob.database_service.dao.user.CachedUserDao;
-import com.niksob.database_service.dao.user.UserDao;
+import com.niksob.database_service.dao.user.CachedUserEntityDao;
+import com.niksob.database_service.dao.user.UserEntityDao;
 import com.niksob.database_service.repository.user.UserRepository;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -19,17 +19,17 @@ public class UserDaoConfig {
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserDaoConfig.class);
 
     @Bean
-    public UserDao getUserDao(UserRepository userRepository, CacheManager cacheManager) {
-        Cache userEntityCache = Stream.of(CachedUserDao.USER_CACHE_ENTITY_NAME)
+    public UserEntityDao getUserDao(UserRepository userRepository, CacheManager cacheManager) {
+        Cache userEntityCache = Stream.of(CachedUserEntityDao.USER_CACHE_ENTITY_NAME)
                 .map(cacheManager::getCache)
                 .filter(Objects::nonNull)
                 .findFirst().orElseThrow(this::createCacheStorageNotFoundException);
-        return new CachedUserDao(userRepository, userEntityCache);
+        return new CachedUserEntityDao(userRepository, userEntityCache);
     }
 
     private IllegalStateException createCacheStorageNotFoundException() {
         final IllegalStateException e = new IllegalStateException("User entity cache storage not found");
-        log.error("UserDao instance was not created by cache key", e, CachedUserDao.USER_CACHE_ENTITY_NAME);
+        log.error("UserDao instance was not created by cache key", e, CachedUserEntityDao.USER_CACHE_ENTITY_NAME);
         return e;
     }
 }

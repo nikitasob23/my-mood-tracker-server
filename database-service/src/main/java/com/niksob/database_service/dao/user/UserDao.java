@@ -1,14 +1,17 @@
 package com.niksob.database_service.dao.user;
 
-import com.niksob.database_service.cache.cleaner.CacheCleaner;
-import com.niksob.database_service.entity.user.UserEntity;
+import com.niksob.database_service.mapper.dao.user.UserEntityMapper;
+import com.niksob.domain.model.user.UserInfo;
+import com.niksob.domain.model.user.Username;
+import com.niksob.mapping_wrapper.annotation.MappingWrapper;
 
-public interface UserDao extends CacheCleaner {
-    UserEntity load(String username);
+@MappingWrapper(source = CachedUserEntityDao.class, mapper = UserEntityMapper.class)
+public interface UserDao {
+    UserInfo load(Username username);
 
-    UserEntity save(UserEntity userEntity);
+    UserInfo save(UserInfo userInfo);
 
-    UserEntity update(UserEntity userEntity);
+    UserInfo update(UserInfo userInfo);
 
-    void delete(String username);
+    void delete(Username username);
 }

@@ -1,0 +1,59 @@
+package com.niksob.mapping_wrapper.dao.user;
+
+@org.springframework.stereotype.Component
+public class UserDaoMappingWrapper implements com.niksob.mapping_wrapper.dao.user.UserDao {
+    private final com.niksob.mapping_wrapper.dao.user.UserEntityDaoImpl source;
+    private final com.niksob.mapping_wrapper.mapper.user.UserEntityMapper mapper;
+
+    public UserDaoMappingWrapper(
+        com.niksob.mapping_wrapper.dao.user.UserEntityDaoImpl source,
+        com.niksob.mapping_wrapper.mapper.user.UserEntityMapper mapper
+    ) {
+        this.source = source;
+        this.mapper = mapper;
+    }
+
+    @Override
+    public reactor.core.publisher.Mono<com.niksob.domain.model.user.UserInfo> load(com.niksob.domain.model.user.Username value) {
+        java.lang.String mapped = mapper.toEntityUsername(value);
+        reactor.core.publisher.Mono<com.niksob.mapping_wrapper.entity.user.UserEntity> result = source.load(mapped);
+        reactor.core.publisher.Mono<com.niksob.domain.model.user.UserInfo> mappedResult = mapper.fromMonoEntity(result);
+        return mappedResult;
+    }
+
+    @Override
+    public reactor.core.publisher.Mono<com.niksob.domain.model.user.UserInfo> update(com.niksob.domain.model.user.UserInfo value) {
+        com.niksob.mapping_wrapper.entity.user.UserEntity mapped = mapper.toEntity(value);
+        reactor.core.publisher.Mono<com.niksob.mapping_wrapper.entity.user.UserEntity> result = source.update(mapped);
+        reactor.core.publisher.Mono<com.niksob.domain.model.user.UserInfo> mappedResult = mapper.fromMonoEntity(result);
+        return mappedResult;
+    }
+
+    @Override
+    public void save(com.niksob.domain.model.user.UserInfo value) {
+        com.niksob.mapping_wrapper.entity.user.UserEntity mapped = mapper.toEntity(value);
+        source.save(mapped);
+    }
+
+    @Override
+    public java.lang.String get(java.lang.String value) {
+        java.lang.String result = source.get(value);
+        return result;
+    }
+
+    @Override
+    public reactor.core.publisher.Mono<com.niksob.domain.model.user.UserInfo> delete(com.niksob.domain.model.user.Username value) {
+        java.lang.String mapped = mapper.toEntityUsername(value);
+        reactor.core.publisher.Mono<com.niksob.mapping_wrapper.entity.user.UserEntity> result = source.delete(mapped);
+        reactor.core.publisher.Mono<com.niksob.domain.model.user.UserInfo> mappedResult = mapper.fromMonoEntity(result);
+        return mappedResult;
+    }
+
+    @Override
+    public reactor.core.publisher.Mono<com.niksob.domain.model.user.UserInfo> getCurrentUser() {
+        reactor.core.publisher.Mono<com.niksob.mapping_wrapper.entity.user.UserEntity> result = source.getCurrentUser();
+        reactor.core.publisher.Mono<com.niksob.domain.model.user.UserInfo> mappedResult = mapper.fromMonoEntity(result);
+        return mappedResult;
+    }
+
+}

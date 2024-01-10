@@ -118,10 +118,7 @@ public class MapperWrapperMethodCodeBuilderImpl implements MapperWrapperMethodCo
 
     @Override
     public String build() {
-        methodsCode.append("""
-                    }
-                    
-                """);
+        methodsCode.append("    }");
         return returnAndClearCode();
     }
 

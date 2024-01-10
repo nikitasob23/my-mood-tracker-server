@@ -18,14 +18,14 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @AllArgsConstructor
-public class CachedUserDao implements UserDao, CacheCleaner {
+public class CachedUserEntityDao implements UserEntityDao, CacheCleaner {
     public static final String USER_CACHE_ENTITY_NAME = "users";
     private final UserRepository userRepository;
     private final Cache cache;
-    private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(CachedUserDao.class);
+    private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(CachedUserEntityDao.class);
 
     @Override
-    @Cacheable(value = CachedUserDao.USER_CACHE_ENTITY_NAME, key = "#username")
+    @Cacheable(value = CachedUserEntityDao.USER_CACHE_ENTITY_NAME, key = "#username")
     public UserEntity load(String username) {
         log.debug("Start loading user entity by username from repository", username);
         return Stream.of(username)
@@ -37,7 +37,7 @@ public class CachedUserDao implements UserDao, CacheCleaner {
     }
 
     @Override
-    @CachePut(value = CachedUserDao.USER_CACHE_ENTITY_NAME, key = "#userEntity.username")
+    @CachePut(value = CachedUserEntityDao.USER_CACHE_ENTITY_NAME, key = "#userEntity.username")
     public UserEntity save(UserEntity userEntity) {
         log.debug("Saving user info", userEntity);
         try {
@@ -54,7 +54,7 @@ public class CachedUserDao implements UserDao, CacheCleaner {
     }
 
     @Override
-    @CachePut(value = CachedUserDao.USER_CACHE_ENTITY_NAME, key = "#userEntity.username")
+    @CachePut(value = CachedUserEntityDao.USER_CACHE_ENTITY_NAME, key = "#userEntity.username")
     public UserEntity update(UserEntity userEntity) {
         log.debug("Updating user entity", userEntity);
         try {

@@ -1,6 +1,6 @@
 package com.niksob.database_service.service.user;
 
-import com.niksob.database_service.dao.user.UserDao;
+import com.niksob.database_service.dao.user.UserEntityDao;
 import com.niksob.database_service.mapper.dao.user.UserEntityMapper;
 import com.niksob.domain.model.user.UserInfo;
 import com.niksob.domain.model.user.Username;
@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserDao userDao;
+    private final UserEntityDao userEntityDao;
 
     private final UserEntityMapper userEntityMapper;
 
@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     public UserInfo load(Username username) {
         return Stream.of(username)
                 .map(userEntityMapper::toEntityUsername)
-                .map(userDao::load)
+                .map(userEntityDao::load)
                 .map(userEntityMapper::fromEntity)
                 .peek(userInfo -> log.debug("Get user info from user DAO", userInfo))
                 .findFirst().get();
@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     public void save(UserInfo userInfo) {
         Stream.of(userInfo)
                 .map(userEntityMapper::toEntity)
-                .forEach(userDao::save);
+                .forEach(userEntityDao::save);
         log.debug("Save user info to user DAO", userInfo);
     }
 
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     public void update(UserInfo userInfo) {
         Stream.of(userInfo)
                 .map(userEntityMapper::toEntity)
-                .forEach(userDao::update);
+                .forEach(userEntityDao::update);
         log.debug("Update user info to user DAO", userInfo);
     }
 
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
     public void delete(Username username) {
         Stream.of(username)
                 .map(userEntityMapper::toEntityUsername)
-                .peek(userDao::delete)
+                .peek(userEntityDao::delete)
                 .forEach(userInfo -> log.debug("Deleted user info from user DAO", userInfo));
     }
 }

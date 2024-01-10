@@ -24,7 +24,7 @@ public class MappingWrapperMethodCodeGeneratorImpl implements MappingWrapperMeth
     private final ClassUtil classUtil;
 
     @Override
-    public String generate(MappingWrapperClassDetails classDetails) {
+    public Set<String> generate(MappingWrapperClassDetails classDetails) {
         var mapperClass = classDetails.getMapperDetails();
         if (methodHasDuplicates(mapperClass.getMethods())) {
             throw new IllegalStateException("The mapper %s has duplicates among the conversion methods"
@@ -36,7 +36,7 @@ public class MappingWrapperMethodCodeGeneratorImpl implements MappingWrapperMeth
                     .map(interfaceMethod -> createMappingWrapperMethod(interfaceMethod, classDetails))
                     .filter(methodDetails -> checkMapperCompleteness(methodDetails, mapperClass.getName()))
                     .map(this::buildMethod)
-                    .collect(Collectors.joining());
+                    .collect(Collectors.toSet());
         } catch (Exception e) {
             codeBuilder.clear();
             throw e;
