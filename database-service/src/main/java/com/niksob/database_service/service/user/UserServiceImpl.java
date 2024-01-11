@@ -31,26 +31,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(UserInfo userInfo) {
-        Stream.of(userInfo)
+    public UserInfo save(UserInfo userInfo) {
+        return Stream.of(userInfo)
                 .map(userEntityMapper::toEntity)
-                .forEach(userEntityDao::save);
-        log.debug("Save user info to user DAO", userInfo);
+                .map(userEntityDao::save)
+                .map(userEntityMapper::fromEntity)
+                .peek(u -> log.debug("Save user info to user DAO", u))
+                .findFirst().get();
     }
 
     @Override
-    public void update(UserInfo userInfo) {
-        Stream.of(userInfo)
+    public UserInfo update(UserInfo userInfo) {
+        return Stream.of(userInfo)
                 .map(userEntityMapper::toEntity)
-                .forEach(userEntityDao::update);
-        log.debug("Update user info to user DAO", userInfo);
+                .map(userEntityDao::update)
+                .map(userEntityMapper::fromEntity)
+                .peek(u -> log.debug("Update user info to user DAO", u))
+                .findFirst().get();
     }
 
     @Override
-    public void delete(Username username) {
-        Stream.of(username)
-                .map(userEntityMapper::toEntityUsername)
+    public UserInfo delete(Username username) {
+        final String entityUsername = userEntityMapper.toEntityUsername(username);
+
+        final UserInfo loaded = Stream.of(entityUsername)
+                .map(userEntityDao::load)
+                .map(userEntityMapper::fromEntity)
+                .findFirst().get();
+
+        Stream.of(entityUsername)
                 .peek(userEntityDao::delete)
                 .forEach(userInfo -> log.debug("Deleted user info from user DAO", userInfo));
+        return loaded;
     }
 }

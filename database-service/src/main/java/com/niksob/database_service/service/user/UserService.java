@@ -6,9 +6,9 @@ import com.niksob.domain.model.user.Username;
 public interface UserService {
     UserInfo load(Username username);
 
-    void save(UserInfo userInfo);
+    UserInfo save(UserInfo userInfo);
 
-    void update(UserInfo userInfo);
+    UserInfo update(UserInfo userInfo);
 
-    void delete(Username username);
+    UserInfo delete(Username username);
 }

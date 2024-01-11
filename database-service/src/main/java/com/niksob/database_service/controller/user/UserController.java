@@ -6,11 +6,8 @@ import com.niksob.database_service.exception.entity.EntityUpdatingException;
 import com.niksob.domain.exception.rest.controller.response.ControllerResponseException;
 import com.niksob.domain.exception.user.data.access.IllegalUserAccessException;
 import com.niksob.domain.path.controller.database_service.signup.UserControllerPaths;
-import com.niksob.database_service.service.user.UserService;
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;
-import com.niksob.domain.mapper.user.UserInfoDtoMapper;
-import com.niksob.domain.mapper.user.UsernameDtoMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,21 +21,14 @@ import reactor.core.publisher.Mono;
 @RequestMapping(UserControllerPaths.BASE_URI)
 public class UserController {
 
-    private final UserService userService;
-
-    private final UsernameDtoMapper usernameDtoMapper;
-
-    private final UserInfoDtoMapper userInfoDtoMapper;
+    private final UserControllerService userControllerService;
 
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
     @GetMapping
     public Mono<UserInfoDto> load(@RequestParam("username") UsernameDto usernameDto) {
-        return Mono.just(usernameDto)
-                .map(usernameDtoMapper::fromDto)
-                .map(userService::load)
-                .map(userInfoDtoMapper::toDto)
+        return userControllerService.load(usernameDto)
                 .onErrorResume(this::createLoadingError);
     }
 
@@ -46,8 +36,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Void> save(@RequestBody UserInfoDto userInfoDto) {
         return Mono.just(userInfoDto)
-                .map(userInfoDtoMapper::fromDto)
-                .doOnNext(userService::save)
+                .doOnNext(userControllerService::save)
                 .then()
                 .onErrorResume(this::createSavingError);
     }
@@ -56,8 +45,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> update(@RequestBody UserInfoDto userInfoDto) {
         return Mono.just(userInfoDto)
-                .map(userInfoDtoMapper::fromDto)
-                .doOnNext(userService::update)
+                .doOnNext(userControllerService::update)
                 .then()
                 .onErrorResume(this::createUpdatingError);
     }
@@ -66,8 +54,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> delete(@RequestParam("username") UsernameDto usernameDto) {
         return Mono.just(usernameDto)
-                .map(usernameDtoMapper::fromDto)
-                .doOnNext(userService::delete)
+                .doOnNext(userControllerService::delete)
                 .then()
                 .onErrorResume(this::createDeleteError);
     }
