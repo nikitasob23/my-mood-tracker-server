@@ -4,9 +4,19 @@ import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.model.user.UserInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import reactor.core.publisher.Mono;
 
 @Mapper(componentModel = "spring")
 public interface UserInfoDtoMapper {
+    default Mono<UserInfoDto> toMonoUserInfoDto(UserInfo userInfo) {
+        return Mono.just(userInfo)
+                .map(this::toDto);
+    }
+
+    default Mono<Void> toMonoVoid(UserInfo userInfo) {
+        return Mono.empty();
+    }
+
     @Mapping(source = "username.value", target = "username")
     @Mapping(source = "nickname.value", target = "nickname")
     @Mapping(source = "password.value", target = "password")

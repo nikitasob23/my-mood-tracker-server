@@ -1,13 +1,14 @@
 package com.niksob.database_service.controller.user;
 
-import com.niksob.database_service.mapper.controller.user.UserControllerMapper;
 import com.niksob.database_service.service.user.UserService;
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;
+import com.niksob.domain.mapper.user.UserInfoDtoMapper;
+import com.niksob.domain.mapper.user.UsernameDtoMapper;
 import com.niksob.mapping_wrapper.annotation.MappingWrapper;
 import reactor.core.publisher.Mono;
 
-@MappingWrapper(source = UserService.class, mapper = UserControllerMapper.class)
+@MappingWrapper(source = UserService.class, mapper = {UsernameDtoMapper.class, UserInfoDtoMapper.class})
 public interface UserControllerService {
     Mono<UserInfoDto> load(UsernameDto usernameDto);
 
