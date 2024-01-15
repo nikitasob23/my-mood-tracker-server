@@ -102,7 +102,7 @@ public class MappingWrapperClassCodeGeneratorTest extends MainContextTest {
         );
         Assertions.assertThatThrownBy(() -> mappingWrapperCodeGenerator.generateClassCode(mappingWrapperClassDetails))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Mapper com.niksob.mapping_wrapper.mapper.user.UserEntityMapper does not have a method for mapping all values");
+                .hasMessage("Mappers needed for MappingWrapper interface com.niksob.mapping_wrapper.dao.user.UserDao does not have a method for mapping all values");
     }
 
     @Test
