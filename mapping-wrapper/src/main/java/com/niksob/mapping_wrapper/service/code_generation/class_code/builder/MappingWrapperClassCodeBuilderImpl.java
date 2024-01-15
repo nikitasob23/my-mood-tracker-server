@@ -1,13 +1,16 @@
 package com.niksob.mapping_wrapper.service.code_generation.class_code.builder;
 
 import com.niksob.mapping_wrapper.model.MappingWrapperClassCode;
+import com.niksob.mapping_wrapper.model.class_details.ClassDetails;
 import com.niksob.mapping_wrapper.model.class_details.MappingWrapperClassDetails;
+import com.niksob.mapping_wrapper.model.method_details.VariableName;
 import com.niksob.mapping_wrapper.service.code_generation.class_code.builder.string_builder.MappingWrapperCodeStringBuilder;
 import com.niksob.mapping_wrapper.service.code_generation.class_code.method_code.MappingWrapperMethodCodeGenerator;
 import com.niksob.mapping_wrapper.util.ClassUtil;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component("MappingWrapperClassCodeBuilder")
 public class MappingWrapperClassCodeBuilderImpl implements MappingWrapperClassCodeBuilder {
@@ -15,6 +18,9 @@ public class MappingWrapperClassCodeBuilderImpl implements MappingWrapperClassCo
     private final MappingWrapperMethodCodeGenerator mappingWrapperMethodCodeGenerator;
     private final ClassUtil classUtil;
     private final MappingWrapperCodeStringBuilder mappingWrapperCodeStringBuilder;
+
+    private final List<String> fieldNames = new ArrayList<>();
+    private final List<String> declaringVariables = new ArrayList<>();
     private MappingWrapperClassDetails details;
     private boolean wasInitialized;
 
@@ -36,6 +42,8 @@ public class MappingWrapperClassCodeBuilderImpl implements MappingWrapperClassCo
         }
         wasInitialized = true;
         this.details = details;
+        initFieldNames(details);
+        initDeclaringVariables(details);
         return this;
     }
 
@@ -66,30 +74,41 @@ public class MappingWrapperClassCodeBuilderImpl implements MappingWrapperClassCo
 
     @Override
     public MappingWrapperClassCodeBuilder addFields() {
-        var fields = Set.of(
-                String.format("    private final %s source;", details.getSourceDetails().getName()),
-                String.format("    private final %s mapper;", details.getMapperDetails().getName())
-        );
+        final List<String> fields = declaringVariables.stream()
+                .map(declaringVariable -> String.format("    private final %s;", declaringVariable))
+                .toList();
         classCode.setFields(fields);
         return this;
     }
 
     @Override
     public MappingWrapperClassCodeBuilder addConstructor() {
+        final String params = declaringVariables.stream()
+                .map(declaringVariable -> "        " + declaringVariable)
+                .reduce((v1, v2) -> v1 + ",\n" + v2)
+                .orElseThrow(this::throwIfFieldsAbsent);
+
+        final String fieldsInitialization = fieldNames.stream()
+                .map(fieldName -> String.format("        this.%s = %s;", fieldName, fieldName))
+                .reduce((v1, v2) -> v1 + "\n" + v2)
+                .orElseThrow(this::throwIfFieldsAbsent);
+
         classCode.setConstructor(String.format("""
                             public %sMappingWrapper(
-                                %s source,
-                                %s mapper
+                        %s
                             ) {
-                                this.source = source;
-                                this.mapper = mapper;
+                        %s
                             }
                         """,
                 classUtil.getShortClassName(details.getInterfaceDetails().getName()),
-                details.getSourceDetails().getName(),
-                details.getMapperDetails().getName())
-        );
+                params,
+                fieldsInitialization
+        ));
         return this;
+    }
+
+    private IllegalStateException throwIfFieldsAbsent() {
+        return new IllegalStateException("There are no mappers or source class in MappingWrapper");
     }
 
     @Override
@@ -111,7 +130,28 @@ public class MappingWrapperClassCodeBuilderImpl implements MappingWrapperClassCo
     public void clear() {
         mappingWrapperMethodCodeGenerator.clear();
         classCode = new MappingWrapperClassCode();
+        fieldNames.clear();
+        declaringVariables.clear();
         wasInitialized = false;
         details = null;
+    }
+
+    private void initFieldNames(MappingWrapperClassDetails details) {
+        details.getMapperDetailsList().stream()
+                .map(ClassDetails::getName)
+                .map(classUtil::getVariableName)
+                .forEach(fieldNames::add);
+        fieldNames.add(VariableName.SOURCE.getValue());
+    }
+
+    private void initDeclaringVariables(MappingWrapperClassDetails details) {
+        final List<ClassDetails> mapperDetailsList = details.getMapperDetailsList();
+        for (int i = 0; i < mapperDetailsList.size(); i++) {
+            var className = mapperDetailsList.get(i).getName();
+            var declaringVariable = String.format("%s %s", className, fieldNames.get(i));
+            declaringVariables.add(declaringVariable);
+        }
+        var declaringSourceField = String.format("%s source", details.getSourceDetails().getName());
+        declaringVariables.add(declaringSourceField);
     }
 }

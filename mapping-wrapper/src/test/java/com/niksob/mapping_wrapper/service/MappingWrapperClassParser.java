@@ -4,7 +4,7 @@ import com.niksob.mapping_wrapper.model.MappingWrapperClassCode;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 
 @Component
 @AllArgsConstructor
@@ -28,7 +28,7 @@ public class MappingWrapperClassParser {
         removeEmptyLines(classCodeStrBuilder);
 
         //Fields
-        var fields = new HashSet<String>();
+        var fields = new ArrayList<String>();
         final String fieldMarker = "private final";
         while (contains(classCodeStrBuilder, fieldMarker)) {
             String fieldLine = cutStringBetween(classCodeStrBuilder, fieldMarker, lineEndMarker);
@@ -41,7 +41,7 @@ public class MappingWrapperClassParser {
         removeEmptyLines(classCodeStrBuilder);
 
         //Methods
-        var methods = new HashSet<String>();
+        var methods = new ArrayList<String>();
         final String methodMarker = "@Override";
         String methodLines;
         while (contains(classCodeStrBuilder, methodMarker)) {

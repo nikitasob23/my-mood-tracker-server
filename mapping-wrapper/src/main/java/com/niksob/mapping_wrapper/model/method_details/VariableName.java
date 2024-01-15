@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum VariableName {
+    SOURCE("source"),
     VALUE("value"),
     MAPPED("mapped"),
     RESULT("result"),

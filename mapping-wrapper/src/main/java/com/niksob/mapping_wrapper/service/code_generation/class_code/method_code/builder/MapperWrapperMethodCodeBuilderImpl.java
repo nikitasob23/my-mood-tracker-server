@@ -1,5 +1,6 @@
 package com.niksob.mapping_wrapper.service.code_generation.class_code.method_code.builder;
 
+import com.niksob.mapping_wrapper.model.method_details.MappingMethodDetails;
 import com.niksob.mapping_wrapper.model.method_details.MethodSignature;
 import com.niksob.mapping_wrapper.model.method_details.MappingWrapperMethodDetails;
 import com.niksob.mapping_wrapper.model.method_details.VariableName;
@@ -8,14 +9,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MapperWrapperMethodCodeBuilderImpl implements MapperWrapperMethodCodeBuilder {
-    private static final String ASSIGNMENT_OPERATOR = " = ";
     private final StringBuilder methodsCode = new StringBuilder();
     private final ClassUtil classUtil;
 
     private MethodSignature interfaceMethod;
-    private MethodSignature methodForMappingSourceParam;
+    private MappingMethodDetails methodForMappingSourceParam;
     private MethodSignature sourceMethod;
-    private MethodSignature methodForMappingSourceReturnType;
+    private MappingMethodDetails methodForMappingSourceReturnType;
 
     private boolean wasInitialized;
 
@@ -62,10 +62,11 @@ public class MapperWrapperMethodCodeBuilderImpl implements MapperWrapperMethodCo
             return this;
         }
         methodsCode.append("""
-                        %s %s = mapper.%s(%s);
+                        %s %s = %s.%s(%s);
                 """.formatted(
                 methodForMappingSourceParam.getReturnType(),
                 VariableName.MAPPED.getValue(),
+                methodForMappingSourceParam.getVariableName(),
                 methodForMappingSourceParam.getMethodName(),
                 VariableName.VALUE.getValue()));
         return this;
@@ -74,14 +75,14 @@ public class MapperWrapperMethodCodeBuilderImpl implements MapperWrapperMethodCo
     @Override
     public MapperWrapperMethodCodeBuilder addSourceMethodInvokingCode() {
         var returnVoid = classUtil.returnVoid(sourceMethod);
-        methodsCode.append("""
-                        %s%s%ssource.%s(%s);
-                """.formatted(
-                returnVoid ? "" : sourceMethod.getReturnType(),
-                returnVoid ? "" : " " + VariableName.RESULT.getValue(),
-                returnVoid ? "" : ASSIGNMENT_OPERATOR,
-                sourceMethod.getMethodName(),
-                getSourceReturnTypeVarName()));
+        methodsCode.append("        ")
+                .append(returnVoid ? "" : sourceMethod.getReturnType())
+                .append(returnVoid ? "" : " " + VariableName.RESULT.getValue())
+                .append(returnVoid ? "" : " = ")
+                .append(VariableName.SOURCE.getValue())
+                .append(".")
+                .append(sourceMethod.getMethodName())
+                .append(String.format("(%s);\n", getSourceReturnTypeVarName()));
         return this;
     }
 
@@ -95,10 +96,11 @@ public class MapperWrapperMethodCodeBuilderImpl implements MapperWrapperMethodCo
             return this;
         }
         methodsCode.append("""
-                        %s %s = mapper.%s(%s);
+                        %s %s = %s.%s(%s);
                 """.formatted(
                 methodForMappingSourceReturnType.getReturnType(),
                 VariableName.MAPPED_RESULT.getValue(),
+                methodForMappingSourceReturnType.getVariableName(),
                 methodForMappingSourceReturnType.getMethodName(),
                 VariableName.RESULT.getValue())
         );
@@ -151,7 +153,7 @@ public class MapperWrapperMethodCodeBuilderImpl implements MapperWrapperMethodCo
         return VariableName.RESULT.getValue();
     }
 
-    private boolean methodForMappingFound(MethodSignature mapperMethod) {
+    private boolean methodForMappingFound(MappingMethodDetails mapperMethod) {
         return mapperMethod != null;
     }
 

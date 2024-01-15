@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface MappingWrapper {
     Class<?> source();
-    Class<?> mapper();
+    Class<?>[] mapper();
     boolean isSpringComponentEnabled() default true;
 }

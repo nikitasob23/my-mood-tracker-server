@@ -7,6 +7,7 @@ import com.niksob.mapping_wrapper.di.module.code_generation.builder.MapperWrappe
 import com.niksob.mapping_wrapper.di.module.code_generation.builder.MappingWrapperClassCodeBuilderDIModule;
 import com.niksob.mapping_wrapper.di.module.code_generation.builder.string_builder.MappingWrapperCodeStringBuilderDIModule;
 import com.niksob.mapping_wrapper.di.module.logger.LoggerDIModule;
+import com.niksob.mapping_wrapper.di.module.mapper.MappingMethodDetailsMapperDIModule;
 import com.niksob.mapping_wrapper.di.module.service.MappingWrapperServiceDIModule;
 import com.niksob.mapping_wrapper.di.module.service.annotation.MappingWrapperAnnotationServiceDIModule;
 import com.niksob.mapping_wrapper.di.module.service.element.ElementMethodServiceDIModule;
@@ -68,9 +69,10 @@ public class MappingWrapperProcessorDIComponent {
 
     private MappingWrapperClassCodeGeneratorDIModule setMappingWrapperClassCodeGeneratorDIModule() {
         var mapperWrapperMethodCodeBuilderDIModule = new MapperWrapperMethodCodeBuilderDIModule(classUtilDIModule);
+        var mappingMethodDetailsMapperDIModule = new MappingMethodDetailsMapperDIModule();
         var mappingWrapperMethodCodeGeneratorDIModule =
                 new MappingWrapperMethodCodeGeneratorDIModule(
-                        mapperWrapperMethodCodeBuilderDIModule, classUtilDIModule);
+                        mapperWrapperMethodCodeBuilderDIModule, classUtilDIModule, mappingMethodDetailsMapperDIModule);
         var mappingWrapperClassCodeBuilderDIModule = new MappingWrapperClassCodeBuilderDIModule(
                 mappingWrapperMethodCodeGeneratorDIModule, classUtilDIModule, mappingWrapperCodeStringBuilderDIModule
         );

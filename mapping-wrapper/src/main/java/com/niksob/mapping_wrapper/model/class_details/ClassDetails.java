@@ -9,6 +9,6 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 public class ClassDetails {
-    private String name;
-    private Set<MethodSignature> methods;
+    private final String name;
+    private final Set<MethodSignature> methods;
 }

@@ -2,10 +2,10 @@ package com.niksob.mapping_wrapper.service.code_generation.class_code.method_cod
 
 import com.niksob.mapping_wrapper.model.class_details.MappingWrapperClassDetails;
 
-import java.util.Set;
+import java.util.List;
 
 public interface MappingWrapperMethodCodeGenerator {
-    Set<String> generate(MappingWrapperClassDetails details);
+    List<String> generate(MappingWrapperClassDetails details);
 
     void clear();
 }

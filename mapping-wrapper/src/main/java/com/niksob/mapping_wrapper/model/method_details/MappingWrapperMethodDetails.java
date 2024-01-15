@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class MappingWrapperMethodDetails {
     MethodSignature interfaceSignature;
-    MethodSignature methodForMappingSourceParam;
+    MappingMethodDetails methodForMappingSourceParam;
     MethodSignature sourceMethod;
-    MethodSignature methodForMappingSourceReturnType;
+    MappingMethodDetails methodForMappingSourceReturnType;
 }

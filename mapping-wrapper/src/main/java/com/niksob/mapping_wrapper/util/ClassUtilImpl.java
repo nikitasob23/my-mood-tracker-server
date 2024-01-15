@@ -29,8 +29,7 @@ public class ClassUtilImpl implements ClassUtil {
 
     @Override
     public boolean returnVoid(MethodSignature method) {
-        return method.getReturnType().equals(VoidReturnType.VOID.getValue())
-                || returnVoidObject(method.getReturnType());
+        return method.getReturnType().equals(VoidReturnType.VOID.getValue());
     }
 
     @Override
@@ -54,9 +53,11 @@ public class ClassUtilImpl implements ClassUtil {
                 .findFirst().orElseThrow(() -> new IllegalStateException("The package name of the class was not found"));
     }
 
-    private boolean returnVoidObject(String returnType) {
-        return returnType.contains(VoidReturnType.GENERIC_PARAM.getValue())
-                || returnType.equals(VoidReturnType.VOID_OBJECT.getValue());
+    @Override
+    public String getVariableName(String fullClassName) {
+        final String[] classNameComponent = fullClassName.split("\\.");
+        final String shortClassName = classNameComponent[classNameComponent.length - 1];
+        return shortClassName.substring(0, 1).toLowerCase() + shortClassName.substring(1);
     }
 
     private boolean symExists(Integer symNum) {

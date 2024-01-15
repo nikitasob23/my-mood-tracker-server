@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -72,6 +73,7 @@ public class CachedUserEntityDao implements UserEntityDao, CacheCleaner {
     }
 
     @Override
+    @Transactional
     public void delete(String username) {
         log.debug("Start deleting user entity by username from repository", username);
         try {

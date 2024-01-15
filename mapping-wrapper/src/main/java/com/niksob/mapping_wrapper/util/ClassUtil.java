@@ -16,4 +16,6 @@ public interface ClassUtil {
     String stickNames(String name1, String name2);
 
     String getPackageName(String name);
+
+    String getVariableName(String fullClassName);
 }

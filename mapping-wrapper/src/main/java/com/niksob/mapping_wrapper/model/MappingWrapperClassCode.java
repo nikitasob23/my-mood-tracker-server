@@ -5,8 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,8 +16,8 @@ public class MappingWrapperClassCode {
     private String packageName = "";
     private String componentAnnotation = "";
     private String className = "";
-    private Set<String> fields = new HashSet<>();
+    private List<String> fields = new ArrayList<>();
     private String constructor = "";
-    private Set<String> methods = new HashSet<>();
+    private List<String> methods = new ArrayList<>();
     private String endChar = "";
 }

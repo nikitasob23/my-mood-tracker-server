@@ -1,5 +1,6 @@
 package com.niksob.mapping_wrapper.service.code_generation.class_code.method_code;
 
+import com.niksob.mapping_wrapper.mapper.MappingMethodDetailsMapper;
 import com.niksob.mapping_wrapper.model.method_details.MethodSignature;
 import com.niksob.mapping_wrapper.model.class_details.MappingWrapperClassDetails;
 import com.niksob.mapping_wrapper.model.method_details.MappingWrapperMethodDetails;
@@ -9,9 +10,7 @@ import com.niksob.mapping_wrapper.util.ClassUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,21 +21,25 @@ public class MappingWrapperMethodCodeGeneratorImpl implements MappingWrapperMeth
     private final MapperWrapperMethodCodeBuilder codeBuilder;
 
     private final ClassUtil classUtil;
+    private final MappingMethodDetailsMapper mappingMethodDetailsMapper;
 
     @Override
-    public Set<String> generate(MappingWrapperClassDetails classDetails) {
-        var mapperClass = classDetails.getMapperDetails();
-        if (methodHasDuplicates(mapperClass.getMethods())) {
-            throw new IllegalStateException("The mapper %s has duplicates among the conversion methods"
-                    .formatted(mapperClass.getName()));
-        }
+    public List<String> generate(MappingWrapperClassDetails classDetails) {
+
+        classDetails.getMapperDetailsList().stream()
+                .filter(mapperClass -> methodHasDuplicates(mapperClass.getMethods()))
+                .findAny().ifPresent(mapperClass -> {
+                    throw new IllegalStateException("The mapper %s has duplicates among the conversion methods"
+                            .formatted(mapperClass.getName()));
+                });
         try {
             return classDetails.getInterfaceDetails()
                     .getMethods().stream()
                     .map(interfaceMethod -> createMappingWrapperMethod(interfaceMethod, classDetails))
-                    .filter(methodDetails -> checkMapperCompleteness(methodDetails, mapperClass.getName()))
-                    .map(this::buildMethod)
-                    .collect(Collectors.toSet());
+                    .filter(methodDetails ->
+                            checkMapperCompleteness(methodDetails, classDetails.getInterfaceDetails().getName())
+                    ).map(this::buildMethod)
+                    .toList();
         } catch (Exception e) {
             codeBuilder.clear();
             throw e;
@@ -56,16 +59,22 @@ public class MappingWrapperMethodCodeGeneratorImpl implements MappingWrapperMeth
                 .filter(s -> s.getMethodName().equals(interfaceMethod.getMethodName()))
                 .findFirst().orElseThrow(() -> notFoundSourceMethod(details));
 
+        var mappingMethodDetails = details.getMapperDetailsList().stream()
+                .map(mapperClass -> mappingMethodDetailsMapper.map(
+                        mapperClass, classUtil.getVariableName(mapperClass.getName()))
+                ).flatMap(Collection::stream)
+                .collect(Collectors.toSet());
+
         var mapperMethodForSourceParam = Stream.of(interfaceMethod.getParamType())
                 .filter(Objects::nonNull)
-                .flatMap(ignore -> details.getMapperDetails().getMethods().stream())
+                .flatMap(ignore -> mappingMethodDetails.stream())
                 .filter(m -> m.getParamType().equals(interfaceMethod.getParamType()))
                 .filter(m -> m.getReturnType().equals(sourceMethod.getParamType()))
                 .findFirst().orElse(null);
 
         var mapperMethodForSourceReturnType = Stream.of(interfaceMethod.getReturnType())
                 .filter(returnType -> !returnType.equals(VoidReturnType.VOID.getValue()))
-                .flatMap(ignore -> details.getMapperDetails().getMethods().stream())
+                .flatMap(ignore -> mappingMethodDetails.stream())
                 .filter(m -> m.getParamType().equals(sourceMethod.getReturnType()))
                 .filter(m -> m.getReturnType().equals(interfaceMethod.getReturnType()))
                 .findFirst().orElse(null);
@@ -92,7 +101,7 @@ public class MappingWrapperMethodCodeGeneratorImpl implements MappingWrapperMeth
         return false;
     }
 
-    private boolean checkMapperCompleteness(MappingWrapperMethodDetails methodDetails, String mapperName) {
+    private boolean checkMapperCompleteness(MappingWrapperMethodDetails methodDetails, String interfaceName) {
         // Get method signatures
         final MethodSignature interfaceMethod = methodDetails.getInterfaceSignature();
         final MethodSignature sourceMethod = methodDetails.getSourceMethod();
@@ -113,13 +122,16 @@ public class MappingWrapperMethodCodeGeneratorImpl implements MappingWrapperMeth
 
         if (paramMappingIsNotPossible || returnTypeMappingIsNotPossible) {
             throw new IllegalStateException(
-                    String.format("Mapper %s does not have a method for mapping all values", mapperName));
+                    String.format(
+                            "Mappers needed for MappingWrapper interface %s does not have a method for mapping all values",
+                            interfaceName
+                    ));
         }
         return true;
     }
 
-    private String buildMethod(MappingWrapperMethodDetails MethodDetails) {
-        return codeBuilder.builder(MethodDetails)
+    private String buildMethod(MappingWrapperMethodDetails methodDetails) {
+        return codeBuilder.builder(methodDetails)
                 .addMethodSignatureCode()
                 .addMappingSourceParamCode()
                 .addSourceMethodInvokingCode()

@@ -25,6 +25,7 @@ public class MappingWrapperServiceImpl implements MappingWrapperService {
 
         var interfaceClassDetails = new ClassDetails(
                 extractFullClassName((TypeElement) e),
+
                 elementMethodService.extractSignature(e, Marker.INTERFACE)
         );
         var sourceClassDetails = new ClassDetails(
@@ -35,12 +36,13 @@ public class MappingWrapperServiceImpl implements MappingWrapperService {
                                 sourceMethod, interfaceClassDetails.getMethods())
                         ).collect(Collectors.toSet()));
 
-        var mapperClassDetails = new ClassDetails(
-                extractFullClassName(annotationDetails.getMapperTypeElement()),
-                elementMethodService.extractSignature(annotationDetails.getMapperTypeElement(), Marker.MAPPER)
-        );
+        var mapperClassDetailsList = annotationDetails.getMapperTypeElementSet().stream()
+                .map(typeElement -> new ClassDetails(
+                        extractFullClassName(typeElement),
+                        elementMethodService.extractSignature(typeElement, Marker.MAPPER)
+                )).toList();
         return new MappingWrapperClassDetails(
-                interfaceClassDetails, sourceClassDetails, mapperClassDetails,
+                interfaceClassDetails, sourceClassDetails, mapperClassDetailsList,
                 annotationDetails.isSpringComponentEnabled()
         );
     }
