@@ -6,7 +6,7 @@ import com.niksob.mapping_wrapper.model.class_details.MappingWrapperClassDetails
 import com.niksob.mapping_wrapper.model.method_details.MappingWrapperMethodDetails;
 import com.niksob.mapping_wrapper.model.method_details.VoidReturnType;
 import com.niksob.mapping_wrapper.service.code_generation.class_code.method_code.builder.MapperWrapperMethodCodeBuilder;
-import com.niksob.mapping_wrapper.util.ClassUtil;
+import com.niksob.mapping_wrapper.util.clazz.ClassUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

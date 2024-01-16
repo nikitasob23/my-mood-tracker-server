@@ -14,6 +14,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class MappingWrapperClassCode {
     private String packageName = "";
+    private String generatedAnnotation = "";
     private String componentAnnotation = "";
     private String className = "";
     private List<String> fields = new ArrayList<>();

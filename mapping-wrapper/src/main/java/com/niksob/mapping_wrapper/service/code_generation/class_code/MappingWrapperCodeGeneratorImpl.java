@@ -15,6 +15,7 @@ public class MappingWrapperCodeGeneratorImpl implements MappingWrapperCodeGenera
         try {
             return mappingWrapperClassCodeBuilder.builder(details)
                     .addPackageName()
+                    .addGeneratedAnnotation()
                     .addComponentAnnotation()
                     .addClassName()
                     .addFields()

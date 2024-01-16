@@ -4,7 +4,7 @@ import com.niksob.mapping_wrapper.model.method_details.MappingMethodDetails;
 import com.niksob.mapping_wrapper.model.method_details.MethodSignature;
 import com.niksob.mapping_wrapper.model.method_details.MappingWrapperMethodDetails;
 import com.niksob.mapping_wrapper.model.method_details.VariableName;
-import com.niksob.mapping_wrapper.util.ClassUtil;
+import com.niksob.mapping_wrapper.util.clazz.ClassUtil;
 import org.springframework.stereotype.Component;
 
 @Component

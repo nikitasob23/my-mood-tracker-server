@@ -7,6 +7,8 @@ public interface MappingWrapperClassCodeBuilder {
 
     MappingWrapperClassCodeBuilder addPackageName();
 
+    MappingWrapperClassCodeBuilder addGeneratedAnnotation();
+
     MappingWrapperClassCodeBuilder addComponentAnnotation();
 
     MappingWrapperClassCodeBuilder addClassName();

@@ -1,5 +1,10 @@
 package com.niksob.mapping_wrapper.dao.user;
 
+@javax.annotation.processing.Generated(
+    value = "com.niksob.mapping_wrapper.processor.MappingWrapperProcessor",
+    date = "2024-01-16T12:11:03+0300",
+    comments = "comments = version: 0.0.1-SNAPSHOT, compiler: javac, environment: Java 17"
+)
 @org.springframework.stereotype.Component
 public class UserDaoMappingWrapper implements com.niksob.mapping_wrapper.dao.user.UserDao {
     private final com.niksob.mapping_wrapper.mapper.user.UserEntityMapper userEntityMapper;

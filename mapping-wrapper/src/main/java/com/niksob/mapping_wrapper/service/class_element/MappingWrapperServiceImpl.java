@@ -1,15 +1,19 @@
 package com.niksob.mapping_wrapper.service.class_element;
 
+import com.niksob.mapping_wrapper.logger.Logger;
 import com.niksob.mapping_wrapper.model.class_details.ClassDetails;
 import com.niksob.mapping_wrapper.model.class_details.MappingWrapperClassDetails;
 import com.niksob.mapping_wrapper.model.class_details.Marker;
+import com.niksob.mapping_wrapper.model.compiler.CompilationDetails;
 import com.niksob.mapping_wrapper.service.annotation.mapping_wrapper.MappingWrapperAnnotationService;
 import com.niksob.mapping_wrapper.service.element.ElementMethodService;
+import com.niksob.mapping_wrapper.util.date.DateUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,6 +22,9 @@ public class MappingWrapperServiceImpl implements MappingWrapperService {
 
     private final MappingWrapperAnnotationService annotationService;
     private final ElementMethodService elementMethodService;
+    private final DateUtil dateUtil;
+
+    private final Logger log;
 
     @Override
     public MappingWrapperClassDetails extractClassDetails(Element e) {
@@ -25,7 +32,6 @@ public class MappingWrapperServiceImpl implements MappingWrapperService {
 
         var interfaceClassDetails = new ClassDetails(
                 extractFullClassName((TypeElement) e),
-
                 elementMethodService.extractSignature(e, Marker.INTERFACE)
         );
         var sourceClassDetails = new ClassDetails(
@@ -45,6 +51,19 @@ public class MappingWrapperServiceImpl implements MappingWrapperService {
                 interfaceClassDetails, sourceClassDetails, mapperClassDetailsList,
                 annotationDetails.isSpringComponentEnabled()
         );
+    }
+
+    @Override
+    public CompilationDetails extractCompilationDetails(Map<String, String> options, String processorName) {
+        var compilationDetails = new CompilationDetails(
+                processorName,
+                dateUtil.generateCurrentDate(),
+                options.get("project.version"),
+                options.get("compiler.name"),
+                options.get("java.version")
+        );
+        log.warn("Compilation details extracted: " + compilationDetails);
+        return compilationDetails;
     }
 
     private String extractFullClassName(TypeElement e) {

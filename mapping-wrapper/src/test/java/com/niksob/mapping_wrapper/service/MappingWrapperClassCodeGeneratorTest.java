@@ -7,6 +7,8 @@ import com.niksob.mapping_wrapper.logger.Logger;
 import com.niksob.mapping_wrapper.MainContextTest;
 import com.niksob.mapping_wrapper.model.MappingWrapperClassCode;
 import com.niksob.mapping_wrapper.model.class_details.MappingWrapperClassDetails;
+import com.niksob.mapping_wrapper.model.compiler.CompilationDetails;
+import com.niksob.mapping_wrapper.parser.MappingWrapperClassParser;
 import com.niksob.mapping_wrapper.service.code_generation.class_code.MappingWrapperCodeGenerator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,8 @@ public class MappingWrapperClassCodeGeneratorTest extends MainContextTest {
     private SourceClassDetailsTestConfig sourceClassConfig;
     @Autowired
     private MapperClassDetailsTestConfig mapperClassConfig;
+    @Autowired
+    private CompilationDetails compilationDetails;
 
     private MappingWrapperClassCode readMappingWrapperExample(String filePath) {
         final MappingWrapperClassParser classParser = new MappingWrapperClassParser();
@@ -52,7 +56,9 @@ public class MappingWrapperClassCodeGeneratorTest extends MainContextTest {
                 interfaceClassConfig.getDetails(),
                 sourceClassConfig.getDetails(),
                 mapperClassConfig.getDetails(),
-                true
+                true,
+                compilationDetails
+
         );
         final String classCodeStr = mappingWrapperCodeGenerator.generateClassCode(mappingWrapperClassDetails);
         var expectedClassCode = readMappingWrapperExample("./src/test/resources/mapping_wrapper_class.example");
@@ -66,7 +72,8 @@ public class MappingWrapperClassCodeGeneratorTest extends MainContextTest {
                 interfaceClassConfig.getDetailsWithGeneric(),
                 sourceClassConfig.getDetailsWithGeneric(),
                 mapperClassConfig.getDetailsWithGeneric(),
-                true
+                true,
+                compilationDetails
         );
         final String classCodeStr = mappingWrapperCodeGenerator.generateClassCode(mappingWrapperClassDetails);
         var expectedClassCode = readMappingWrapperExample(
@@ -81,7 +88,8 @@ public class MappingWrapperClassCodeGeneratorTest extends MainContextTest {
                 interfaceClassConfig.getDetails(),
                 sourceClassConfig.getDetailsWithInsufficientMethods(),
                 mapperClassConfig.getDetails(),
-                true
+                true,
+                compilationDetails
         );
         Assertions.assertThatThrownBy(() -> mappingWrapperCodeGenerator.generateClassCode(mappingWrapperClassDetails))
                 .isInstanceOf(IllegalStateException.class)
@@ -98,7 +106,8 @@ public class MappingWrapperClassCodeGeneratorTest extends MainContextTest {
                 interfaceClassConfig.getDetails(),
                 sourceClassConfig.getDetails(),
                 mapperClassConfig.getIncompleteDetails(),
-                true
+                true,
+                compilationDetails
         );
         Assertions.assertThatThrownBy(() -> mappingWrapperCodeGenerator.generateClassCode(mappingWrapperClassDetails))
                 .isInstanceOf(IllegalStateException.class)
@@ -108,7 +117,11 @@ public class MappingWrapperClassCodeGeneratorTest extends MainContextTest {
     @Test
     public void testWithSeveralIdenticalMapperReturnTypes() {
         var mappingWrapperClassDetails = new MappingWrapperClassDetails(
-                interfaceClassConfig.getDetails(), sourceClassConfig.getDetails(), mapperClassConfig.getDetailsWithIdenticalReturnTypes(), true
+                interfaceClassConfig.getDetails(),
+                sourceClassConfig.getDetails(),
+                mapperClassConfig.getDetailsWithIdenticalReturnTypes(),
+                true,
+                compilationDetails
         );
         Assertions.assertThatThrownBy(() -> mappingWrapperCodeGenerator.generateClassCode(mappingWrapperClassDetails))
                 .isInstanceOf(IllegalStateException.class)
@@ -120,6 +133,12 @@ public class MappingWrapperClassCodeGeneratorTest extends MainContextTest {
         Assertions.assertThat(classCodeStr.contains(expectedClassCode.getPackageName()))
                 .withFailMessage(String.format("Class code has wrong package name.\nExpected:\n%s\nActual full class code:\n%s",
                         expectedClassCode.getPackageName(), classCodeStr
+                )).isTrue();
+
+        // Generated annotation assertion
+        Assertions.assertThat(classCodeStr.contains(expectedClassCode.getGeneratedAnnotation()))
+                .withFailMessage(String.format("Class code hasn't spring generation annotation.\nExpected:\n%s\nActual full class code:\n%s",
+                        expectedClassCode.getGeneratedAnnotation(), classCodeStr
                 )).isTrue();
 
         //Spring component annotation assertion

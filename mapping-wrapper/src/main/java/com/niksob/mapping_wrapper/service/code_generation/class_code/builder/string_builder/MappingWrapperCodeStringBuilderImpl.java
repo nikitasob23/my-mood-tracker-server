@@ -12,6 +12,7 @@ public class MappingWrapperCodeStringBuilderImpl implements MappingWrapperCodeSt
     public String build(MappingWrapperClassCode classCode) {
         final StringBuilder codeStringBuilder = new StringBuilder(classCode.getPackageName())
                 .append(EMPTY_LINE)
+                .append(classCode.getGeneratedAnnotation())
                 .append(classCode.getComponentAnnotation())
                 .append(NEW_LINE)
                 .append(classCode.getClassName())

@@ -3,9 +3,10 @@ package com.niksob.mapping_wrapper.processor;
 import com.google.auto.service.AutoService;
 import com.niksob.mapping_wrapper.di.component.MappingWrapperProcessorDIComponent;
 import com.niksob.mapping_wrapper.di.module.logger.LoggerDIModule;
+import com.niksob.mapping_wrapper.model.compiler.CompilationDetails;
 import com.niksob.mapping_wrapper.service.class_element.MappingWrapperService;
 import com.niksob.mapping_wrapper.service.code_generation.class_code.MappingWrapperCodeGenerator;
-import com.niksob.mapping_wrapper.util.ClassUtil;
+import com.niksob.mapping_wrapper.util.clazz.ClassUtil;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -28,6 +29,8 @@ public class MappingWrapperProcessor extends AbstractProcessor {
 
     private boolean processorEnable;
 
+    private CompilationDetails compilationDetails;
+
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
@@ -35,6 +38,11 @@ public class MappingWrapperProcessor extends AbstractProcessor {
                 .loggerDIModule(new LoggerDIModule(processingEnv))
                 .build()
                 .inject(this);
+
+        this.compilationDetails = mappingWrapperService.extractCompilationDetails(
+                processingEnv.getOptions(),
+                MappingWrapperProcessor.class.getCanonicalName()
+        );
     }
 
     @Override
@@ -50,7 +58,8 @@ public class MappingWrapperProcessor extends AbstractProcessor {
     }
 
     private void generateMappingWrapperClass(Element e) {
-        var mappingWrapperClassDetails = mappingWrapperService.extractClassDetails(e);
+        var mappingWrapperClassDetails = mappingWrapperService.extractClassDetails(e)
+                .setCompilationDetails(compilationDetails);
         var classCode = mappingWrapperCodeGenerator.generateClassCode(mappingWrapperClassDetails);
         var mappingWrapperName = classUtil.stickNames(
                 mappingWrapperClassDetails.getInterfaceDetails().getName(),

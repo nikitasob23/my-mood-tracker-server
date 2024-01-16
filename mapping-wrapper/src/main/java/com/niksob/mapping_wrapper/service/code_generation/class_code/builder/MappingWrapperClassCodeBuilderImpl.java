@@ -6,13 +6,13 @@ import com.niksob.mapping_wrapper.model.class_details.MappingWrapperClassDetails
 import com.niksob.mapping_wrapper.model.method_details.VariableName;
 import com.niksob.mapping_wrapper.service.code_generation.class_code.builder.string_builder.MappingWrapperCodeStringBuilder;
 import com.niksob.mapping_wrapper.service.code_generation.class_code.method_code.MappingWrapperMethodCodeGenerator;
-import com.niksob.mapping_wrapper.util.ClassUtil;
+import com.niksob.mapping_wrapper.util.clazz.ClassUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component("MappingWrapperClassCodeBuilder")
+@Component
 public class MappingWrapperClassCodeBuilderImpl implements MappingWrapperClassCodeBuilder {
     private MappingWrapperClassCode classCode = new MappingWrapperClassCode();
     private final MappingWrapperMethodCodeGenerator mappingWrapperMethodCodeGenerator;
@@ -51,6 +51,28 @@ public class MappingWrapperClassCodeBuilderImpl implements MappingWrapperClassCo
     public MappingWrapperClassCodeBuilder addPackageName() {
         final String interfaceFullName = details.getInterfaceDetails().getName();
         classCode.setPackageName(String.format("package %s;", classUtil.getPackageName(interfaceFullName)));
+        return this;
+    }
+
+    @Override
+    public MappingWrapperClassCodeBuilder addGeneratedAnnotation() {
+        var compilationDetails = details.getCompilationDetails();
+        var comments = String.format("comments = version: %s, compiler: %s, environment: Java %s",
+                compilationDetails.getProjectVersion(),
+                compilationDetails.getCompilerName(),
+                compilationDetails.getJavaVersion()
+        );
+        classCode.setGeneratedAnnotation(String.format("""
+                        @javax.annotation.processing.Generated(
+                            value = "%s",
+                            date = "%s",
+                            comments = "%s"
+                        )
+                        """,
+                compilationDetails.getAnnotationProcessorName(),
+                compilationDetails.getDate(),
+                comments
+        ));
         return this;
     }
 

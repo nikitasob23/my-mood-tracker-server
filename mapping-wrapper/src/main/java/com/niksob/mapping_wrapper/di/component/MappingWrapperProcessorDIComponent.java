@@ -12,6 +12,7 @@ import com.niksob.mapping_wrapper.di.module.service.MappingWrapperServiceDIModul
 import com.niksob.mapping_wrapper.di.module.service.annotation.MappingWrapperAnnotationServiceDIModule;
 import com.niksob.mapping_wrapper.di.module.service.element.ElementMethodServiceDIModule;
 import com.niksob.mapping_wrapper.di.module.util.ClassUtilDIModule;
+import com.niksob.mapping_wrapper.di.module.util.DateUtilDIModule;
 import com.niksob.mapping_wrapper.processor.MappingWrapperProcessor;
 import lombok.Builder;
 
@@ -20,6 +21,8 @@ public class MappingWrapperProcessorDIComponent {
     private MappingWrapperClassCodeGeneratorDIModule mappingWrapperClassCodeGeneratorDIModule;
     @Builder.Default
     private ClassUtilDIModule classUtilDIModule = new ClassUtilDIModule();
+    @Builder.Default
+    private DateUtilDIModule dateUtilDIModule = new DateUtilDIModule();
     @Builder.Default
     private MappingWrapperCodeStringBuilderDIModule mappingWrapperCodeStringBuilderDIModule =
             new MappingWrapperCodeStringBuilderDIModule();
@@ -32,12 +35,14 @@ public class MappingWrapperProcessorDIComponent {
     public MappingWrapperProcessorDIComponent(
             MappingWrapperClassCodeGeneratorDIModule mappingWrapperClassCodeGeneratorDIModule,
             ClassUtilDIModule classUtilDIModule,
+            DateUtilDIModule dateUtilDIModule,
             MappingWrapperCodeStringBuilderDIModule mappingWrapperCodeStringBuilderDIModule,
             MappingWrapperProcessorEnableDIModule mappingWrapperProcessorEnableDIModule,
             LoggerDIModule loggerDIModule,
             MappingWrapperServiceDIModule mappingWrapperServiceDIModule
     ) {
         this.classUtilDIModule = classUtilDIModule;
+        this.dateUtilDIModule = dateUtilDIModule;
         this.mappingWrapperCodeStringBuilderDIModule = mappingWrapperCodeStringBuilderDIModule;
         this.mappingWrapperProcessorEnableDIModule = mappingWrapperProcessorEnableDIModule;
         this.mappingWrapperClassCodeGeneratorDIModule = mappingWrapperClassCodeGeneratorDIModule == null
@@ -63,7 +68,7 @@ public class MappingWrapperProcessorDIComponent {
         var mappingWrapperAnnotationServiceDIModule = new MappingWrapperAnnotationServiceDIModule(loggerDIModule);
         var elementMethodServiceDIModule = new ElementMethodServiceDIModule(loggerDIModule);
         return new MappingWrapperServiceDIModule(
-                mappingWrapperAnnotationServiceDIModule, elementMethodServiceDIModule
+                mappingWrapperAnnotationServiceDIModule, elementMethodServiceDIModule, dateUtilDIModule, loggerDIModule
         );
     }
 

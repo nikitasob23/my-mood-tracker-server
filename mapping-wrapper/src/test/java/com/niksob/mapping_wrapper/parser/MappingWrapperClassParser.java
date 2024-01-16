@@ -1,4 +1,4 @@
-package com.niksob.mapping_wrapper.service;
+package com.niksob.mapping_wrapper.parser;
 
 import com.niksob.mapping_wrapper.model.MappingWrapperClassCode;
 import lombok.AllArgsConstructor;
@@ -19,8 +19,15 @@ public class MappingWrapperClassParser {
         String packageLine = cutStringBetween(classCodeStrBuilder, "package", lineEndMarker);
         removeEmptyLines(classCodeStrBuilder);
 
+        //Generated annotation
+        final String endOfGeneratedAnnotation = ")";
+        String generatedAnnotationLines = cutStringBetween(
+                classCodeStrBuilder, "@javax.annotation.processing.Generated(", endOfGeneratedAnnotation
+        ) + endOfGeneratedAnnotation;
+        removeEmptyLines(classCodeStrBuilder);
+
         //Component annotation
-        String annotationLine = cutStringBetween(classCodeStrBuilder, "@org.springframework.stereotype.Component", lineEndMarker);
+        String componentAnnotationLine = cutStringBetween(classCodeStrBuilder, "@org.springframework.stereotype.Component", lineEndMarker);
         removeEmptyLines(classCodeStrBuilder);
 
         //Class name
@@ -51,7 +58,8 @@ public class MappingWrapperClassParser {
         }
 
         return mappingWrapperClassCode.setPackageName(packageLine)
-                .setComponentAnnotation(annotationLine)
+                .setGeneratedAnnotation(generatedAnnotationLines)
+                .setComponentAnnotation(componentAnnotationLine)
                 .setClassName(classNameLine)
                 .setFields(fields)
                 .setConstructor(constructorLines)
