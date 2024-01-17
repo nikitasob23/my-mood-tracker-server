@@ -1,8 +1,8 @@
 ### GET Request
-GET http://localhost:8081/api/service/user?username=MY_TEST_USERNAME
+GET http://localhost:8081/api/service/user?username=TEST_USERNAME
 
-### GET Request
-GET http://localhost:8081/api/service/user?username=THROW
+### DELETE Request
+DELETE http://localhost:8081/api/service/user?username=TEST_USERNAME
 
 ### POST Request
 POST http://localhost:8081/api/service/user
@@ -14,8 +14,8 @@ Content-Type: application/json
   "password": "TEST_PASSWORD"
 }
 
-### POST Request
-POST http://localhost:8081/api/service/user
+### PUT Request
+PUT http://localhost:8081/api/service/user
 Content-Type: application/json
 
 {
@@ -23,4 +23,3 @@ Content-Type: application/json
   "nickname": "TEST_NICKNAME",
   "password": "0000"
 }
-

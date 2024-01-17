@@ -3,9 +3,9 @@ package com.niksob.database_service.dao.user;
 import com.niksob.database_service.mapper.dao.user.UserEntityMapper;
 import com.niksob.domain.model.user.UserInfo;
 import com.niksob.domain.model.user.Username;
-import com.niksob.mapping_wrapper.annotation.MappingWrapper;
+import com.niksob.layer_connector.annotation.LayerConnector;
 
-@MappingWrapper(source = UserEntityDao.class, mapper = UserEntityMapper.class)
+@LayerConnector(source = UserEntityDao.class, mapper = UserEntityMapper.class)
 public interface UserDao {
     UserInfo load(Username username);
 

@@ -6,10 +6,10 @@ import com.niksob.domain.dto.user.UsernameDto;
 import com.niksob.domain.mapper.user.UserDtoMonoMapper;
 import com.niksob.domain.mapper.user.UserInfoDtoMapper;
 import com.niksob.domain.mapper.user.UsernameDtoMapper;
-import com.niksob.mapping_wrapper.annotation.MappingWrapper;
+import com.niksob.layer_connector.annotation.LayerConnector;
 import reactor.core.publisher.Mono;
 
-@MappingWrapper(source = UserService.class, mapper = {UsernameDtoMapper.class, UserInfoDtoMapper.class, UserDtoMonoMapper.class})
+@LayerConnector(source = UserService.class, mapper = {UsernameDtoMapper.class, UserInfoDtoMapper.class, UserDtoMonoMapper.class})
 public interface UserControllerService {
     Mono<UserInfoDto> load(UsernameDto usernameDto);
 
