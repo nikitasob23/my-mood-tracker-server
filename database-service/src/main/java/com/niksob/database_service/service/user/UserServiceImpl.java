@@ -33,6 +33,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Mono<UserInfo> update(UserInfo userInfo) {
         return Mono.just(userInfo)
+                .filter(u -> exists(u.getUsername()))
                 .map(userDao::update)
                 .doOnNext(u -> log.debug("Update user info to user DAO", u));
     }
@@ -40,8 +41,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public Mono<UserInfo> delete(Username username) {
         return Mono.just(username)
+                .filter(this::exists)
                 .map(userDao::load)
                 .doOnNext(ignore -> userDao.delete(username))
                 .doOnNext(loaded -> log.debug("Deleted user info from user DAO", loaded));
+    }
+
+    @Override
+    public boolean exists(Username username) {
+        return load(username).blockOptional().isPresent();
     }
 }

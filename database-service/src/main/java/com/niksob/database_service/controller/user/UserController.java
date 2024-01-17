@@ -88,7 +88,7 @@ public class UserController {
                     String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)
             ));
         }
-        return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+        return createLoadingError(throwable).then();
     }
 
     private Mono<Void> createDeleteError(Throwable throwable) {
@@ -98,6 +98,6 @@ public class UserController {
                     String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)
             ));
         }
-        return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+        return createLoadingError(throwable).then();
     }
 }

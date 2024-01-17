@@ -12,4 +12,6 @@ public interface UserService {
     Mono<UserInfo> update(UserInfo userInfo);
 
     Mono<UserInfo> delete(Username username);
+
+    boolean exists(Username username);
 }
