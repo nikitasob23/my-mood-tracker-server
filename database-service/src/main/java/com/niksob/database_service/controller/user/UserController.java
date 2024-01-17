@@ -35,8 +35,7 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Void> save(@RequestBody UserInfoDto userInfoDto) {
-        return Mono.just(userInfoDto)
-                .doOnNext(userControllerService::save)
+        return userControllerService.save(userInfoDto)
                 .then()
                 .onErrorResume(this::createSavingError);
     }
@@ -44,8 +43,7 @@ public class UserController {
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> update(@RequestBody UserInfoDto userInfoDto) {
-        return Mono.just(userInfoDto)
-                .doOnNext(userControllerService::update)
+        return userControllerService.update(userInfoDto)
                 .then()
                 .onErrorResume(this::createUpdatingError);
     }
@@ -53,8 +51,7 @@ public class UserController {
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> delete(@RequestParam("username") UsernameDto usernameDto) {
-        return Mono.just(usernameDto)
-                .doOnNext(userControllerService::delete)
+        return userControllerService.delete(usernameDto)
                 .then()
                 .onErrorResume(this::createDeleteError);
     }
