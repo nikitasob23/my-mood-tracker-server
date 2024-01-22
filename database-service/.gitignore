@@ -5,7 +5,7 @@ mvnw
 mvnw.cmd
 
 .http
-/http-requests
+/http-request
 
 ### STS ###
 .apt_generated
