@@ -1,10 +1,12 @@
 package com.niksob.database_service.service.user;
 
 import com.niksob.database_service.dao.user.UserDao;
+import com.niksob.database_service.exception.entity.EntityAlreadyExistsException;
 import com.niksob.domain.model.user.UserInfo;
 import com.niksob.domain.model.user.Username;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -26,6 +28,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public Mono<UserInfo> save(UserInfo userInfo) {
         return Mono.just(userInfo)
+                .filter(u -> !exists(u.getUsername()))
+                .switchIfEmpty(createUserAlreadyExistsException(userInfo))
                 .map(userDao::save)
                 .doOnNext(u -> log.debug("Save user info to user DAO", u));
     }
@@ -33,7 +37,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Mono<UserInfo> update(UserInfo userInfo) {
         return Mono.just(userInfo)
-                .filter(u -> exists(u.getUsername()))
+                .filter(u -> existsOrThrowNotFound(u.getUsername()))
                 .map(userDao::update)
                 .doOnNext(u -> log.debug("Update user info to user DAO", u));
     }
@@ -41,7 +45,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Mono<UserInfo> delete(Username username) {
         return Mono.just(username)
-                .filter(this::exists)
+                .filter(this::existsOrThrowNotFound)
                 .map(userDao::load)
                 .doOnNext(ignore -> userDao.delete(username))
                 .doOnNext(loaded -> log.debug("Deleted user info from user DAO", loaded));
@@ -49,6 +53,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean exists(Username username) {
+        try {
+            return existsOrThrowNotFound(username);
+        } catch (EntityNotFoundException e) {
+            return false;
+        }
+    }
+
+    private boolean existsOrThrowNotFound(Username username) {
         return load(username).blockOptional().isPresent();
+    }
+
+    private Mono<UserInfo> createUserAlreadyExistsException(UserInfo userInfo) {
+        final String username = userInfo.getUsername().getValue();
+        return Mono.error(new EntityAlreadyExistsException("Failed to save user. User already exists", username));
     }
 }

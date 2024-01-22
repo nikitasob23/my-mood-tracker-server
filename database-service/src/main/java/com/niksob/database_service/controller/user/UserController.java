@@ -1,5 +1,6 @@
 package com.niksob.database_service.controller.user;
 
+import com.niksob.database_service.exception.entity.EntityAlreadyExistsException;
 import com.niksob.database_service.exception.entity.EntityNotDeletedException;
 import com.niksob.database_service.exception.entity.EntitySavingException;
 import com.niksob.database_service.exception.entity.EntityUpdatingException;
@@ -80,6 +81,11 @@ public class UserController {
         if (throwable instanceof EntitySavingException) {
             return Mono.error(new ControllerResponseException(
                     throwable, HttpStatus.BAD_REQUEST,
+                    String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)
+            ));
+        } else if (throwable instanceof EntityAlreadyExistsException) {
+            return Mono.error(new ControllerResponseException(
+                    throwable, HttpStatus.CONFLICT,
                     String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)
             ));
         }
