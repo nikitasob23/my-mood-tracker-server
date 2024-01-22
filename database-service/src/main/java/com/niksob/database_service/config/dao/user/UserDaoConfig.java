@@ -1,4 +1,4 @@
-package com.niksob.database_service.config.dao;
+package com.niksob.database_service.config.dao.user;
 
 import com.niksob.database_service.dao.user.CachedUserEntityDao;
 import com.niksob.database_service.dao.user.UserEntityDao;

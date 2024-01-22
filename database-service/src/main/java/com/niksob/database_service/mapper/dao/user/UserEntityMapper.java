@@ -1,12 +1,13 @@
 package com.niksob.database_service.mapper.dao.user;
 
 import com.niksob.database_service.entity.user.UserEntity;
+import com.niksob.database_service.mapper.dao.mood.entry.MoodEntryEntityMapper;
 import com.niksob.domain.model.user.UserInfo;
 import com.niksob.domain.model.user.Username;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {MoodEntryEntityMapper.class})
 public interface UserEntityMapper {
     default String toEntityUsername(Username username) {
         return username.getValue();

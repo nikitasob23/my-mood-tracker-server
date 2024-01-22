@@ -1,11 +1,12 @@
 package com.niksob.domain.mapper.user;
 
 import com.niksob.domain.dto.user.UserInfoDto;
+import com.niksob.domain.mapper.mood.entry.MoodEntryDtoMapper;
 import com.niksob.domain.model.user.UserInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {MoodEntryDtoMapper.class})
 public interface UserInfoDtoMapper {
     @Mapping(source = "username.value", target = "username")
     @Mapping(source = "nickname.value", target = "nickname")

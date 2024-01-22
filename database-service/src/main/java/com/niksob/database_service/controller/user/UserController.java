@@ -5,9 +5,11 @@ import com.niksob.database_service.exception.entity.EntitySavingException;
 import com.niksob.database_service.exception.entity.EntityUpdatingException;
 import com.niksob.domain.exception.rest.controller.response.ControllerResponseException;
 import com.niksob.domain.exception.user.data.access.IllegalUserAccessException;
-import com.niksob.domain.path.controller.database_service.signup.UserControllerPaths;
+import com.niksob.domain.path.controller.database_service.user.UserControllerPaths;
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;
+import com.niksob.logger.object_state.ObjectStateLogger;
+import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,16 +22,17 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 @RequestMapping(UserControllerPaths.BASE_URI)
 public class UserController {
-
     private final UserControllerService userControllerService;
 
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
+    private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserController.class);
+
     @GetMapping
     public Mono<UserInfoDto> load(@RequestParam("username") UsernameDto usernameDto) {
         return userControllerService.load(usernameDto)
-                .onErrorResume(this::createLoadingError);
+                .onErrorResume(throwable -> createLoadingError(throwable, usernameDto));
     }
 
     @PostMapping
@@ -37,7 +40,7 @@ public class UserController {
     public Mono<Void> save(@RequestBody UserInfoDto userInfoDto) {
         return userControllerService.save(userInfoDto)
                 .then()
-                .onErrorResume(this::createSavingError);
+                .onErrorResume(throwable -> createSavingError(throwable, userInfoDto));
     }
 
     @PutMapping
@@ -45,7 +48,7 @@ public class UserController {
     public Mono<Void> update(@RequestBody UserInfoDto userInfoDto) {
         return userControllerService.update(userInfoDto)
                 .then()
-                .onErrorResume(this::createUpdatingError);
+                .onErrorResume(throwable -> createUpdatingError(throwable, userInfoDto));
     }
 
     @DeleteMapping
@@ -53,10 +56,11 @@ public class UserController {
     public Mono<Void> delete(@RequestParam("username") UsernameDto usernameDto) {
         return userControllerService.delete(usernameDto)
                 .then()
-                .onErrorResume(this::createDeleteError);
+                .onErrorResume(throwable -> createDeleteError(throwable, usernameDto));
     }
 
-    private Mono<UserInfoDto> createLoadingError(Throwable throwable) {
+    private Mono<UserInfoDto> createLoadingError(Throwable throwable, Object state) {
+        log.error("User load error", throwable, state);
         if (throwable instanceof IllegalUserAccessException) {
             return Mono.error(new ControllerResponseException(
                     throwable, HttpStatus.FORBIDDEN,
@@ -71,7 +75,8 @@ public class UserController {
         return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    private Mono<Void> createSavingError(Throwable throwable) {
+    private Mono<Void> createSavingError(Throwable throwable, Object state) {
+        log.error("User save error", throwable, state);
         if (throwable instanceof EntitySavingException) {
             return Mono.error(new ControllerResponseException(
                     throwable, HttpStatus.BAD_REQUEST,
@@ -81,23 +86,25 @@ public class UserController {
         return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    private Mono<Void> createUpdatingError(Throwable throwable) {
+    private Mono<Void> createUpdatingError(Throwable throwable, Object userInfoDto) {
+        log.error("User update error", throwable, userInfoDto);
         if (throwable instanceof EntityUpdatingException) {
             return Mono.error(new ControllerResponseException(
                     throwable, HttpStatus.BAD_REQUEST,
                     String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)
             ));
         }
-        return createLoadingError(throwable).then();
+        return createLoadingError(throwable, userInfoDto).then();
     }
 
-    private Mono<Void> createDeleteError(Throwable throwable) {
+    private Mono<Void> createDeleteError(Throwable throwable, Object usernameDto) {
+        log.error("User delete error", throwable, usernameDto);
         if (throwable instanceof EntityNotDeletedException) {
             return Mono.error(new ControllerResponseException(
                     throwable, HttpStatus.BAD_REQUEST,
                     String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)
             ));
         }
-        return createLoadingError(throwable).then();
+        return createLoadingError(throwable, usernameDto).then();
     }
 }
