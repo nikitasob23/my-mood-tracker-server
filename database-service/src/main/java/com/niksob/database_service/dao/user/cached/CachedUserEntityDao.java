@@ -1,10 +1,10 @@
-package com.niksob.database_service.dao.user;
+package com.niksob.database_service.dao.user.cached;
 
 import com.niksob.database_service.cache.cleaner.CacheCleaner;
+import com.niksob.database_service.dao.user.UserEntityDao;
 import com.niksob.database_service.entity.user.UserEntity;
 import com.niksob.database_service.exception.entity.EntityNotDeletedException;
 import com.niksob.database_service.exception.entity.EntitySavingException;
-import com.niksob.database_service.exception.entity.EntityUpdatingException;
 import com.niksob.database_service.repository.user.UserRepository;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -19,11 +19,12 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @AllArgsConstructor
-public class CachedUserEntityDao implements UserEntityDao, CacheCleaner {
+public abstract class CachedUserEntityDao implements UserEntityDao, CacheCleaner {
     public static final String USER_CACHE_ENTITY_NAME = "users";
-    private final UserRepository userRepository;
     private final Cache cache;
-    private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(CachedUserEntityDao.class);
+
+    protected final UserRepository userRepository;
+    protected final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(CachedUserEntityDao.class);
 
     @Override
     @Cacheable(value = CachedUserEntityDao.USER_CACHE_ENTITY_NAME, key = "#username")
@@ -51,24 +52,6 @@ public class CachedUserEntityDao implements UserEntityDao, CacheCleaner {
             final EntitySavingException entitySavingException = new EntitySavingException(userEntity.getUsername(), e);
             log.error("User entity has not been saved", e, userEntity);
             throw entitySavingException;
-        }
-    }
-
-    @Override
-    @CachePut(value = CachedUserEntityDao.USER_CACHE_ENTITY_NAME, key = "#userEntity.username")
-    public UserEntity update(UserEntity userEntity) {
-        log.debug("Updating user entity", userEntity);
-        try {
-            return Stream.of(userEntity)
-                    .peek(userRepository::save)
-                    .peek(u -> log.debug("User entity updated", u))
-                    .peek(u -> log.debug("User entity cache updated", u))
-                    .findFirst().get();
-        } catch (Exception e) {
-            final EntityUpdatingException entityUpdatingException =
-                    new EntityUpdatingException(userEntity.getUsername(), e);
-            log.error("User entity has not been updated", e, userEntity);
-            throw entityUpdatingException;
         }
     }
 
