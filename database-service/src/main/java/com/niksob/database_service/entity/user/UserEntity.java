@@ -1,5 +1,6 @@
 package com.niksob.database_service.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.niksob.database_service.entity.mood.entry.MoodEntryEntity;
 import jakarta.persistence.*;
@@ -9,7 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -30,6 +33,13 @@ public class UserEntity implements Serializable {
     @JsonIgnore
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<MoodEntryEntity> moodEntries;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonBackReference
+    private Set<MoodEntryEntity> moodEntries = new HashSet<>();
+
+    public void setMoodEntries(Set<MoodEntryEntity> moodEntries) {
+        this.moodEntries = moodEntries.stream()
+                .peek(moodEntry -> moodEntry.setUser(this))
+                .collect(Collectors.toSet());
+    }
 }

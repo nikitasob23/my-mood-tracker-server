@@ -1,4 +1,4 @@
-package com.niksob.logger.adapter.json;
+package com.niksob.logger.json.adapter;
 
 import com.google.gson.*;
 import org.springframework.stereotype.Component;
@@ -22,4 +22,3 @@ public class LocalDateTimeAdapter implements JsonSerializer<LocalDateTime>, Json
         return LocalDateTime.parse(json.getAsString(), formatter);
     }
 }
-
