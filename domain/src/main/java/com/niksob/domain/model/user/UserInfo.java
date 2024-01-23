@@ -10,6 +10,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 public class UserInfo {
+    private final UserId id;
     private final Username username;
     private final Nickname nickname;
     private final Password password;

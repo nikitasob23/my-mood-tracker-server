@@ -1,6 +1,6 @@
 package com.niksob.database_service.dao.user;
 
-import com.niksob.database_service.mapper.dao.user.UserEntityMapper;
+import com.niksob.database_service.mapper.entity.user.UserEntityMapper;
 import com.niksob.domain.model.user.UserInfo;
 import com.niksob.domain.model.user.Username;
 import com.niksob.layer_connector.annotation.LayerConnector;

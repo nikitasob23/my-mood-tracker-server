@@ -1,4 +1,4 @@
-package com.niksob.domain.mapper.mood.tag;
+package com.niksob.domain.mapper.dto.mood.tag;
 
 import com.niksob.domain.dto.mood.tag.MoodTagNameDto;
 import com.niksob.domain.model.mood.tag.MoodTagName;

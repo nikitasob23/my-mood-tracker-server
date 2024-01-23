@@ -11,6 +11,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserInfoDto {
+    private Long id;
     private String username;
     private String nickname;
     private String password;

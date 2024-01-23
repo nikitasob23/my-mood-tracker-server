@@ -79,7 +79,11 @@ public interface UserControllerService {
 
 Процессор аннотаций создаст соответствующий класс адаптера `UserControllerServiceLayerConnector`, 
 который выступает в качестве адаптера, соединяющего служебный слой с данными.
+
 ```java
+import com.niksob.domain.mapper.dto.user.UserDtoMonoMapper;
+import com.niksob.domain.mapper.dto.user.UserInfoDtoMapper;
+
 @javax.annotation.processing.Generated(
         value = "com.niksob.layer_connector.processor.LayerConnectorProcessor",
         date = "2024-01-18T01:03:06+0300",
@@ -87,8 +91,8 @@ public interface UserControllerService {
 )
 @org.springframework.stereotype.Component
 public class UserControllerServiceLayerConnector implements com.niksob.database_service.controller.user.UserControllerService {
-    private final com.niksob.domain.mapper.user.UserDtoMonoMapper userDtoMonoMapper;
-    private final com.niksob.domain.mapper.user.UserInfoDtoMapper userInfoDtoMapper;
+    private final UserDtoMonoMapper userDtoMonoMapper;
+    private final UserInfoDtoMapper userInfoDtoMapper;
     private final com.niksob.database_service.service.user.UserService source;
 
     @Override

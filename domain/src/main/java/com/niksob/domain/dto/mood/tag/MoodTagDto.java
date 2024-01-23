@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MoodTagDto {
+    private Long id;
     private String name;
     private int degree;
 }

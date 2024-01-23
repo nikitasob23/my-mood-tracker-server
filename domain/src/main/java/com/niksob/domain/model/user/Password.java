@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Password {
-    private String value;
+    private final String value;
 }

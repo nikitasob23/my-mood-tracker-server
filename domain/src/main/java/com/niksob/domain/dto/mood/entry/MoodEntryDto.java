@@ -12,6 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MoodEntryDto {
+    private Long id;
     private int degree;
     private LocalDateTime dateTime;
     private Set<MoodTagDto> moodTags;

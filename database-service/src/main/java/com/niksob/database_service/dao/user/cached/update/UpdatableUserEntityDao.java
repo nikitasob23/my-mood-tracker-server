@@ -18,8 +18,6 @@ public class UpdatableUserEntityDao extends CachedUserEntityDao {
     @Override
     @CachePut(value = CachedUserEntityDao.USER_CACHE_ENTITY_NAME, key = "#userEntity.username")
     public UserEntity update(UserEntity userEntity) {
-        inflateEntityFromRepository(userEntity);
-
         log.debug("Updating user entity", userEntity);
         try {
             return Stream.of(userEntity)
@@ -33,10 +31,5 @@ public class UpdatableUserEntityDao extends CachedUserEntityDao {
             log.error("User entity has not been updated", e, userEntity);
             throw entityUpdatingException;
         }
-    }
-
-    private void inflateEntityFromRepository(UserEntity userEntity) {
-        final UserEntity loaded = super.load(userEntity.getUsername());
-        userEntity.setId(loaded.getId());
     }
 }

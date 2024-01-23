@@ -10,6 +10,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 public class MoodEntry {
+    private final MoodEntryId id;
     private final MoodEntryDegree degree;
     private final LocalDateTime dateTime;
     private final Set<MoodTag> moodTags;

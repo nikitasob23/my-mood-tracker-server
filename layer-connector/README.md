@@ -82,7 +82,11 @@ public interface UserControllerService {
 
 The annotation processor will generate the corresponding adapter class `UserControllerServiceLayerConnector`, 
 which acts as an adapter connecting the service layer with the data layer.
+
 ```java
+import com.niksob.domain.mapper.dto.user.UserDtoMonoMapper;
+import com.niksob.domain.mapper.dto.user.UserInfoDtoMapper;
+
 @javax.annotation.processing.Generated(
         value = "com.niksob.layer_connector.processor.LayerConnectorProcessor",
         date = "2024-01-18T01:03:06+0300",
@@ -90,8 +94,8 @@ which acts as an adapter connecting the service layer with the data layer.
 )
 @org.springframework.stereotype.Component
 public class UserControllerServiceLayerConnector implements com.niksob.database_service.controller.user.UserControllerService {
-    private final com.niksob.domain.mapper.user.UserDtoMonoMapper userDtoMonoMapper;
-    private final com.niksob.domain.mapper.user.UserInfoDtoMapper userInfoDtoMapper;
+    private final UserDtoMonoMapper userDtoMonoMapper;
+    private final UserInfoDtoMapper userInfoDtoMapper;
     private final com.niksob.database_service.service.user.UserService source;
 
     @Override

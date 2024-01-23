@@ -1,4 +1,4 @@
-package com.niksob.domain.mapper.user;
+package com.niksob.domain.mapper.dto.user;
 
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.model.user.UserInfo;

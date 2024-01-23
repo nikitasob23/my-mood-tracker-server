@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Username {
-    private final String value;
+public class UserId {
+    private final Long value;
 }
