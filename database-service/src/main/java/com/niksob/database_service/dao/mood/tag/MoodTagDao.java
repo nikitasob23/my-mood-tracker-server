@@ -9,5 +9,5 @@ import com.niksob.layer_connector.annotation.LayerConnector;
 public interface MoodTagDao {
     MoodTag load(MoodTagName name);
 
-    void delete(MoodTagName name);
+    void deleteByName(MoodTagName name);
 }

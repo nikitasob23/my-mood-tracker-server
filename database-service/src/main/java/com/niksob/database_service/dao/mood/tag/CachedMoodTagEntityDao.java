@@ -34,7 +34,7 @@ public class CachedMoodTagEntityDao implements MoodTagEntityDao, CacheCleaner {
     }
 
     @Override
-    public void delete(String name) {
+    public void deleteByName(String name) {
         log.debug("Start deleting mood tag entity by name from repository", name);
         try {
             Stream.of(name)

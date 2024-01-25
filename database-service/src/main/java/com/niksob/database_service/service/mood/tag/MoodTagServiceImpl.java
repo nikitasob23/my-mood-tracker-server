@@ -28,7 +28,7 @@ public class MoodTagServiceImpl implements MoodTagService {
         return Mono.just(name)
                 .filter(this::exists)
                 .map(moodTagDao::load)
-                .doOnNext(ignore -> moodTagDao.delete(name))
+                .doOnNext(ignore -> moodTagDao.deleteByName(name))
                 .doOnNext(loaded -> log.debug("Deleted mood tag from DAO", loaded));
     }
 

@@ -35,17 +35,21 @@ public class MoodEntryEntity implements Serializable {
     @JsonManagedReference
     private UserEntity user;
 
-    @OneToMany(mappedBy = "moodEntry",
-            cascade = CascadeType.PERSIST,
-            orphanRemoval = true,
+    @ManyToMany(
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST},
             fetch = FetchType.EAGER
+    )
+    @JoinTable(
+            name = "mood_entry_tag",
+            joinColumns = @JoinColumn(name = "mood_entry_id"),
+            inverseJoinColumns = @JoinColumn(name = "mood_tag_id")
     )
     @JsonBackReference
     private Set<MoodTagEntity> moodTags = new HashSet<>();
 
     public void setMoodTags(Set<MoodTagEntity> moodTags) {
         this.moodTags = moodTags.stream()
-                .peek(moodTag -> moodTag.setMoodEntry(this))
+                .peek(moodTag -> moodTag.addMoodEntry(this))
                 .collect(Collectors.toSet());
     }
 }
