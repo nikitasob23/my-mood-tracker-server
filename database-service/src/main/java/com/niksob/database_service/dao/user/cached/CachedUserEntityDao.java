@@ -35,12 +35,10 @@ public abstract class CachedUserEntityDao implements UserEntityDao, CacheCleaner
     @Cacheable(value = CachedUserEntityDao.USER_CACHE_ENTITY_NAME, key = "#username")
     public UserEntity load(String username) {
         log.debug("Start loading user entity by username from repository", username);
-        return Stream.of(username)
-                .map(userRepository::getByUsername)
-                .filter(Objects::nonNull)
-                .peek(userEntity -> log.debug("User entity loaded from repository", userEntity))
-                .peek(userEntity -> log.debug("Cached user entity", userEntity))
-                .findFirst().orElseThrow(() -> createEntityNotFoundException(username));
+        final UserEntity userEntity = userRepository.getByUsername(username);
+        log.debug("User entity loaded from repository", userEntity == null ? "-" : userEntity);
+        log.debug("Cached user entity", userEntity == null ? "-" : userEntity);
+        return userEntity;
     }
 
     @Override

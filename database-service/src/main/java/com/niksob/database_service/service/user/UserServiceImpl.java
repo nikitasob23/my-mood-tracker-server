@@ -20,9 +20,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<UserInfo> load(Username username) {
-        return Mono.just(username)
-                .map(userDao::load)
-                .doOnNext(userInfo -> log.debug("Get user info from user DAO", userInfo));
+        final UserInfo userInfo = userDao.load(username);
+        if (userInfo == null) {
+            final EntityNotFoundException e = new EntityNotFoundException("Username not found by username");
+            log.error("Failed loading user by username from repository", e, username);
+            throw e;
+        }
+        log.debug("Get user info from user DAO", userInfo);
+        return Mono.just(userInfo);
     }
 
     @Override
@@ -53,11 +58,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean exists(Username username) {
-        try {
-            return existsOrThrowNotFound(username);
-        } catch (EntityNotFoundException e) {
-            return false;
-        }
+        return userDao.load(username) != null;
     }
 
     private boolean existsOrThrowNotFound(Username username) {

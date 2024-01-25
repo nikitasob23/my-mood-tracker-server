@@ -1,7 +1,6 @@
 package com.niksob.database_service.entity.mood.tag;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.niksob.database_service.entity.mood.entry.MoodEntryEntity;
 import jakarta.persistence.*;
 import lombok.*;
