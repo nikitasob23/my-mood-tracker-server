@@ -7,6 +7,7 @@ import com.niksob.layer_connector.model.method_details.MappingWrapperMethodDetai
 import com.niksob.layer_connector.model.method_details.VoidReturnType;
 import com.niksob.layer_connector.service.generation.code.layer_connector.method.builder.LayerConnectorMethodCodeBuilder;
 import com.niksob.layer_connector.util.clazz.ClassUtil;
+import com.niksob.layer_connector.values.MethodSignatureValues;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -120,14 +121,23 @@ public class LayerConnectorMethodCodeGeneratorImpl implements LayerConnectorMeth
         boolean returnTypeMapperNotFound = methodDetails.getMethodForMappingSourceReturnType() == null;
         boolean returnTypeMappingIsNotPossible = interfaceReturnTypeMappingRequired && returnTypeMapperNotFound;
 
-        if (paramMappingIsNotPossible || returnTypeMappingIsNotPossible) {
-            throw new IllegalStateException(
-                    String.format(
-                            "Mappers needed for LayerConnector interface %s does not have a method for mapping all values",
-                            interfaceName
-                    ));
+        if (paramMappingIsNotPossible) {
+            throwMappingNotPossibleException(methodDetails, interfaceName, MethodSignatureValues.PARAM_TYPE);
+        } else if (returnTypeMappingIsNotPossible) {
+            throwMappingNotPossibleException(methodDetails, interfaceName, MethodSignatureValues.RETURN_TYPE);
         }
         return true;
+    }
+
+    private void throwMappingNotPossibleException(MappingWrapperMethodDetails methodDetails, String interfaceName, MethodSignatureValues methodSignatureValue) {
+        throw new IllegalStateException(
+                String.format(
+                        "Error: Mappers for the LayerConnector interface %s lack a method to map all values. Required for mapping %s from %s to %s",
+                        interfaceName,
+                        methodSignatureValue.getValue(),
+                        methodDetails.getInterfaceSignature().getParamType(),
+                        methodDetails.getSourceMethod().getParamType()
+                ));
     }
 
     private String buildMethod(MappingWrapperMethodDetails methodDetails) {
