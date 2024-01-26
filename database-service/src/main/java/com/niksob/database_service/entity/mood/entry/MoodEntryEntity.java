@@ -31,14 +31,11 @@ public class MoodEntryEntity implements Serializable {
     private LocalDateTime dateTime;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     @JsonManagedReference
     private UserEntity user;
 
-    @ManyToMany(
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST},
-            fetch = FetchType.EAGER
-    )
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "mood_entry_tag",
             joinColumns = @JoinColumn(name = "mood_entry_id"),

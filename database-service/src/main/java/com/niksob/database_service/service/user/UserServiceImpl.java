@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.Objects;
+
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -20,14 +22,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<UserInfo> load(Username username) {
-        final UserInfo userInfo = userDao.load(username);
-        if (userInfo == null) {
-            final EntityNotFoundException e = new EntityNotFoundException("Username not found by username");
-            log.error("Failed loading user by username from repository", e, username);
-            throw e;
-        }
-        log.debug("Get user info from user DAO", userInfo);
-        return Mono.just(userInfo);
+        return Mono.just(username)
+                .map(userDao::load)
+                .filter(Objects::nonNull)
+                .doOnNext(userInfo -> log.debug("Get user info from user DAO", userInfo))
+                .onErrorResume(throwable -> createEntityNotFoundException(throwable, username));
     }
 
     @Override
@@ -63,6 +62,13 @@ public class UserServiceImpl implements UserService {
 
     private boolean existsOrThrowNotFound(Username username) {
         return load(username).blockOptional().isPresent();
+    }
+
+    private Mono<UserInfo> createEntityNotFoundException(Throwable throwable, Username username) {
+        final EntityNotFoundException e =
+                new EntityNotFoundException("Username not found by username", (Exception) throwable);
+        log.error("Failed loading user by username from repository", e, username);
+        throw e;
     }
 
     private Mono<UserInfo> createUserAlreadyExistsException(UserInfo userInfo) {

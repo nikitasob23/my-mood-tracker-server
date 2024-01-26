@@ -6,8 +6,7 @@ import com.niksob.database_service.exception.entity.EntityUpdatingException;
 import com.niksob.database_service.repository.user.UserRepository;
 import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.CachePut;
-
-import java.util.stream.Stream;
+import org.springframework.transaction.annotation.Transactional;
 
 public class UpdatableUserEntityDao extends CachedUserEntityDao {
 
@@ -16,15 +15,16 @@ public class UpdatableUserEntityDao extends CachedUserEntityDao {
     }
 
     @Override
+    @Transactional
     @CachePut(value = CachedUserEntityDao.USER_CACHE_ENTITY_NAME, key = "#userEntity.username")
     public UserEntity update(UserEntity userEntity) {
         log.debug("Updating user entity", userEntity);
         try {
-            return Stream.of(userEntity)
-                    .peek(userRepository::save)
-                    .peek(u -> log.debug("User entity updated", u))
-                    .peek(u -> log.debug("User entity cache updated", u))
-                    .findFirst().get();
+            addDbReferences(userEntity);
+            final UserEntity saved = userRepository.save(userEntity);
+            log.debug("User entity updated", userEntity);
+            log.debug("User entity cache updated", userEntity);
+            return saved;
         } catch (Exception e) {
             final EntityUpdatingException entityUpdatingException =
                     new EntityUpdatingException(userEntity.getUsername(), e);

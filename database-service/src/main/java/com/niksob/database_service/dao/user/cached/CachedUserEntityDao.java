@@ -16,10 +16,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -45,14 +42,12 @@ public abstract class CachedUserEntityDao implements UserEntityDao, CacheCleaner
     @CachePut(value = CachedUserEntityDao.USER_CACHE_ENTITY_NAME, key = "#userEntity.username")
     public UserEntity save(UserEntity userEntity) {
         log.debug("Saving user info", userEntity);
-
-        mergeMoodTagsWithSameNameInEntities(userEntity);
         try {
-            return Stream.of(userEntity)
-                    .peek(userRepository::save)
-                    .peek(u -> log.debug("User entity saved", u))
-                    .peek(u -> log.debug("User entity cache updated", u))
-                    .findFirst().get();
+            addDbReferences(userEntity);
+            final UserEntity saved = userRepository.save(userEntity);
+            log.debug("User entity saved", userEntity);
+            log.debug("User entity cache updated", userEntity);
+            return saved;
         } catch (Exception e) {
             final EntitySavingException entitySavingException = new EntitySavingException(userEntity.getUsername(), e);
             log.error("User entity has not been saved", e, userEntity);
@@ -83,17 +78,12 @@ public abstract class CachedUserEntityDao implements UserEntityDao, CacheCleaner
         cache.clear();
     }
 
-    private void mergeMoodTagsWithSameNameInEntities(UserEntity userEntity) {
+    protected void addDbReferences(UserEntity userEntity) {
         final List<MoodTagEntity> allMoodTags = userEntity.getMoodEntries().stream()
                 .flatMap(moodEntry -> moodEntry.getMoodTags().stream())
                 .toList();
 
-        if (allMoodTags.stream()
-                .map(MoodTagEntity::getId)
-                .allMatch(Objects::nonNull)) {
-            return;
-        }
-        final Map<String, MoodTagEntity> combinedMoodEntryMap = allMoodTags.stream()
+        final Map<String, MoodTagEntity> combinedMoodTagMap = allMoodTags.stream()
                 .collect(Collectors.toMap(MoodTagEntity::getName, moodTagEntity -> moodTagEntity,
                         (existing, replacement) -> {
                             final Set<MoodEntryEntity> combinedMoodEntries = Stream.concat(
@@ -108,9 +98,10 @@ public abstract class CachedUserEntityDao implements UserEntityDao, CacheCleaner
         userEntity.getMoodEntries()
                 .forEach(moodEntry -> {
                     final Set<MoodTagEntity> newCombinedMoodTags = moodEntry.getMoodTags().stream()
-                            .map(moodTag -> combinedMoodEntryMap.get(moodTag.getName()))
+                            .map(moodTag -> combinedMoodTagMap.get(moodTag.getName()))
                             .collect(Collectors.toSet());
                     moodEntry.setMoodTags(newCombinedMoodTags);
                 });
+        userEntity.setMoodTags(new HashSet<>(combinedMoodTagMap.values()));
     }
 }

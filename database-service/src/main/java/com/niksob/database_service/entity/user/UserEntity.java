@@ -3,6 +3,7 @@ package com.niksob.database_service.entity.user;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.niksob.database_service.entity.mood.entry.MoodEntryEntity;
+import com.niksob.database_service.entity.mood.tag.MoodTagEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,9 +38,19 @@ public class UserEntity implements Serializable {
     @JsonBackReference
     private Set<MoodEntryEntity> moodEntries = new HashSet<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonBackReference
+    private Set<MoodTagEntity> moodTags = new HashSet<>();
+
     public void setMoodEntries(Set<MoodEntryEntity> moodEntries) {
         this.moodEntries = moodEntries.stream()
                 .peek(moodEntry -> moodEntry.setUser(this))
+                .collect(Collectors.toSet());
+    }
+
+    public void setMoodTags(Set<MoodTagEntity> moodTags) {
+        this.moodTags = moodTags.stream()
+                .peek(moodTag -> moodTag.setUser(this))
                 .collect(Collectors.toSet());
     }
 }

@@ -1,7 +1,9 @@
 package com.niksob.database_service.entity.mood.tag;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.niksob.database_service.entity.mood.entry.MoodEntryEntity;
+import com.niksob.database_service.entity.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,8 +14,8 @@ import java.util.Set;
 @Entity
 @Table(name = "mood_tags")
 @Data
-@ToString(exclude = "moodEntries")
-@EqualsAndHashCode(exclude = "moodEntries")
+@ToString(exclude = {"user", "moodEntries"})
+@EqualsAndHashCode(exclude = {"user", "moodEntries"})
 @AllArgsConstructor
 @NoArgsConstructor
 public class MoodTagEntity implements Serializable {
@@ -26,6 +28,11 @@ public class MoodTagEntity implements Serializable {
 
     private int degree;
 
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonManagedReference
+    private UserEntity user;
+
     @ManyToMany(mappedBy = "moodTags", cascade = {CascadeType.ALL})
     @JsonBackReference
     private Set<MoodEntryEntity> moodEntries = new HashSet<>();
@@ -34,6 +41,7 @@ public class MoodTagEntity implements Serializable {
         this.id = moodTag.getId();
         this.name = moodTag.getName();
         this.degree = moodTag.getDegree();
+        this.user = moodTag.getUser();
         this.moodEntries = new HashSet<>(moodTag.getMoodEntries());
     }
 
