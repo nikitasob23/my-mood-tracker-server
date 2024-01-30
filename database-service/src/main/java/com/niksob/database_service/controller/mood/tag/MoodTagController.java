@@ -1,6 +1,6 @@
 package com.niksob.database_service.controller.mood.tag;
 
-import com.niksob.database_service.exception.entity.EntityNotDeletedException;
+import com.niksob.database_service.exception.resource.ResourceDeletionException;
 import com.niksob.domain.dto.mood.tag.MoodTagDto;
 import com.niksob.domain.dto.mood.tag.MoodTagNameDto;
 import com.niksob.domain.exception.rest.controller.response.ControllerResponseException;
@@ -54,7 +54,7 @@ public class MoodTagController {
 
     private Mono<Void> createDeleteError(Throwable throwable, Object nameDto) {
         log.error("Mood tag delete error", throwable, nameDto);
-        if (throwable instanceof EntityNotDeletedException) {
+        if (throwable instanceof ResourceDeletionException) {
             return Mono.error(new ControllerResponseException(
                     throwable, HttpStatus.BAD_REQUEST,
                     String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)

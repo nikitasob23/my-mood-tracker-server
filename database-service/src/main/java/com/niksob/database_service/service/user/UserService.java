@@ -7,11 +7,9 @@ import reactor.core.publisher.Mono;
 public interface UserService {
     Mono<UserInfo> load(Username username);
 
-    Mono<UserInfo> save(UserInfo userInfo);
+    Mono<Void> save(UserInfo userInfo);
 
-    Mono<UserInfo> update(UserInfo userInfo);
+    Mono<Void> update(UserInfo userInfo);
 
-    Mono<UserInfo> delete(Username username);
-
-    boolean exists(Username username);
+    Mono<Void> delete(Username username);
 }

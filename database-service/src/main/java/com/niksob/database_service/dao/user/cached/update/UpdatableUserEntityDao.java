@@ -2,7 +2,7 @@ package com.niksob.database_service.dao.user.cached.update;
 
 import com.niksob.database_service.dao.user.cached.CachedUserEntityDao;
 import com.niksob.database_service.entity.user.UserEntity;
-import com.niksob.database_service.exception.entity.EntityUpdatingException;
+import com.niksob.database_service.exception.resource.ResourceUpdatingException;
 import com.niksob.database_service.repository.user.UserRepository;
 import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.CachePut;
@@ -19,6 +19,9 @@ public class UpdatableUserEntityDao extends CachedUserEntityDao {
     @CachePut(value = CachedUserEntityDao.USER_CACHE_ENTITY_NAME, key = "#userEntity.username")
     public UserEntity update(UserEntity userEntity) {
         log.debug("Updating user entity", userEntity);
+        if (!userRepository.existsByUsername(userEntity.getUsername())) {
+            throw createResourceNotFoundException(userEntity.getUsername());
+        }
         try {
             addDbReferences(userEntity);
             final UserEntity saved = userRepository.save(userEntity);
@@ -26,10 +29,9 @@ public class UpdatableUserEntityDao extends CachedUserEntityDao {
             log.debug("User entity cache updated", userEntity);
             return saved;
         } catch (Exception e) {
-            final EntityUpdatingException entityUpdatingException =
-                    new EntityUpdatingException(userEntity.getUsername(), e);
-            log.error("User entity has not been updated", e, userEntity);
-            throw entityUpdatingException;
+            var updatingException = new ResourceUpdatingException("User has not updated", e, userEntity.getUsername());
+            log.error("Failed updating user in repository", e, userEntity);
+            throw updatingException;
         }
     }
 }

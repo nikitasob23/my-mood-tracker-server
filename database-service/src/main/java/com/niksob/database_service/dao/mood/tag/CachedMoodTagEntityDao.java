@@ -2,7 +2,7 @@ package com.niksob.database_service.dao.mood.tag;
 
 import com.niksob.database_service.cache.cleaner.CacheCleaner;
 import com.niksob.database_service.entity.mood.tag.MoodTagEntity;
-import com.niksob.database_service.exception.entity.EntityNotDeletedException;
+import com.niksob.database_service.exception.resource.ResourceDeletionException;
 import com.niksob.database_service.repository.mood.tag.MoodTagRepository;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -43,10 +43,10 @@ public class CachedMoodTagEntityDao implements MoodTagEntityDao, CacheCleaner {
                     .peek(entity -> log.debug("Mood tag entity deleted from repository", entity))
                     .forEach(entity -> log.debug("Deleted mood tag entity cache", entity));
         } catch (Exception e) {
-            final EntityNotDeletedException entityNotDeletedException =
-                    new EntityNotDeletedException("Mood tag entity not delete by name", name);
+            final ResourceDeletionException resourceDeletionException =
+                    new ResourceDeletionException("Mood tag entity not delete by name", e, name);
             log.error("Failed deleting mood tag by name from repository", e, name);
-            throw entityNotDeletedException;
+            throw resourceDeletionException;
         }
     }
 

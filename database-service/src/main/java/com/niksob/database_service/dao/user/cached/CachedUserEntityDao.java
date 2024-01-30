@@ -5,8 +5,10 @@ import com.niksob.database_service.dao.user.UserEntityDao;
 import com.niksob.database_service.entity.mood.entry.MoodEntryEntity;
 import com.niksob.database_service.entity.mood.tag.MoodTagEntity;
 import com.niksob.database_service.entity.user.UserEntity;
-import com.niksob.database_service.exception.entity.EntityNotDeletedException;
-import com.niksob.database_service.exception.entity.EntitySavingException;
+import com.niksob.database_service.exception.resource.ResourceAlreadyExistsException;
+import com.niksob.database_service.exception.resource.ResourceSavingException;
+import com.niksob.database_service.exception.resource.ResourceDeletionException;
+import com.niksob.database_service.exception.resource.ResourceNotFoundException;
 import com.niksob.database_service.repository.user.UserRepository;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -32,16 +34,30 @@ public abstract class CachedUserEntityDao implements UserEntityDao, CacheCleaner
     @Cacheable(value = CachedUserEntityDao.USER_CACHE_ENTITY_NAME, key = "#username")
     public UserEntity load(String username) {
         log.debug("Start loading user entity by username from repository", username);
-        final UserEntity userEntity = userRepository.getByUsername(username);
-        log.debug("User entity loaded from repository", userEntity == null ? "-" : userEntity);
-        log.debug("Cached user entity", userEntity == null ? "-" : userEntity);
+
+        final UserEntity userEntity;
+        try {
+            userEntity = userRepository.getByUsername(username);
+        } catch (Exception e) {
+            throw createResourceNotFoundException(username, e);
+        }
+        if (userEntity == null) {
+            throw createResourceNotFoundException(username);
+        }
+        log.debug("User entity loaded from repository", userEntity);
+        log.debug("Cached user entity", userEntity);
         return userEntity;
     }
 
     @Override
     @CachePut(value = CachedUserEntityDao.USER_CACHE_ENTITY_NAME, key = "#userEntity.username")
     public UserEntity save(UserEntity userEntity) {
-        log.debug("Saving user info", userEntity);
+        log.debug("Start saving user to repository", userEntity);
+        if (userRepository.existsByUsername(userEntity.getUsername())) {
+            var existsException = new ResourceAlreadyExistsException("User already exists", null, userEntity.getUsername());
+            log.error("Failed saving user to repository", null, userEntity);
+            throw existsException;
+        }
         try {
             addDbReferences(userEntity);
             final UserEntity saved = userRepository.save(userEntity);
@@ -49,27 +65,28 @@ public abstract class CachedUserEntityDao implements UserEntityDao, CacheCleaner
             log.debug("User entity cache updated", userEntity);
             return saved;
         } catch (Exception e) {
-            final EntitySavingException entitySavingException = new EntitySavingException(userEntity.getUsername(), e);
-            log.error("User entity has not been saved", e, userEntity);
-            throw entitySavingException;
+            var savingException = new ResourceSavingException("User has not saved", userEntity.getUsername(), e);
+            log.error("Failed saving user to repository", e, userEntity);
+            throw savingException;
         }
     }
 
     @Override
     @Transactional
     public void delete(String username) {
-        log.debug("Start deleting user entity by username from repository", username);
+        log.debug("Start deleting user by username from repository", username);
+        if (!userRepository.existsByUsername(username)) {
+            throw createResourceNotFoundException(username);
+        }
         try {
-            Stream.of(username)
-                    .peek(cache::evict)
-                    .peek(userRepository::deleteUserEntityByUsername)
-                    .peek(u -> log.debug("User entity deleted from repository", u))
-                    .forEach(u -> log.debug("Deleted user entity cache", u));
+            cache.evict(username);
+            userRepository.deleteByUsername(username);
+            log.debug("User deleted from repository", username);
+            log.debug("Deleted user cache", username);
         } catch (Exception e) {
-            final EntityNotDeletedException entityNotDeletedException =
-                    new EntityNotDeletedException("User entity not delete by username", username);
-            log.error("Failed deleting user by username from repository", e, username);
-            throw entityNotDeletedException;
+            var deletionException = new ResourceDeletionException("The user was not deleted", e, username);
+            log.error("Failed deleting user by username from repository", deletionException, username);
+            throw deletionException;
         }
     }
 
@@ -103,5 +120,15 @@ public abstract class CachedUserEntityDao implements UserEntityDao, CacheCleaner
                     moodEntry.setMoodTags(newCombinedMoodTags);
                 });
         userEntity.setMoodTags(new HashSet<>(combinedMoodTagMap.values()));
+    }
+
+    protected ResourceNotFoundException createResourceNotFoundException(String username) {
+        return createResourceNotFoundException(username, null);
+    }
+
+    private ResourceNotFoundException createResourceNotFoundException(String username, Exception e) {
+        var notFoundException = new ResourceNotFoundException("The user was not found", e, username);
+        log.error("Failed getting user by username from repository", notFoundException, username);
+        return notFoundException;
     }
 }
