@@ -38,8 +38,8 @@ public class MoodEntryEntity implements Serializable {
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "mood_entry_tag",
-            joinColumns = @JoinColumn(name = "mood_entry_id"),
-            inverseJoinColumns = @JoinColumn(name = "mood_tag_id")
+            joinColumns = @JoinColumn(name = "entry_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     @JsonBackReference
     private Set<MoodTagEntity> moodTags = new HashSet<>();

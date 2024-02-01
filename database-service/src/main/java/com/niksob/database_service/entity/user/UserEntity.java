@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "users")
+@Table(name = "usrs")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,8 +28,6 @@ public class UserEntity implements Serializable {
 
     @Column(unique = true)
     private String username;
-
-    private String nickname;
 
     @JsonIgnore
     private String password;
