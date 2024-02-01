@@ -1,14 +1,12 @@
 package com.niksob.database_service.controller.mood.tag;
 
-import com.niksob.database_service.exception.resource.ResourceDeletionException;
+import com.niksob.database_service.exception.resource.ResourceAlreadyExistsException;
+import com.niksob.database_service.exception.resource.ResourceSavingException;
 import com.niksob.domain.dto.mood.tag.MoodTagDto;
-import com.niksob.domain.dto.mood.tag.MoodTagNameDto;
 import com.niksob.domain.exception.rest.controller.response.ControllerResponseException;
 import com.niksob.domain.path.controller.database_service.mood.tag.MoodTagControllerPaths;
-import com.niksob.domain.path.controller.database_service.user.UserControllerPaths;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -27,39 +25,32 @@ public class MoodTagController {
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(MoodTagController.class);
 
-    @GetMapping
-    public Mono<MoodTagDto> load(@RequestParam("name") MoodTagNameDto nameDto) {
-        return moodTagControllerService.load(nameDto)
-                .onErrorResume(throwable -> createLoadingError(throwable, nameDto));
+    @PostMapping
+    public Mono<MoodTagDto> save(@RequestBody MoodTagDto moodTagDto) {
+        return moodTagControllerService.save(moodTagDto)
+                .doOnSuccess(ignore -> log.debug("Successful mood tag saving", moodTagDto))
+                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.CREATED))
+                .onErrorResume(throwable -> createSavingError(throwable, moodTagDto));
     }
 
-    @DeleteMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> delete(@RequestParam("name") MoodTagNameDto nameDto) {
-        return moodTagControllerService.delete(nameDto)
-                .then()
-                .onErrorResume(throwable -> createDeleteError(throwable, nameDto));
-    }
-
-    private Mono<MoodTagDto> createLoadingError(Throwable throwable, Object nameDto) {
-        log.error("Mood tag load error", throwable, nameDto);
-        if (throwable instanceof EntityNotFoundException) {
-            return Mono.error(new ControllerResponseException(
-                    throwable, HttpStatus.NOT_FOUND,
-                    String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)
-            ));
-        }
-        return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
-    }
-
-    private Mono<Void> createDeleteError(Throwable throwable, Object nameDto) {
-        log.error("Mood tag delete error", throwable, nameDto);
-        if (throwable instanceof ResourceDeletionException) {
-            return Mono.error(new ControllerResponseException(
+    private Mono<MoodTagDto> createSavingError(Throwable throwable, Object state) {
+        log.error("Mood tag save error", throwable, state);
+        ControllerResponseException errorResponse;
+        if (throwable instanceof ResourceSavingException) {
+            errorResponse = new ControllerResponseException(
                     throwable, HttpStatus.BAD_REQUEST,
-                    String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)
-            ));
+                    String.format("%s/%s", contextPath, MoodTagControllerPaths.BASE_URI)
+            );
+        } else if (throwable instanceof ResourceAlreadyExistsException) {
+            errorResponse = new ControllerResponseException(
+                    throwable, HttpStatus.CONFLICT,
+                    String.format("%s/%s", contextPath, MoodTagControllerPaths.BASE_URI)
+            );
+        } else {
+            log.error("Controller returning failed status", throwable, HttpStatus.INTERNAL_SERVER_ERROR);
+            return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
         }
-        return createLoadingError(throwable, nameDto).then();
+        log.error("Controller returning failed response", throwable, errorResponse);
+        return Mono.error(errorResponse);
     }
 }

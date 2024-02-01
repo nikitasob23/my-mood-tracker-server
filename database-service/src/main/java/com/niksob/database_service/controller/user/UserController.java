@@ -42,7 +42,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Void> save(@RequestBody UserInfoDto userInfoDto) {
         return userControllerService.save(userInfoDto)
-                .doOnSuccess(ignore -> log.debug("Successful user deletion", userInfoDto))
+                .doOnSuccess(ignore -> log.debug("Successful user saving", userInfoDto))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.CREATED))
                 .onErrorResume(throwable -> createSavingError(throwable, userInfoDto));
     }
@@ -104,7 +104,7 @@ public class UserController {
             return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
         }
         log.error("Controller returning failed response", null, errorResponse);
-        return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+        return Mono.error(errorResponse);
     }
 
     private Mono<Void> createUpdatingError(Throwable throwable, Object userInfoDto) {

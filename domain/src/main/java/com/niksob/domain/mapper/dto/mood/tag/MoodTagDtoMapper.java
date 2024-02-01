@@ -10,10 +10,12 @@ public interface MoodTagDtoMapper {
     @Mapping(source = "id.value", target = "id")
     @Mapping(source = "name.value", target = "name")
     @Mapping(source = "degree.value", target = "degree")
+    @Mapping(source = "userId.value", target = "userId")
     MoodTagDto toDto(MoodTag moodTag);
 
     @Mapping(source = "id", target = "id.value")
     @Mapping(source = "name", target = "name.value")
     @Mapping(source = "degree", target = "degree.value")
+    @Mapping(source = "userId", target = "userId.value")
     MoodTag fromDto(MoodTagDto dto);
 }

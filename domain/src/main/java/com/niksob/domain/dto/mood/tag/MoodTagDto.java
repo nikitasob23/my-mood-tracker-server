@@ -11,4 +11,5 @@ public class MoodTagDto {
     private Long id;
     private String name;
     private int degree;
+    private Long userId;
 }
