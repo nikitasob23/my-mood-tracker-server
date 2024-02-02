@@ -7,11 +7,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Set;
+
 @Repository
 public interface MoodTagRepository extends JpaRepository<MoodTagEntity, Long> {
     boolean existsByName(String name);
 
     MoodTagEntity getByName(String name);
+
+    @Query(value = "SELECT id, name, degree, user_id FROM mood_tags WHERE user_id = :userId", nativeQuery = true)
+    Set<MoodTagEntity> getByUserId(Long userId);
 
     @Modifying
     @Query(

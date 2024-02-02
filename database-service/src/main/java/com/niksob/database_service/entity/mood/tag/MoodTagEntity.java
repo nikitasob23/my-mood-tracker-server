@@ -23,7 +23,7 @@ public class MoodTagEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column
     private String name;
 
     private int degree;
@@ -36,6 +36,14 @@ public class MoodTagEntity implements Serializable {
     @ManyToMany(mappedBy = "moodTags", cascade = {CascadeType.ALL})
     @JsonBackReference
     private Set<MoodEntryEntity> moodEntries = new HashSet<>();
+
+    public MoodTagEntity(Long id, String name, int degree, Long userId, Set<MoodEntryEntity> moodEntries) {
+        this.id = id;
+        this.name = name;
+        this.degree = degree;
+        this.user = new UserEntity(userId);
+        this.moodEntries = moodEntries;
+    }
 
     public MoodTagEntity(MoodTagEntity moodTag) {
         this.id = moodTag.getId();

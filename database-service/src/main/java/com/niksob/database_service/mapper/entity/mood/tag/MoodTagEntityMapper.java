@@ -2,14 +2,17 @@ package com.niksob.database_service.mapper.entity.mood.tag;
 
 import com.niksob.database_service.entity.mood.tag.MoodTagEntity;
 import com.niksob.domain.model.mood.tag.MoodTag;
-import com.niksob.domain.model.mood.tag.MoodTagName;
+import com.niksob.domain.model.user.UserId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Mapper(componentModel = "spring")
 public interface MoodTagEntityMapper {
-    default String toEntityName(MoodTagName name) {
-        return name.getValue();
+    default Long toEntityUserId(UserId userId) {
+        return userId.getValue();
     }
 
     @Mapping(source = "id.value", target = "id")
@@ -23,4 +26,10 @@ public interface MoodTagEntityMapper {
     @Mapping(source = "degree", target = "degree.value")
     @Mapping(source = "user.id", target = "userId.value")
     MoodTag fromEntity(MoodTagEntity entity);
+
+    default Set<MoodTag> fromMoodTagEntitySet(Set<MoodTagEntity> entities) {
+        return entities.stream()
+                .map(this::fromEntity)
+                .collect(Collectors.toSet());
+    }
 }

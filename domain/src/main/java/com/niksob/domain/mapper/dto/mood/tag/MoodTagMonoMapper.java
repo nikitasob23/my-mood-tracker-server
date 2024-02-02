@@ -4,6 +4,7 @@ import com.niksob.domain.dto.mood.tag.MoodTagDto;
 import com.niksob.domain.model.mood.tag.MoodTag;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -15,7 +16,7 @@ public class MoodTagMonoMapper {
         return mono.map(moodTagDtoMapper::toDto);
     }
 
-    public Mono<Void> toMonoVoid(Mono<MoodTag> mono) {
-        return mono.then();
+    public Flux<MoodTagDto> toMonoVoid(Flux<MoodTag> flux) {
+        return flux.map(moodTagDtoMapper::toDto);
     }
 }

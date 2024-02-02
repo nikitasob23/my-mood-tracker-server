@@ -30,6 +30,7 @@ public class UserEntity implements Serializable {
     private String username;
 
     @JsonIgnore
+    @Column(nullable = false)
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
@@ -39,6 +40,10 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonBackReference
     private Set<MoodTagEntity> moodTags = new HashSet<>();
+
+    public UserEntity(Long id) {
+        this.id = id;
+    }
 
     public void setMoodEntries(Set<MoodEntryEntity> moodEntries) {
         this.moodEntries = moodEntries.stream()

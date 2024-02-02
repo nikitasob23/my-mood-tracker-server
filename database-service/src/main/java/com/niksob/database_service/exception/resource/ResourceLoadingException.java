@@ -3,10 +3,10 @@ package com.niksob.database_service.exception.resource;
 import lombok.Getter;
 
 @Getter
-public class ResourceSavingException extends RuntimeException {
+public class ResourceLoadingException extends RuntimeException {
     private final Object state;
 
-    public ResourceSavingException(String message, String state, Throwable cause) {
+    public ResourceLoadingException(String message, Object state, Throwable cause) {
         super(message, cause);
         this.state = state;
     }
