@@ -1,29 +1,31 @@
-CREATE TABLE test_mood_tracker.usrs
+CREATE TABLE usrs
 (
     id       BIGINT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255)
+    nickname VARCHAR(255),
+    password VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE test_mood_tracker.mood_entries
+CREATE TABLE mood_entries
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
     degree    INT,
     date_time TIMESTAMP,
-    user_id   BIGINT,
+    user_id   BIGINT NOT NULL,
     CONSTRAINT fk_mood_entries_user_id FOREIGN KEY (user_id) REFERENCES usrs (id) ON DELETE CASCADE
 );
 
-CREATE TABLE test_mood_tracker.mood_tags
+CREATE TABLE mood_tags
 (
     id      BIGINT PRIMARY KEY AUTO_INCREMENT,
-    name    VARCHAR(15) UNIQUE NOT NULL,
+    name    VARCHAR(15) NOT NULL,
     degree  INT,
-    user_id BIGINT,
+    user_id BIGINT NOT NULL,
+    UNIQUE mood_tags_unique_name_user_id (name, user_id),
     CONSTRAINT fk_mood_tags_user_id FOREIGN KEY (user_id) REFERENCES usrs (id) ON DELETE CASCADE
 );
 
-CREATE TABLE test_mood_tracker.mood_entry_tag
+CREATE TABLE mood_entry_tag
 (
     entry_id BIGINT,
     tag_id   BIGINT,
