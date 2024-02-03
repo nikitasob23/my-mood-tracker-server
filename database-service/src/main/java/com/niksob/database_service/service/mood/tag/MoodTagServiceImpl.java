@@ -22,12 +22,14 @@ public class MoodTagServiceImpl implements MoodTagService {
     public Flux<MoodTag> loadByUserId(UserId userId) {
         return MonoAsyncUtil.create(() -> moodTagDao.loadByUserId(userId))
                 .doOnNext(moodTags -> log.debug("Get mood tag from user DAO", moodTags))
-                .flatMapMany(Flux::fromIterable);
+                .flatMapMany(Flux::fromIterable)
+                .doOnError(throwable -> log.error("Mood tag load error", throwable, userId));
     }
 
     @Override
     public Mono<MoodTag> save(MoodTag moodTag) {
         return MonoAsyncUtil.create(() -> moodTagDao.save(moodTag))
-                .doOnNext(ignore -> log.debug("Save mood tag to user DAO", moodTag));
+                .doOnNext(ignore -> log.debug("Save mood tag to user DAO", moodTag))
+                .doOnError(throwable -> log.error("Mood tag save error", throwable, moodTag));
     }
 }

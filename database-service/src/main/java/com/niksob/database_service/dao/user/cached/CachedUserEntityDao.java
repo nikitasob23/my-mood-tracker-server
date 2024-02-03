@@ -53,10 +53,10 @@ public abstract class CachedUserEntityDao implements UserEntityDao, CacheCleaner
     @CachePut(value = CachedUserEntityDao.USER_CACHE_ENTITY_NAME, key = "#userEntity.username")
     public UserEntity save(UserEntity userEntity) {
         log.debug("Start saving user to repository", userEntity);
+
         if (userRepository.existsByUsername(userEntity.getUsername())) {
-            var existsException = new ResourceAlreadyExistsException("User already exists", null, userEntity.getUsername());
             log.error("Failed saving user to repository", null, userEntity);
-            throw existsException;
+            throw new ResourceAlreadyExistsException("User already exists", null, userEntity.getUsername());
         }
         try {
             addDbReferences(userEntity);
@@ -65,9 +65,8 @@ public abstract class CachedUserEntityDao implements UserEntityDao, CacheCleaner
             log.debug("User entity cache updated", userEntity);
             return saved;
         } catch (Exception e) {
-            var savingException = new ResourceSavingException("User has not saved", userEntity.getUsername(), e);
-            log.error("Failed saving user to repository", e, userEntity);
-            throw savingException;
+            log.error("Failed saving user to repository", null, userEntity);
+            throw new ResourceSavingException("User has not saved", userEntity.getUsername(), e);
         }
     }
 
@@ -84,9 +83,8 @@ public abstract class CachedUserEntityDao implements UserEntityDao, CacheCleaner
             log.debug("User deleted from repository", username);
             log.debug("Deleted user cache", username);
         } catch (Exception e) {
-            var deletionException = new ResourceDeletionException("The user was not deleted", e, username);
-            log.error("Failed deleting user by username from repository", deletionException, username);
-            throw deletionException;
+            log.error("Failed deleting user by username from repository", null, username);
+            throw new ResourceDeletionException("The user was not deleted", e, username);
         }
     }
 
@@ -127,8 +125,7 @@ public abstract class CachedUserEntityDao implements UserEntityDao, CacheCleaner
     }
 
     private ResourceNotFoundException createResourceNotFoundException(String username, Exception e) {
-        var notFoundException = new ResourceNotFoundException("The user was not found", e, username);
-        log.error("Failed getting user by username from repository", notFoundException, username);
-        return notFoundException;
+        log.error("Failed getting user by username from repository", null, username);
+        return new ResourceNotFoundException("The user was not found", e, username);
     }
 }

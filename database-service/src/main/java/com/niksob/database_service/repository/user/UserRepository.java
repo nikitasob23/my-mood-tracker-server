@@ -17,7 +17,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
             "SET u.username = :#{#user.username}, u.nickname = :#{#user.nickname}, u.password = :#{#user.password} " +
             "WHERE u.id = :#{#user.id}"
     )
-    void update(UserEntity user);
+    int update(UserEntity user);
 
     void deleteByUsername(String username);
 }

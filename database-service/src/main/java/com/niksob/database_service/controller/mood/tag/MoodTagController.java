@@ -34,7 +34,7 @@ public class MoodTagController {
         return moodTagControllerService.loadByUserId(userIdDto)
                 .doOnNext(ignore -> log.debug("Successful mood tag loading", userIdDto))
                 .doOnNext(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
-                .onErrorResume(throwable -> createLoadingError(throwable, userIdDto));
+                .onErrorResume(this::createLoadingError);
     }
 
     @PostMapping
@@ -43,11 +43,10 @@ public class MoodTagController {
         return moodTagControllerService.save(moodTagDto)
                 .doOnSuccess(ignore -> log.debug("Successful mood tag saving", moodTagDto))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.CREATED))
-                .onErrorResume(throwable -> createSavingError(throwable, moodTagDto));
+                .onErrorResume(this::createSavingError);
     }
 
-    private Flux<MoodTagDto> createLoadingError(Throwable throwable, Object state) {
-        log.error("Mood tag load error", throwable, state);
+    private Flux<MoodTagDto> createLoadingError(Throwable throwable) {
         ControllerResponseException errorResponse;
         if (throwable instanceof IllegalUserAccessException) {
             errorResponse = new ControllerResponseException(
@@ -67,8 +66,7 @@ public class MoodTagController {
         return Flux.error(errorResponse);
     }
 
-    private Mono<MoodTagDto> createSavingError(Throwable throwable, Object state) {
-        log.error("Mood tag save error", throwable, state);
+    private Mono<MoodTagDto> createSavingError(Throwable throwable) {
         ControllerResponseException errorResponse;
         if (throwable instanceof ResourceSavingException) {
             errorResponse = new ControllerResponseException(

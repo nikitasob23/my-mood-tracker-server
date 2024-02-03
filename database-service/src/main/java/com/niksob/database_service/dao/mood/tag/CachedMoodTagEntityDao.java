@@ -35,10 +35,13 @@ public class CachedMoodTagEntityDao implements MoodTagEntityDao {
         try {
             moodTags = moodTagRepository.getByUserId(userId);
         } catch (Exception e) {
-            throw createResourceLoadingException(e, userId);
+            log.error("Failed loading mood tag by user id from repository", null, userId);
+            throw new ResourceLoadingException("The mood tags was not load", userId, e);
         }
+
         if (moodTags.isEmpty()) {
-            throw createResourceNotFoundException(userId);
+            log.error("Failed getting mood tag by user id from repository", null, userId);
+            throw new ResourceNotFoundException("The mood tags was not found", null, userId);
         }
         log.debug("Mood tag entities loaded from repository", moodTags);
         log.debug("Cached mood tag entities", moodTags);
@@ -51,9 +54,8 @@ public class CachedMoodTagEntityDao implements MoodTagEntityDao {
     public MoodTagEntity save(MoodTagEntity moodTag) {
         log.debug("Start saving mood tag entity to repository", moodTag);
         if (moodTagRepository.existsByName(moodTag.getName())) {
-            var existsException = new ResourceAlreadyExistsException("Mood tag entity already exists", null, moodTag.getName());
             log.error("Failed saving mood tag to repository", null, moodTag);
-            throw existsException;
+            throw new ResourceAlreadyExistsException("Mood tag entity already exists", null, moodTag.getName());
         }
         try {
             moodTagRepository.save(moodTag.getName(), moodTag.getDegree(), moodTag.getUser().getId());
@@ -62,9 +64,8 @@ public class CachedMoodTagEntityDao implements MoodTagEntityDao {
             addMoodTagToCachedCollection(saved);
             return saved;
         } catch (Exception e) {
-            var savingException = new ResourceSavingException("Mood tag has not saved", moodTag.getName(), e);
             log.error("Failed saving mood tag to repository", e, moodTag);
-            throw savingException;
+            throw new ResourceSavingException("Mood tag has not saved", moodTag.getName(), e);
         }
     }
 
@@ -75,17 +76,5 @@ public class CachedMoodTagEntityDao implements MoodTagEntityDao {
         moodTags.add(moodTag);
         cache.put(userId, moodTags);
         log.debug("Mood tag entity cache updated", moodTag);
-    }
-
-    private ResourceLoadingException createResourceLoadingException(Exception e, Object state) {
-        var loadingException = new ResourceLoadingException("The mood tags was not load", state, e);
-        log.error("Failed loading mood tag by user id from repository", loadingException, state);
-        return loadingException;
-    }
-
-    private ResourceNotFoundException createResourceNotFoundException(Object state) {
-        var notFoundException = new ResourceNotFoundException("The mood tags was not found", null, state);
-        log.error("Failed getting mood tag by user id from repository", notFoundException, state);
-        return notFoundException;
     }
 }
