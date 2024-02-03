@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 public interface UserControllerService {
     Mono<UserInfoDto> load(UsernameDto usernameDto);
 
-    Mono<Void> save(UserInfoDto userInfoDto);
+    Mono<UserInfoDto> save(UserInfoDto userInfoDto);
 
     Mono<Void> update(UserInfoDto userInfoDto);
 

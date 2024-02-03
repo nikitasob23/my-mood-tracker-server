@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 public interface UserService {
     Mono<UserInfo> load(Username username);
 
-    Mono<Void> save(UserInfo userInfo);
+    Mono<UserInfo> save(UserInfo userInfo);
 
     Mono<Void> update(UserInfo userInfo);
 

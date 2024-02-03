@@ -24,17 +24,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Mono<Void> save(UserInfo userInfo) {
+    public Mono<UserInfo> save(UserInfo userInfo) {
         return MonoAsyncUtil.create(() -> userDao.save(userInfo))
-                .then()
-                .doOnSuccess(u -> log.debug("Save user info to user DAO", u));
+                .doOnNext(u -> log.debug("Save user info to user DAO", u));
     }
 
     @Override
     public Mono<Void> update(UserInfo userInfo) {
         return MonoAsyncUtil.create(() -> userDao.update(userInfo))
                 .then()
-                .doOnSuccess(u -> log.debug("Update user info to user DAO", u));
+                .doOnSuccess(ignore -> log.debug("Update user info to user DAO", userInfo));
     }
 
     @Override

@@ -1,6 +1,6 @@
-INSERT INTO usrs VALUES (1, 'clark@gmail.com', 'PASSWORD_1');
-INSERT INTO usrs VALUES (2, 'dave@gmail.com', 'PASSWORD_2');
-INSERT INTO usrs VALUES (3, 'ava@yandex.ru', 'PASSWORD_3');
+INSERT INTO usrs VALUES (1, 'clark@gmail.com', 'clark', 'PASSWORD_1');
+INSERT INTO usrs VALUES (2, 'dave@gmail.com', 'dave', 'PASSWORD_2');
+INSERT INTO usrs VALUES (3, 'ava@yandex.ru', 'ava', 'PASSWORD_3');
 
 INSERT INTO mood_entries VALUES (1, 4, '2024-01-18 21:10:24.346878', 1);
 INSERT INTO mood_entries VALUES (2, 3, '2024-01-20 10:11:56.447351', 1);

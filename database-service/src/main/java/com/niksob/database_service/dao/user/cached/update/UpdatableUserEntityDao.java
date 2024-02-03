@@ -24,10 +24,11 @@ public class UpdatableUserEntityDao extends CachedUserEntityDao {
         }
         try {
             addDbReferences(userEntity);
-            final UserEntity saved = userRepository.save(userEntity);
+            userRepository.update(userEntity);
+            final UserEntity updated = userRepository.getByUsername(userEntity.getUsername());
             log.debug("User entity updated", userEntity);
             log.debug("User entity cache updated", userEntity);
-            return saved;
+            return updated;
         } catch (Exception e) {
             var updatingException = new ResourceUpdatingException("User has not updated", e, userEntity.getUsername());
             log.error("Failed updating user in repository", e, userEntity);

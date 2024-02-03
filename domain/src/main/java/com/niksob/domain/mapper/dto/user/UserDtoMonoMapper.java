@@ -14,8 +14,4 @@ public class UserDtoMonoMapper {
     public Mono<UserInfoDto> toDtoMono(Mono<UserInfo> mono) {
         return mono.map(userInfoDtoMapper::toDto);
     }
-
-    public Mono<Void> toMonoVoid(Mono<UserInfo> mono) {
-        return mono.then();
-    }
 }

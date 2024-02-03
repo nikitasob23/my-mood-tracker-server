@@ -29,6 +29,8 @@ public class UserEntity implements Serializable {
     @Column(unique = true)
     private String username;
 
+    private String nickname;
+
     @JsonIgnore
     @Column(nullable = false)
     private String password;

@@ -40,10 +40,10 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Void> save(@RequestBody UserInfoDto userInfoDto) {
+    public Mono<UserInfoDto> save(@RequestBody UserInfoDto userInfoDto) {
         return userControllerService.save(userInfoDto)
-                .doOnSuccess(ignore -> log.debug("Successful user saving", userInfoDto))
-                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.CREATED))
+                .doOnNext(u -> log.debug("Successful user saving", u.getUsername()))
+                .doOnNext(ignore -> log.debug("Controller returning success status", HttpStatus.CREATED))
                 .onErrorResume(throwable -> createSavingError(throwable, userInfoDto));
     }
 
@@ -86,7 +86,7 @@ public class UserController {
         return Mono.error(errorResponse);
     }
 
-    private Mono<Void> createSavingError(Throwable throwable, Object state) {
+    private Mono<UserInfoDto> createSavingError(Throwable throwable, Object state) {
         log.error("User save error", throwable, state);
         ControllerResponseException errorResponse;
         if (throwable instanceof ResourceSavingException) {
@@ -100,7 +100,7 @@ public class UserController {
                     String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)
             );
         } else {
-            log.error("Controller returning failed status", null, HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error("Controller returning failed status", throwable, HttpStatus.INTERNAL_SERVER_ERROR);
             return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
         }
         log.error("Controller returning failed response", null, errorResponse);
