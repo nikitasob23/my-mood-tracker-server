@@ -12,7 +12,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "mood_tags")
+@Table(name = "mood_tags",
+        uniqueConstraints = @UniqueConstraint(name = "mood_tags_unique_name_user_id", columnNames = {"name", "user_id"}),
+        indexes = @Index(name = "ind_mood_tags_user_id", columnList = "user_id")
+)
 @Data
 @ToString(exclude = {"user", "moodEntries"})
 @EqualsAndHashCode(exclude = {"user", "moodEntries"})
@@ -28,8 +31,12 @@ public class MoodTagEntity implements Serializable {
 
     private int degree;
 
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(nullable = false, insertable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "fk_mood_tags_user_id"))
     @JsonManagedReference
     private UserEntity user;
 
@@ -49,6 +56,7 @@ public class MoodTagEntity implements Serializable {
         this.id = moodTag.getId();
         this.name = moodTag.getName();
         this.degree = moodTag.getDegree();
+        this.userId = moodTag.getUserId();
         this.user = moodTag.getUser();
         this.moodEntries = new HashSet<>(moodTag.getMoodEntries());
     }

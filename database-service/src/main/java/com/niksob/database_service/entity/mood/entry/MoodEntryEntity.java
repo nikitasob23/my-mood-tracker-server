@@ -14,7 +14,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "mood_entries")
+@Table(name = "mood_entries",
+        indexes = @Index(name = "ind_mood_entries_user_id", columnList = "user_id"))
 @Data
 @ToString(exclude = "user")
 @EqualsAndHashCode(exclude = "user")
@@ -29,8 +30,12 @@ public class MoodEntryEntity implements Serializable {
 
     private LocalDateTime dateTime;
 
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(nullable = false, insertable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "fk_mood_entries_user_id"))
     @JsonManagedReference
     private UserEntity user;
 
@@ -38,7 +43,9 @@ public class MoodEntryEntity implements Serializable {
     @JoinTable(
             name = "mood_entry_tag",
             joinColumns = @JoinColumn(name = "entry_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
+            inverseJoinColumns = @JoinColumn(name = "tag_id"),
+            foreignKey = @ForeignKey(name = "fk_mood_entry_tag_entry_id"),
+            inverseForeignKey = @ForeignKey(name = "fk_mood_entry_tag_tag_id")
     )
     @JsonBackReference
     private Set<MoodTagEntity> moodTags = new HashSet<>();
