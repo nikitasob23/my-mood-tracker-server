@@ -181,12 +181,12 @@ public class ObjectStateLoggerImpl extends MaskedMessageLogger implements Object
     // from ObjectStateLogger interface
     @Override
     public void error(String s, Throwable throwable, Object o) {
-        addObjectStatesAndLog(() -> super.log.error(s, throwable, o), o);
+        addObjectStatesAndLog(() -> super.log.error(s, throwable), o);
     }
 
     @Override
     public void error(String s, Throwable throwable, Object... objects) {
-        addObjectStatesAndLog(() -> super.log.error(s, throwable, objects), objects);
+        addObjectStatesAndLog(() -> super.log.error(s, throwable), objects);
     }
 
     @Override
@@ -222,6 +222,10 @@ public class ObjectStateLoggerImpl extends MaskedMessageLogger implements Object
     }
 
     private void addObjectStatesAndLog(Runnable logging, Object... objects) {
+        if (objects == null || objects.length == 0) {
+            logging.run();
+            return;
+        }
         MDC.put(OBJECT_STATE_KEY, mask(objects).value());
         logging.run();
         MDC.remove(OBJECT_STATE_KEY);
