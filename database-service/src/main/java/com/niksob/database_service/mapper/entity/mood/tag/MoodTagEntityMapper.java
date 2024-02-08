@@ -18,13 +18,13 @@ public interface MoodTagEntityMapper {
     @Mapping(source = "id.value", target = "id")
     @Mapping(source = "name.value", target = "name")
     @Mapping(source = "degree.value", target = "degree")
-    @Mapping(source = "userId.value", target = "user.id")
+    @Mapping(source = "userId.value", target = "userId")
     MoodTagEntity toEntity(MoodTag moodTag);
 
     @Mapping(source = "id", target = "id.value")
     @Mapping(source = "name", target = "name.value")
     @Mapping(source = "degree", target = "degree.value")
-    @Mapping(source = "user.id", target = "userId.value")
+    @Mapping(source = "userId", target = "userId.value")
     MoodTag fromEntity(MoodTagEntity entity);
 
     default Set<MoodTag> fromMoodTagEntitySet(Set<MoodTagEntity> entities) {

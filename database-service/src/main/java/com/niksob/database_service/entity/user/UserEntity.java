@@ -10,12 +10,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "usrs")
+@Table(name = "usrs", uniqueConstraints = @UniqueConstraint(name = "uk_usrs_username", columnNames = {"username"}))
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,7 +22,7 @@ public class UserEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String username;
 
     private String nickname;
@@ -33,27 +31,17 @@ public class UserEntity implements Serializable {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     @JsonBackReference
-    private Set<MoodEntryEntity> moodEntries = new HashSet<>();
+    private Set<MoodEntryEntity> moodEntries;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     @JsonBackReference
-    private Set<MoodTagEntity> moodTags = new HashSet<>();
+    private Set<MoodTagEntity> moodTags;
 
     public UserEntity(Long id) {
         this.id = id;
-    }
-
-    public void setMoodEntries(Set<MoodEntryEntity> moodEntries) {
-        this.moodEntries = moodEntries.stream()
-                .peek(moodEntry -> moodEntry.setUser(this))
-                .collect(Collectors.toSet());
-    }
-
-    public void setMoodTags(Set<MoodTagEntity> moodTags) {
-        this.moodTags = moodTags.stream()
-                .peek(moodTag -> moodTag.setUser(this))
-                .collect(Collectors.toSet());
     }
 }

@@ -9,9 +9,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "mood_entries",
@@ -39,7 +37,7 @@ public class MoodEntryEntity implements Serializable {
     @JsonManagedReference
     private UserEntity user;
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "mood_entry_tag",
             joinColumns = @JoinColumn(name = "entry_id"),
@@ -48,11 +46,5 @@ public class MoodEntryEntity implements Serializable {
             inverseForeignKey = @ForeignKey(name = "fk_mood_entry_tag_tag_id")
     )
     @JsonBackReference
-    private Set<MoodTagEntity> moodTags = new HashSet<>();
-
-    public void setMoodTags(Set<MoodTagEntity> moodTags) {
-        this.moodTags = moodTags.stream()
-                .peek(moodTag -> moodTag.addMoodEntry(this))
-                .collect(Collectors.toSet());
-    }
+    private Set<MoodTagEntity> moodTags;
 }

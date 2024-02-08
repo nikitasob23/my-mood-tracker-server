@@ -2,8 +2,6 @@ package com.niksob.database_service.dao.user.cached;
 
 import com.niksob.database_service.cache.cleaner.CacheCleaner;
 import com.niksob.database_service.dao.user.UserEntityDao;
-import com.niksob.database_service.entity.mood.entry.MoodEntryEntity;
-import com.niksob.database_service.entity.mood.tag.MoodTagEntity;
 import com.niksob.database_service.entity.user.UserEntity;
 import com.niksob.database_service.exception.resource.ResourceAlreadyExistsException;
 import com.niksob.database_service.exception.resource.ResourceSavingException;
@@ -18,17 +16,14 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 @AllArgsConstructor
 public abstract class CachedUserEntityDao implements UserEntityDao, CacheCleaner {
     public static final String USER_CACHE_ENTITY_NAME = "users";
+    protected final UserRepository userRepository;
+
     private final Cache cache;
 
-    protected final UserRepository userRepository;
-    protected final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(CachedUserEntityDao.class);
+    private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(CachedUserEntityDao.class);
 
     @Override
     @Cacheable(value = CachedUserEntityDao.USER_CACHE_ENTITY_NAME, key = "#username")
@@ -59,7 +54,6 @@ public abstract class CachedUserEntityDao implements UserEntityDao, CacheCleaner
             throw new ResourceAlreadyExistsException("User already exists", null, userEntity.getUsername());
         }
         try {
-            addDbReferences(userEntity);
             final UserEntity saved = userRepository.save(userEntity);
             log.debug("User entity saved", userEntity);
             log.debug("User entity cache updated", userEntity);
@@ -91,33 +85,6 @@ public abstract class CachedUserEntityDao implements UserEntityDao, CacheCleaner
     @Override
     public void clearCache() {
         cache.clear();
-    }
-
-    protected void addDbReferences(UserEntity userEntity) {
-        final List<MoodTagEntity> allMoodTags = userEntity.getMoodEntries().stream()
-                .flatMap(moodEntry -> moodEntry.getMoodTags().stream())
-                .toList();
-
-        final Map<String, MoodTagEntity> combinedMoodTagMap = allMoodTags.stream()
-                .collect(Collectors.toMap(MoodTagEntity::getName, moodTagEntity -> moodTagEntity,
-                        (existing, replacement) -> {
-                            final Set<MoodEntryEntity> combinedMoodEntries = Stream.concat(
-                                    existing.getMoodEntries().stream(),
-                                    replacement.getMoodEntries().stream()
-                            ).collect(Collectors.toSet());
-
-                            final MoodTagEntity newMoodTag = new MoodTagEntity(existing);
-                            newMoodTag.setMoodEntries(combinedMoodEntries);
-                            return newMoodTag;
-                        }));
-        userEntity.getMoodEntries()
-                .forEach(moodEntry -> {
-                    final Set<MoodTagEntity> newCombinedMoodTags = moodEntry.getMoodTags().stream()
-                            .map(moodTag -> combinedMoodTagMap.get(moodTag.getName()))
-                            .collect(Collectors.toSet());
-                    moodEntry.setMoodTags(newCombinedMoodTags);
-                });
-        userEntity.setMoodTags(new HashSet<>(combinedMoodTagMap.values()));
     }
 
     protected ResourceNotFoundException createResourceNotFoundException(String username) {

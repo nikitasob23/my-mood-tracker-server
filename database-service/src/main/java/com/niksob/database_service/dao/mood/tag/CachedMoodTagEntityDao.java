@@ -58,8 +58,7 @@ public class CachedMoodTagEntityDao implements MoodTagEntityDao {
             throw new ResourceAlreadyExistsException("Mood tag entity already exists", null, moodTag.getName());
         }
         try {
-            moodTagRepository.save(moodTag.getName(), moodTag.getDegree(), moodTag.getUser().getId());
-            var saved = moodTagRepository.getByName(moodTag.getName());
+            final MoodTagEntity saved = moodTagRepository.save(moodTag);
             log.debug("Mood tag entity saved", moodTag);
             addMoodTagToCachedCollection(saved);
             return saved;
@@ -70,11 +69,10 @@ public class CachedMoodTagEntityDao implements MoodTagEntityDao {
     }
 
     private void addMoodTagToCachedCollection(MoodTagEntity moodTag) {
-        final Long userId = moodTag.getUser().getId();
-        final Cache.ValueWrapper wrapper = cache.get(userId);
+        final Cache.ValueWrapper wrapper = cache.get(moodTag.getUserId());
         Set<MoodTagEntity> moodTags = wrapper == null ? new HashSet<>() : (Set<MoodTagEntity>) wrapper.get();
         moodTags.add(moodTag);
-        cache.put(userId, moodTags);
+        cache.put(moodTag.getUserId(), moodTags);
         log.debug("Mood tag entity cache updated", moodTag);
     }
 }
