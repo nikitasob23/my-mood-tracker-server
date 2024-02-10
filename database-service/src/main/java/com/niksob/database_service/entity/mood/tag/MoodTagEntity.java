@@ -32,13 +32,13 @@ public class MoodTagEntity implements Serializable {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, insertable = false, updatable = false,
             foreignKey = @ForeignKey(name = "fk_mood_tags_user_id"))
     @JsonManagedReference
     private UserEntity user;
 
-    @ManyToMany(mappedBy = "moodTags", cascade = {CascadeType.ALL})
+    @ManyToMany(mappedBy = "moodTags")
     @JsonBackReference
     private Set<MoodEntryEntity> moodEntries;
 }

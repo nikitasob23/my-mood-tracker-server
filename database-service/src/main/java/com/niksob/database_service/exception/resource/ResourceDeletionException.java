@@ -4,10 +4,10 @@ import lombok.Getter;
 
 @Getter
 public class ResourceDeletionException extends RuntimeException {
-    private final String username;
+    private final Object state;
 
-    public ResourceDeletionException(String message, Throwable cause, String username) {
+    public ResourceDeletionException(String message, Throwable cause, Object state) {
         super(message, cause);
-        this.username = username;
+        this.state = state;
     }
 }

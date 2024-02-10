@@ -37,13 +37,16 @@ public class MoodEntryEntity implements Serializable {
     @JsonManagedReference
     private UserEntity user;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "mood_entry_tag",
             joinColumns = @JoinColumn(name = "entry_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"),
-            foreignKey = @ForeignKey(name = "fk_mood_entry_tag_entry_id"),
-            inverseForeignKey = @ForeignKey(name = "fk_mood_entry_tag_tag_id")
+            foreignKey = @ForeignKey(name = "fk_mood_entry_tag_entry_id",
+                    foreignKeyDefinition = "FOREIGN KEY (entry_id) REFERENCES mood_entries(id) ON DELETE CASCADE"),
+            inverseForeignKey = @ForeignKey(name = "fk_mood_entry_tag_tag_id",
+                    foreignKeyDefinition = "FOREIGN KEY (tag_id) REFERENCES mood_tags(id) ON DELETE CASCADE"),
+            uniqueConstraints = @UniqueConstraint(name = "uk_mood_entry_tag_ids", columnNames = {"entry_id", "tag_id"})
     )
     @JsonBackReference
     private Set<MoodTagEntity> moodTags;

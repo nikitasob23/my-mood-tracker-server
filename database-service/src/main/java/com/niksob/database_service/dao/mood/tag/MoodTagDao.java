@@ -12,4 +12,8 @@ public interface MoodTagDao {
     MoodTag save(MoodTag moodTag);
 
     Set<MoodTag> loadByUserId(UserId userId);
+
+    void update(MoodTag moodTag);
+
+    void deleteById(MoodTag moodTag);
 }

@@ -9,4 +9,8 @@ public interface MoodTagService {
     Flux<MoodTag> loadByUserId(UserId userId);
 
     Mono<MoodTag> save(MoodTag moodTag);
+
+    Mono<Void> update(MoodTag moodTag);
+
+    Mono<Void> deleteById(MoodTag moodTag);
 }

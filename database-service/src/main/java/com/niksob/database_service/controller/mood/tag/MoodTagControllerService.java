@@ -15,4 +15,8 @@ public interface MoodTagControllerService {
     Flux<MoodTagDto> loadByUserId(UserIdDto userIdDto);
 
     Mono<MoodTagDto> save(MoodTagDto moodTagDto);
+
+    Mono<Void> update(MoodTagDto moodTagDto);
+
+    Mono<Void> deleteById(MoodTagDto moodTagDto);
 }

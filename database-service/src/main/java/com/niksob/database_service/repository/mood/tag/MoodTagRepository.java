@@ -8,7 +8,5 @@ import java.util.Set;
 
 @Repository
 public interface MoodTagRepository extends JpaRepository<MoodTagEntity, Long> {
-    boolean existsByName(String name);
-
     Set<MoodTagEntity> getByUserId(Long userId);
 }

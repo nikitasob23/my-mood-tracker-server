@@ -107,8 +107,8 @@ public class UserController {
         return Mono.error(errorResponse);
     }
 
-    private Mono<Void> createUpdatingError(Throwable throwable, Object userInfoDto) {
-        log.error("User update error", throwable, userInfoDto);
+    private Mono<Void> createUpdatingError(Throwable throwable, Object state) {
+        log.error("User update error", throwable, state);
         if (throwable instanceof ResourceUpdatingException) {
             var errorResponse = new ControllerResponseException(
                     throwable, HttpStatus.BAD_REQUEST,
@@ -117,11 +117,11 @@ public class UserController {
             log.error("Controller returning failed response", null, errorResponse);
             return Mono.error(errorResponse);
         }
-        return createLoadingError(throwable, userInfoDto).then();
+        return createLoadingError(throwable, state).then();
     }
 
-    private Mono<Void> createDeleteError(Throwable throwable, Object usernameDto) {
-        log.error("Failed to delete user", throwable, usernameDto);
+    private Mono<Void> createDeleteError(Throwable throwable, Object state) {
+        log.error("Failed to delete user", throwable, state);
         if (throwable instanceof ResourceDeletionException) {
             final ControllerResponseException errorResponse = new ControllerResponseException(
                     throwable, HttpStatus.BAD_REQUEST,
@@ -130,6 +130,6 @@ public class UserController {
             log.error("Controller returning failed response", null, errorResponse);
             return Mono.error(errorResponse);
         }
-        return createLoadingError(throwable, usernameDto).then();
+        return createLoadingError(throwable, state).then();
     }
 }

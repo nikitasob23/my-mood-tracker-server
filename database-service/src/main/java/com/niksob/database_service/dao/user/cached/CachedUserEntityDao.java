@@ -3,10 +3,7 @@ package com.niksob.database_service.dao.user.cached;
 import com.niksob.database_service.cache.cleaner.CacheCleaner;
 import com.niksob.database_service.dao.user.UserEntityDao;
 import com.niksob.database_service.entity.user.UserEntity;
-import com.niksob.database_service.exception.resource.ResourceAlreadyExistsException;
-import com.niksob.database_service.exception.resource.ResourceSavingException;
-import com.niksob.database_service.exception.resource.ResourceDeletionException;
-import com.niksob.database_service.exception.resource.ResourceNotFoundException;
+import com.niksob.database_service.exception.resource.*;
 import com.niksob.database_service.repository.user.UserRepository;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -17,7 +14,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
 @AllArgsConstructor
-public abstract class CachedUserEntityDao implements UserEntityDao, CacheCleaner {
+public class CachedUserEntityDao implements UserEntityDao, CacheCleaner {
     public static final String USER_CACHE_ENTITY_NAME = "users";
     protected final UserRepository userRepository;
 
@@ -62,6 +59,26 @@ public abstract class CachedUserEntityDao implements UserEntityDao, CacheCleaner
             log.error("Failed saving user to repository", null, userEntity);
             throw new ResourceSavingException("User has not saved", userEntity.getUsername(), e);
         }
+    }
+
+    @Override
+    @Transactional
+    @CachePut(value = CachedUserEntityDao.USER_CACHE_ENTITY_NAME, key = "#userEntity.username")
+    public UserEntity update(UserEntity userEntity) {
+        log.debug("Updating user entity", userEntity);
+        if (!userRepository.existsByUsername(userEntity.getUsername())) {
+            throw createResourceNotFoundException(userEntity.getUsername());
+        }
+        final UserEntity updated;
+        try {
+            updated = userRepository.save(userEntity);
+        } catch (Exception e) {
+            log.error("Failed updating user in repository", null, userEntity);
+            throw new ResourceUpdatingException("User has not updated", e, userEntity.getId());
+        }
+        log.debug("User entity updated", updated);
+        log.debug("User entity cache updated", updated);
+        return updated;
     }
 
     @Override

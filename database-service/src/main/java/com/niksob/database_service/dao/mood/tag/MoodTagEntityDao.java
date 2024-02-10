@@ -8,4 +8,8 @@ public interface MoodTagEntityDao {
     Set<MoodTagEntity> loadByUserId(Long userId);
 
     MoodTagEntity save(MoodTagEntity moodTag);
+
+    MoodTagEntity update(MoodTagEntity moodTag);
+
+    void deleteById(MoodTagEntity moodTag);
 }

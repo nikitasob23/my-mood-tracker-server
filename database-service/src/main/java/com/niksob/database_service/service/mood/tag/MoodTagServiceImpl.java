@@ -21,7 +21,7 @@ public class MoodTagServiceImpl implements MoodTagService {
     @Override
     public Flux<MoodTag> loadByUserId(UserId userId) {
         return MonoAsyncUtil.create(() -> moodTagDao.loadByUserId(userId))
-                .doOnNext(moodTags -> log.debug("Get mood tag from user DAO", moodTags))
+                .doOnNext(moodTags -> log.debug("Get mood tag from DAO", moodTags))
                 .flatMapMany(Flux::fromIterable)
                 .doOnError(throwable -> log.error("Mood tag load error", throwable, userId));
     }
@@ -29,7 +29,20 @@ public class MoodTagServiceImpl implements MoodTagService {
     @Override
     public Mono<MoodTag> save(MoodTag moodTag) {
         return MonoAsyncUtil.create(() -> moodTagDao.save(moodTag))
-                .doOnNext(ignore -> log.debug("Save mood tag to user DAO", moodTag))
+                .doOnNext(ignore -> log.debug("Save mood tag to DAO", moodTag))
                 .doOnError(throwable -> log.error("Mood tag save error", throwable, moodTag));
+    }
+
+    @Override
+    public Mono<Void> update(MoodTag moodTag) {
+        return MonoAsyncUtil.create(() -> moodTagDao.update(moodTag))
+                .then()
+                .doOnSuccess(ignore -> log.debug("Update mood tag to DAO", moodTag));
+    }
+
+    @Override
+    public Mono<Void> deleteById(MoodTag moodTag) {
+        return MonoAsyncUtil.create(() -> moodTagDao.deleteById(moodTag))
+                .doOnSuccess(ignore -> log.debug("Delete mood tag from DAO", moodTag));
     }
 }

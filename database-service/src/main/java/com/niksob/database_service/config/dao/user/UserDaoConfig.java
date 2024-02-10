@@ -2,7 +2,6 @@ package com.niksob.database_service.config.dao.user;
 
 import com.niksob.database_service.dao.user.cached.CachedUserEntityDao;
 import com.niksob.database_service.dao.user.UserEntityDao;
-import com.niksob.database_service.dao.user.cached.update.UpdatableUserEntityDao;
 import com.niksob.database_service.repository.user.UserRepository;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -25,7 +24,7 @@ public class UserDaoConfig {
                 .map(cacheManager::getCache)
                 .filter(Objects::nonNull)
                 .findFirst().orElseThrow(this::createCacheStorageNotFoundException);
-        return new UpdatableUserEntityDao(userRepository, userEntityCache);
+        return new CachedUserEntityDao(userRepository, userEntityCache);
     }
 
     private IllegalStateException createCacheStorageNotFoundException() {

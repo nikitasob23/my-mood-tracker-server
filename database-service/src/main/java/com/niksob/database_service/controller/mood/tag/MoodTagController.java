@@ -1,8 +1,6 @@
 package com.niksob.database_service.controller.mood.tag;
 
-import com.niksob.database_service.exception.resource.ResourceAlreadyExistsException;
-import com.niksob.database_service.exception.resource.ResourceNotFoundException;
-import com.niksob.database_service.exception.resource.ResourceSavingException;
+import com.niksob.database_service.exception.resource.*;
 import com.niksob.domain.dto.mood.tag.MoodTagDto;
 import com.niksob.domain.dto.user.UserIdDto;
 import com.niksob.domain.exception.rest.controller.response.ControllerResponseException;
@@ -34,7 +32,7 @@ public class MoodTagController {
         return moodTagControllerService.loadByUserId(userIdDto)
                 .doOnNext(ignore -> log.debug("Successful mood tag loading", userIdDto))
                 .doOnNext(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
-                .onErrorResume(this::createLoadingError);
+                .onErrorResume(throwable -> createLoadingError(throwable, userIdDto));
     }
 
     @PostMapping
@@ -46,7 +44,26 @@ public class MoodTagController {
                 .onErrorResume(this::createSavingError);
     }
 
-    private Flux<MoodTagDto> createLoadingError(Throwable throwable) {
+    @PutMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> update(@RequestBody MoodTagDto moodTagDto) {
+        return moodTagControllerService.update(moodTagDto)
+                .doOnSuccess(ignore -> log.debug("Successful mood tag updating", moodTagDto))
+                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
+                .onErrorResume(throwable -> createUpdatingError(throwable, moodTagDto));
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> deleteById(@RequestBody MoodTagDto tagDto) {
+        return moodTagControllerService.deleteById(tagDto)
+                .doOnSuccess(ignore -> log.debug("Successful mood tag deletion", tagDto))
+                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
+                .onErrorResume(throwable -> createDeleteError(throwable, tagDto));
+    }
+
+    private Flux<MoodTagDto> createLoadingError(Throwable throwable, Object state) {
+        log.error("Mood tag load error", throwable, state);
         ControllerResponseException errorResponse;
         if (throwable instanceof IllegalUserAccessException) {
             errorResponse = new ControllerResponseException(
@@ -84,5 +101,31 @@ public class MoodTagController {
         }
         log.error("Controller returning failed response", throwable, errorResponse);
         return Mono.error(errorResponse);
+    }
+
+    private Mono<Void> createUpdatingError(Throwable throwable, Object state) {
+        log.error("Mood tag update error", throwable, state);
+        if (throwable instanceof ResourceUpdatingException) {
+            var errorResponse = new ControllerResponseException(
+                    throwable, HttpStatus.BAD_REQUEST,
+                    String.format("%s/%s", contextPath, MoodTagControllerPaths.BASE_URI)
+            );
+            log.error("Controller returning failed response", null, errorResponse);
+            return Mono.error(errorResponse);
+        }
+        return createLoadingError(throwable, state).then();
+    }
+
+    private Mono<Void> createDeleteError(Throwable throwable, Object state) {
+        log.error("Failed to delete mood tag", throwable, state);
+        if (throwable instanceof ResourceDeletionException) {
+            final ControllerResponseException errorResponse = new ControllerResponseException(
+                    throwable, HttpStatus.BAD_REQUEST,
+                    String.format("%s/%s", contextPath, MoodTagControllerPaths.BASE_URI)
+            );
+            log.error("Controller returning failed response", null, errorResponse);
+            return Mono.error(errorResponse);
+        }
+        return createLoadingError(throwable, state).then();
     }
 }
