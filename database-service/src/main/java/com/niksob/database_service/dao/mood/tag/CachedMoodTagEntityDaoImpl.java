@@ -1,24 +1,26 @@
 package com.niksob.database_service.dao.mood.tag;
 
-import com.niksob.database_service.dao.mood.tag.loader.CachedMoodTagEntityDaoLoader;
+import com.niksob.database_service.dao.mood.tag.cache.MoodTagEntityCache;
+import com.niksob.database_service.dao.mood.tag.loader.CachedMoodTagEntityLoaderDaoImpl;
 import com.niksob.database_service.entity.mood.tag.MoodTagEntity;
 import com.niksob.database_service.exception.resource.*;
 import com.niksob.database_service.repository.mood.tag.MoodTagRepository;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
-import lombok.NonNull;
-import org.springframework.cache.Cache;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-public class CachedMoodTagEntityDao extends CachedMoodTagEntityDaoLoader {
-    private final Cache cache;
+@Component
+public class CachedMoodTagEntityDaoImpl extends CachedMoodTagEntityLoaderDaoImpl implements MoodTagEntityDao {
+    private final MoodTagEntityCache cache;
 
-    private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(CachedMoodTagEntityDao.class);
+    private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(CachedMoodTagEntityDaoImpl.class);
 
-    public CachedMoodTagEntityDao(MoodTagRepository moodTagRepository, Cache cache) {
+    public CachedMoodTagEntityDaoImpl(MoodTagRepository moodTagRepository, MoodTagEntityCache cache) {
         super(moodTagRepository);
         this.cache = cache;
     }
@@ -37,7 +39,7 @@ public class CachedMoodTagEntityDao extends CachedMoodTagEntityDaoLoader {
         try {
             final MoodTagEntity saved = moodTagRepository.save(moodTag);
             log.debug("Mood tag entity saved", moodTag);
-            updateCacheCollection(saved);
+            cache.updateCacheCollection(saved);
             return saved;
         } catch (Exception e) {
             log.error("Failed saving mood tag to repository", e, moodTag);
@@ -57,12 +59,27 @@ public class CachedMoodTagEntityDao extends CachedMoodTagEntityDaoLoader {
         try {
             updated = moodTagRepository.save(moodTag);
             log.debug("Mood tag entity updated", updated);
-            updateCacheCollection(updated);
+            cache.updateCacheCollection(updated);
         } catch (Exception e) {
             log.error("Failed updating mood tag entity in repository", null, moodTag);
             throw new ResourceUpdatingException("Mood tag entity has not updated", e, moodTag.getId());
         }
         return updated;
+    }
+
+    @Override
+    @Transactional
+    public Set<MoodTagEntity> mergeAll(Set<MoodTagEntity> moodTags) {
+        log.debug("Start merging mood tag entities", moodTags);
+        try {
+            final List<MoodTagEntity> mergedList = moodTagRepository.saveAll(moodTags);
+            log.debug("Mood tag entities merged", mergedList);
+            cache.updateCacheCollection(mergedList);
+            return new HashSet<>(mergedList);
+        } catch (Exception e) {
+            log.error("Failed merging mood tag entities in repository", null, moodTags);
+            throw new ResourceUpdatingException("Mood tag entity has not updated", e, moodTags);
+        }
     }
 
     @Override
@@ -75,43 +92,17 @@ public class CachedMoodTagEntityDao extends CachedMoodTagEntityDaoLoader {
         try {
             moodTagRepository.deleteById(moodTag.getId());
             log.debug("Mood tag entity deleted from repository", moodTag);
-            deleteFromCacheCollection(moodTag);
+            cache.deleteFromCacheCollection(moodTag);
         } catch (Exception e) {
             log.error("Failed deleting mood tag entity by id from repository", null, moodTag.getId());
             throw new ResourceDeletionException("The mood tag entity was not deleted", e, moodTag.getId());
         }
     }
-    
+
     private boolean nonPresentInRepoById(MoodTagEntity moodTag) {
         return super.loadByUserId(moodTag.getUserId()).stream()
                 .map(MoodTagEntity::getId)
                 .noneMatch(moodTag.getId()::equals);
-        
-    }
-
-    private void updateCacheCollection(@NonNull MoodTagEntity newMoodTag) {
-        Set<MoodTagEntity> dbCollection;
-        try {
-            dbCollection = super.loadByUserId(newMoodTag.getUserId());
-        } catch (ResourceNotFoundException e) {
-            dbCollection = new HashSet<>();
-        }
-        dbCollection.add(newMoodTag);
-        cache.put(newMoodTag.getUserId(), dbCollection);
-        log.debug("Mood tag entity cache updated", newMoodTag);
-    }
-
-    private void deleteFromCacheCollection(@NonNull MoodTagEntity deletedMoodTag) {
-        Set<MoodTagEntity> dbCollection;
-        try {
-            dbCollection = super.loadByUserId(deletedMoodTag.getUserId());
-        } catch (ResourceNotFoundException e) {
-            log.debug("Do not remove the mood tag from the cache as it does not exist", deletedMoodTag);
-            return;
-        }
-        dbCollection.remove(deletedMoodTag);
-        cache.put(deletedMoodTag.getUserId(), dbCollection);
-        log.debug("Mood tag entity cache updated", deletedMoodTag);
     }
 
     private ResourceNotFoundException createResourceNotFoundException(Object state) {

@@ -6,7 +6,7 @@ import lombok.Getter;
 public class ResourceSavingException extends RuntimeException {
     private final Object state;
 
-    public ResourceSavingException(String message, String state, Throwable cause) {
+    public ResourceSavingException(String message, Object state, Throwable cause) {
         super(message, cause);
         this.state = state;
     }

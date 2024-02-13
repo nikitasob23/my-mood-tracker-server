@@ -32,4 +32,10 @@ public interface MoodTagEntityMapper {
                 .map(this::fromEntity)
                 .collect(Collectors.toSet());
     }
+
+    default Set<MoodTagEntity> toMoodTagEntitySet(Set<MoodTag> moodTags) {
+        return moodTags.stream()
+                .map(this::toEntity)
+                .collect(Collectors.toSet());
+    }
 }

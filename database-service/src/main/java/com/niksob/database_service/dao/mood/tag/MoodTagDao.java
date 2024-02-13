@@ -9,11 +9,13 @@ import java.util.Set;
 
 @LayerConnector(source = MoodTagEntityDao.class, mapper = {MoodTagEntityMapper.class})
 public interface MoodTagDao {
-    MoodTag save(MoodTag moodTag);
-
     Set<MoodTag> loadByUserId(UserId userId);
 
+    MoodTag save(MoodTag moodTag);
+
     void update(MoodTag moodTag);
+
+    Set<MoodTag> mergeAll(Set<MoodTag> moodTags);
 
     void deleteById(MoodTag moodTag);
 }

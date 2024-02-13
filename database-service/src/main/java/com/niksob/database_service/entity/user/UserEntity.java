@@ -31,7 +31,7 @@ public class UserEntity implements Serializable {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     @JsonBackReference
     private Set<MoodEntryEntity> moodEntries;
@@ -40,8 +40,4 @@ public class UserEntity implements Serializable {
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     @JsonBackReference
     private Set<MoodTagEntity> moodTags;
-
-    public UserEntity(Long id) {
-        this.id = id;
-    }
 }

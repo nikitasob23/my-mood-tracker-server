@@ -9,14 +9,14 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "mood_entries",
-        indexes = @Index(name = "ind_mood_entries_user_id", columnList = "user_id"))
+@Table(name = "mood_entries")
 @Data
 @ToString(exclude = "user")
-@EqualsAndHashCode(exclude = "user")
+@EqualsAndHashCode(exclude = {"user", "moodTags"})
 @AllArgsConstructor
 @NoArgsConstructor
 public class MoodEntryEntity implements Serializable {
@@ -26,6 +26,7 @@ public class MoodEntryEntity implements Serializable {
 
     private int degree;
 
+    @Column(columnDefinition = "DATETIME")
     private LocalDateTime dateTime;
 
     @Column(name = "user_id", nullable = false)
@@ -37,7 +38,7 @@ public class MoodEntryEntity implements Serializable {
     @JsonManagedReference
     private UserEntity user;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "mood_entry_tag",
             joinColumns = @JoinColumn(name = "entry_id"),
@@ -46,8 +47,7 @@ public class MoodEntryEntity implements Serializable {
                     foreignKeyDefinition = "FOREIGN KEY (entry_id) REFERENCES mood_entries(id) ON DELETE CASCADE"),
             inverseForeignKey = @ForeignKey(name = "fk_mood_entry_tag_tag_id",
                     foreignKeyDefinition = "FOREIGN KEY (tag_id) REFERENCES mood_tags(id) ON DELETE CASCADE"),
-            uniqueConstraints = @UniqueConstraint(name = "uk_mood_entry_tag_ids", columnNames = {"entry_id", "tag_id"})
-    )
+            uniqueConstraints = @UniqueConstraint(name = "uk_mood_entry_tag_ids", columnNames = {"entry_id", "tag_id"}))
     @JsonBackReference
-    private Set<MoodTagEntity> moodTags;
+    private Set<MoodTagEntity> moodTags = new HashSet<>();
 }

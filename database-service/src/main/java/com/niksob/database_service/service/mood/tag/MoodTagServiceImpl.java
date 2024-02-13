@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Set;
+
 @Component
 @AllArgsConstructor
 public class MoodTagServiceImpl implements MoodTagService {
@@ -38,6 +40,13 @@ public class MoodTagServiceImpl implements MoodTagService {
         return MonoAsyncUtil.create(() -> moodTagDao.update(moodTag))
                 .then()
                 .doOnSuccess(ignore -> log.debug("Update mood tag to DAO", moodTag));
+    }
+
+    @Override
+    public Mono<Set<MoodTag>> mergeAll(Set<MoodTag> moodTags) {
+        return MonoAsyncUtil.create(() -> moodTagDao.mergeAll(moodTags))
+                .doOnNext(ignore -> log.debug("Merge mood tag to DAO", moodTags))
+                .doOnError(throwable -> log.error("Mood tag merge error", throwable, moodTags));
     }
 
     @Override

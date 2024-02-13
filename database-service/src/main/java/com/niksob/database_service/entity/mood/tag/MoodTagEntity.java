@@ -11,10 +11,8 @@ import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-@Table(name = "mood_tags",
-        uniqueConstraints = @UniqueConstraint(
-                name = "uk_mood_tags_unique_name_user_id", columnNames = {"name", "user_id"}
-        ), indexes = @Index(name = "ind_mood_tags_user_id", columnList = "user_id"))
+@Table(name = "mood_tags", uniqueConstraints = @UniqueConstraint(
+        name = "uk_mood_tags_unique_name_user_id", columnNames = {"name", "user_id"}))
 @Data
 @ToString(exclude = {"user", "moodEntries"})
 @EqualsAndHashCode(exclude = {"user", "moodEntries"})

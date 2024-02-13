@@ -5,12 +5,16 @@ import com.niksob.domain.model.user.UserId;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Set;
+
 public interface MoodTagService {
     Flux<MoodTag> loadByUserId(UserId userId);
 
     Mono<MoodTag> save(MoodTag moodTag);
 
     Mono<Void> update(MoodTag moodTag);
+
+    Mono<Set<MoodTag>> mergeAll(Set<MoodTag> moodTags);
 
     Mono<Void> deleteById(MoodTag moodTag);
 }
