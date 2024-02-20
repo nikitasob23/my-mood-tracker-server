@@ -1,6 +1,7 @@
 package com.niksob.layer_connector.service.class_element;
 
 import com.niksob.layer_connector.logger.Logger;
+import com.niksob.layer_connector.model.annotation.LayerConnectorAnnotationDetails;
 import com.niksob.layer_connector.model.class_details.ClassDetails;
 import com.niksob.layer_connector.model.class_details.LayerConnectorClassDetails;
 import com.niksob.layer_connector.model.class_details.Marker;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -34,13 +36,7 @@ public class LayerConnectorServiceImpl implements LayerConnectorService {
                 extractFullClassName((TypeElement) e),
                 elementMethodService.extractSignature(e, Marker.INTERFACE)
         );
-        var sourceClassDetails = new ClassDetails(
-                extractFullClassName(annotationDetails.getSourceTypeElement()),
-                elementMethodService.extractSignature(annotationDetails.getSourceTypeElement(), Marker.SOURCE)
-                        .stream()
-                        .filter(sourceMethod -> elementMethodService.filterMethodSignaturesByNames(
-                                sourceMethod, interfaceClassDetails.getMethods())
-                        ).collect(Collectors.toSet()));
+        final var sourceClassDetails = extractSourceClassDetails(annotationDetails, interfaceClassDetails);
 
         var mapperClassDetailsList = annotationDetails.getMapperTypeElementSet().stream()
                 .map(typeElement -> new ClassDetails(
@@ -64,6 +60,28 @@ public class LayerConnectorServiceImpl implements LayerConnectorService {
         );
         log.warn("Compilation details extracted: " + compilationDetails);
         return compilationDetails;
+    }
+
+    private ClassDetails extractSourceClassDetails(
+            LayerConnectorAnnotationDetails annotationDetails, ClassDetails interfaceClassDetails
+    ) {
+        final String sourceClassName = extractFullClassName(annotationDetails.getSourceTypeElement());
+
+        var sourceParentsMethods = annotationDetails.getSourceParents().stream()
+                .map(sourceParent -> elementMethodService.extractSignature(sourceParent, Marker.SOURCE))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toSet());
+
+        var sourceMethods = elementMethodService.extractSignature(
+                annotationDetails.getSourceTypeElement(), Marker.SOURCE
+        );
+        sourceMethods.addAll(sourceParentsMethods);
+
+        var filteredSourceMethodsByInterface = sourceMethods.stream()
+                .filter(sourceMethod -> elementMethodService.filterMethodSignaturesByNames(
+                        sourceMethod, interfaceClassDetails.getMethods())
+                ).collect(Collectors.toSet());
+        return new ClassDetails(sourceClassName, filteredSourceMethodsByInterface);
     }
 
     private String extractFullClassName(TypeElement e) {

@@ -2,7 +2,7 @@ package com.niksob.layer_connector.service.annotation.layer_connector;
 
 import com.niksob.layer_connector.annotation.LayerConnector;
 import com.niksob.layer_connector.logger.Logger;
-import com.niksob.layer_connector.model.annotation.MappingWrapperAnnotationDetails;
+import com.niksob.layer_connector.model.annotation.LayerConnectorAnnotationDetails;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,20 +21,22 @@ public class LayerConnectorAnnotationServiceImpl implements LayerConnectorAnnota
     private final Logger log;
 
     @Override
-    public MappingWrapperAnnotationDetails extractAnnotationDetails(Element element) {
+    public LayerConnectorAnnotationDetails extractAnnotationDetails(Element element) {
         var annotation = element.getAnnotation(LayerConnector.class);
 
         var sourceTypeElement = extractTypeElement(annotation::source);
+        var sourceParentsTypeElement = extractTypeElements(annotation::sourceParents);
         var mapperTypeElement = extractTypeElements(annotation::mapper);
         var springComponentEnabled = annotation.isSpringComponentEnabled();
-        var annotationDetails =
-                new MappingWrapperAnnotationDetails(sourceTypeElement, mapperTypeElement, springComponentEnabled);
+        var annotationDetails = new LayerConnectorAnnotationDetails(
+                sourceTypeElement, sourceParentsTypeElement, mapperTypeElement, springComponentEnabled
+        );
 
         if (sourceTypeElement == null || mapperTypeElement == null || mapperTypeElement.isEmpty()) {
             throw new IllegalArgumentException("Invalid @LayerConnector annotation parameters");
         }
 
-        log.warn("MappingWrapperAnnotationDetails was extracted. ObjectState = " + annotationDetails);
+        log.warn("LayerConnectorAnnotationDetails was extracted. ObjectState = " + annotationDetails);
         return annotationDetails;
     }
 

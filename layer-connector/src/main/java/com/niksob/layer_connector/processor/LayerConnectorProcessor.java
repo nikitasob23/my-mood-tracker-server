@@ -52,23 +52,23 @@ public class LayerConnectorProcessor extends AbstractProcessor {
         }
         for (var element : annotations) {
             roundEnv.getElementsAnnotatedWith(element)
-                    .forEach(this::generateMappingWrapperClass);
+                    .forEach(this::generateLayerConnectorClass);
         }
         return true;
     }
 
-    private void generateMappingWrapperClass(Element e) {
-        var mappingWrapperClassDetails = layerConnectorService.extractClassDetails(e)
+    private void generateLayerConnectorClass(Element e) {
+        var layerConnectorClassDetails = layerConnectorService.extractClassDetails(e)
                 .setCompilationDetails(compilationDetails);
-        var classCode = layerConnectorCodeGenerator.generateClassCode(mappingWrapperClassDetails);
-        var mappingWrapperName = classUtil.stickNames(
-                mappingWrapperClassDetails.getInterfaceDetails().getName(),
+        var classCode = layerConnectorCodeGenerator.generateClassCode(layerConnectorClassDetails);
+        var layerConnectorName = classUtil.stickNames(
+                layerConnectorClassDetails.getInterfaceDetails().getName(),
                 LayerConnectorService.MAPPING_WRAPPER_NAME_POSTFIX
         );
-        createMappingWrapperImplementationClass(mappingWrapperName, classCode);
+        createLayerConnectorImplementationClass(layerConnectorName, classCode);
     }
 
-    private void createMappingWrapperImplementationClass(String implementationFullName, String s) {
+    private void createLayerConnectorImplementationClass(String implementationFullName, String s) {
         try (PrintWriter writer = new PrintWriter(
                 processingEnv.getFiler().createSourceFile(implementationFullName).openWriter())
         ) {

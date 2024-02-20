@@ -8,8 +8,9 @@ import java.util.Set;
 
 @Data
 @AllArgsConstructor
-public class MappingWrapperAnnotationDetails {
+public class LayerConnectorAnnotationDetails {
     private final TypeElement sourceTypeElement;
+    private final Set<TypeElement> sourceParents;
     private final Set<TypeElement> mapperTypeElementSet;
     private final boolean springComponentEnabled;
 }

@@ -1,9 +1,9 @@
 package com.niksob.layer_connector.service.annotation.layer_connector;
 
-import com.niksob.layer_connector.model.annotation.MappingWrapperAnnotationDetails;
+import com.niksob.layer_connector.model.annotation.LayerConnectorAnnotationDetails;
 
 import javax.lang.model.element.Element;
 
 public interface LayerConnectorAnnotationService {
-    MappingWrapperAnnotationDetails extractAnnotationDetails(Element element);
+    LayerConnectorAnnotationDetails extractAnnotationDetails(Element element);
 }

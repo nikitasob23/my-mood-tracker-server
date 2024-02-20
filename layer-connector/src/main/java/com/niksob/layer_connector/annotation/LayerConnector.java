@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface LayerConnector {
     Class<?> source();
+    Class<?>[] sourceParents() default {};
     Class<?>[] mapper();
     boolean isSpringComponentEnabled() default true;
 }
