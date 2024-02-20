@@ -15,6 +15,18 @@ public interface MoodTagEntityMapper {
         return userId.getValue();
     }
 
+    default Set<MoodTag> fromEntitySet(Set<MoodTagEntity> entities) {
+        return entities == null ? null : entities.stream()
+                .map(this::fromEntity)
+                .collect(Collectors.toSet());
+    }
+
+    default Set<MoodTagEntity> toEntitySet(Set<MoodTag> moodTags) {
+        return moodTags == null ? null : moodTags.stream()
+                .map(this::toEntity)
+                .collect(Collectors.toSet());
+    }
+
     @Mapping(source = "id.value", target = "id")
     @Mapping(source = "name.value", target = "name")
     @Mapping(source = "degree.value", target = "degree")
@@ -26,16 +38,4 @@ public interface MoodTagEntityMapper {
     @Mapping(source = "degree", target = "degree.value")
     @Mapping(source = "userId", target = "userId.value")
     MoodTag fromEntity(MoodTagEntity entity);
-
-    default Set<MoodTag> fromMoodTagEntitySet(Set<MoodTagEntity> entities) {
-        return entities.stream()
-                .map(this::fromEntity)
-                .collect(Collectors.toSet());
-    }
-
-    default Set<MoodTagEntity> toMoodTagEntitySet(Set<MoodTag> moodTags) {
-        return moodTags.stream()
-                .map(this::toEntity)
-                .collect(Collectors.toSet());
-    }
 }

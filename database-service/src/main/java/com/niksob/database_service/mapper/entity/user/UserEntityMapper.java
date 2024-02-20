@@ -2,12 +2,13 @@ package com.niksob.database_service.mapper.entity.user;
 
 import com.niksob.database_service.entity.user.UserEntity;
 import com.niksob.database_service.mapper.entity.mood.entry.MoodEntryEntityMapper;
+import com.niksob.database_service.mapper.entity.mood.tag.MoodTagEntityMapper;
 import com.niksob.domain.model.user.UserInfo;
 import com.niksob.domain.model.user.Username;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {MoodEntryEntityMapper.class})
+@Mapper(componentModel = "spring", uses = {MoodEntryEntityMapper.class, MoodTagEntityMapper.class})
 public interface UserEntityMapper {
     default String toEntityUsername(Username username) {
         return username.getValue();

@@ -28,15 +28,10 @@ public class MoodEntryEntityDaoImpl implements MoodEntryEntityDao {
         try {
             moodEntries = moodEntryRepository.loadByDateRange(userEntityDateRange);
         } catch (Exception e) {
-            log.error("Failed loading mood entries by user id from repository", null, userEntityDateRange);
-            throw new ResourceLoadingException("The mood entries was not load", userEntityDateRange, e);
+            log.error("Failed loading mood entries by date range from repository", null, userEntityDateRange);
+            throw new ResourceLoadingException("The mood entry entities was not load", userEntityDateRange, e);
         }
-        if (moodEntries.isEmpty()) {
-            log.error("Failed getting mood entries by user id from repository", null, userEntityDateRange);
-            throw new ResourceNotFoundException("The mood entries was not found", null, userEntityDateRange);
-        }
-        log.debug("Mood tag entries loaded from repository", moodEntries);
-        log.debug("Cached mood entry entities", moodEntries);
+        log.debug("Mood entry entries loaded from repository", moodEntries);
         return moodEntries;
     }
 

@@ -10,6 +10,7 @@ import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -30,6 +31,7 @@ public class MoodEntryServiceImpl implements MoodEntryService {
     }
 
     @Override
+    @Transactional
     public Mono<MoodEntry> save(MoodEntry moodEntry) {
         return MonoAsyncUtil.create(() -> moodEntry)
                 .flatMap(this::mergeMoodTagsInDao)
@@ -39,12 +41,14 @@ public class MoodEntryServiceImpl implements MoodEntryService {
     }
 
     @Override
+    @Transactional
     public Mono<Void> update(MoodEntry moodEntry) {
         return MonoAsyncUtil.create(() -> moodEntry)
                 .flatMap(this::mergeMoodTagsInDao)
                 .doOnNext(moodEntryDao::update)
                 .then()
-                .doOnSuccess(ignore -> log.debug("Update mood entry to DAO", moodEntry));
+                .doOnSuccess(ignore -> log.debug("Update mood entry to DAO", moodEntry))
+                .doOnError(throwable -> log.error("Mood entry update error", throwable, moodEntry));
     }
 
     @Override

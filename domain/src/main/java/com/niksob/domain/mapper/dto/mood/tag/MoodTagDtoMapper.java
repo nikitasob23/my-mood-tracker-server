@@ -7,11 +7,20 @@ import com.niksob.domain.model.user.UserId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Mapper(componentModel = "spring")
 public interface MoodTagDtoMapper {
     default UserId fromUserIdDto(UserIdDto userIdDto) {
         final Long id = Long.parseLong(userIdDto.getValue());
         return new UserId(id);
+    }
+
+    default Set<MoodTag> fromDtoSet(Set<MoodTagDto> dto) {
+        return dto == null ? null : dto.stream()
+                .map(this::fromDto)
+                .collect(Collectors.toSet());
     }
 
     @Mapping(source = "id.value", target = "id")

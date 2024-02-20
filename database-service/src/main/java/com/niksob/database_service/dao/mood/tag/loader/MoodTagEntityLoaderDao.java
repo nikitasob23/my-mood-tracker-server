@@ -4,6 +4,6 @@ import com.niksob.database_service.entity.mood.tag.MoodTagEntity;
 
 import java.util.Set;
 
-public interface CachedMoodTagEntityLoaderDao {
+public interface MoodTagEntityLoaderDao {
     Set<MoodTagEntity> loadByUserId(Long userId);
 }

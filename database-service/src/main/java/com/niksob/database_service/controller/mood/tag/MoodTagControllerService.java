@@ -10,7 +10,8 @@ import com.niksob.layer_connector.annotation.LayerConnector;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@LayerConnector(source = MoodTagService.class, mapper = {MoodTagNameDtoMapper.class, MoodTagDtoMapper.class, MoodTagMonoMapper.class})
+@LayerConnector(source = MoodTagService.class,
+        mapper = {MoodTagNameDtoMapper.class, MoodTagDtoMapper.class, MoodTagMonoMapper.class})
 public interface MoodTagControllerService {
     Flux<MoodTagDto> loadByUserId(UserIdDto userIdDto);
 

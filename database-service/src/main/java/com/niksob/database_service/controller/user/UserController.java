@@ -35,7 +35,7 @@ public class UserController {
         return userControllerService.load(usernameDto)
                 .doOnSuccess(ignore -> log.debug("Successful user loading", usernameDto))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
-                .onErrorResume(throwable -> createLoadingError(throwable, usernameDto));
+                .onErrorResume(this::createLoadingError);
     }
 
     @PostMapping
@@ -44,7 +44,7 @@ public class UserController {
         return userControllerService.save(userInfoDto)
                 .doOnNext(u -> log.debug("Successful user saving", u.getUsername()))
                 .doOnNext(ignore -> log.debug("Controller returning success status", HttpStatus.CREATED))
-                .onErrorResume(throwable -> createSavingError(throwable, userInfoDto));
+                .onErrorResume(this::createSavingError);
     }
 
     @PutMapping
@@ -53,7 +53,7 @@ public class UserController {
         return userControllerService.update(userInfoDto)
                 .doOnSuccess(ignore -> log.debug("Successful user updating", userInfoDto))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
-                .onErrorResume(throwable -> createUpdatingError(throwable, userInfoDto));
+                .onErrorResume(this::createUpdatingError);
     }
 
     @DeleteMapping
@@ -62,11 +62,10 @@ public class UserController {
         return userControllerService.delete(usernameDto)
                 .doOnSuccess(ignore -> log.debug("Successful user deletion", usernameDto))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
-                .onErrorResume(throwable -> createDeleteError(throwable, usernameDto));
+                .onErrorResume(this::createDeleteError);
     }
 
-    private Mono<UserInfoDto> createLoadingError(Throwable throwable, Object state) {
-        log.error("User load error", throwable, state);
+    private Mono<UserInfoDto> createLoadingError(Throwable throwable) {
         ControllerResponseException errorResponse;
         if (throwable instanceof IllegalUserAccessException) {
             errorResponse = new ControllerResponseException(
@@ -86,8 +85,7 @@ public class UserController {
         return Mono.error(errorResponse);
     }
 
-    private Mono<UserInfoDto> createSavingError(Throwable throwable, Object state) {
-        log.error("User save error", throwable, state);
+    private Mono<UserInfoDto> createSavingError(Throwable throwable) {
         ControllerResponseException errorResponse;
         if (throwable instanceof ResourceSavingException) {
             errorResponse = new ControllerResponseException(
@@ -100,15 +98,14 @@ public class UserController {
                     String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)
             );
         } else {
-            log.error("Controller returning failed status", throwable, HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error("Controller returning failed status", null, HttpStatus.INTERNAL_SERVER_ERROR);
             return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
         }
         log.error("Controller returning failed response", null, errorResponse);
         return Mono.error(errorResponse);
     }
 
-    private Mono<Void> createUpdatingError(Throwable throwable, Object state) {
-        log.error("User update error", throwable, state);
+    private Mono<Void> createUpdatingError(Throwable throwable) {
         if (throwable instanceof ResourceUpdatingException) {
             var errorResponse = new ControllerResponseException(
                     throwable, HttpStatus.BAD_REQUEST,
@@ -117,11 +114,10 @@ public class UserController {
             log.error("Controller returning failed response", null, errorResponse);
             return Mono.error(errorResponse);
         }
-        return createLoadingError(throwable, state).then();
+        return createLoadingError(throwable).then();
     }
 
-    private Mono<Void> createDeleteError(Throwable throwable, Object state) {
-        log.error("Failed to delete user", throwable, state);
+    private Mono<Void> createDeleteError(Throwable throwable) {
         if (throwable instanceof ResourceDeletionException) {
             final ControllerResponseException errorResponse = new ControllerResponseException(
                     throwable, HttpStatus.BAD_REQUEST,
@@ -130,6 +126,6 @@ public class UserController {
             log.error("Controller returning failed response", null, errorResponse);
             return Mono.error(errorResponse);
         }
-        return createLoadingError(throwable, state).then();
+        return createLoadingError(throwable).then();
     }
 }

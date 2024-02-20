@@ -17,7 +17,7 @@ public interface MoodEntryEntityMapper {
     }
 
     default Set<MoodEntry> fromEntitySet(Set<MoodEntryEntity> entities) {
-        return entities.stream()
+        return entities == null ? null : entities.stream()
                 .map(this::fromEntity)
                 .collect(Collectors.toSet());
     }
