@@ -25,6 +25,13 @@ public class ControllerResponseException extends RuntimeException {
         this.path = path;
     }
 
+    public ControllerResponseException(String message, HttpStatus httpStatus, String path) {
+        super(message);
+        this.timestamp = LocalDateTime.now();
+        this.httpStatus = httpStatus;
+        this.path = path;
+    }
+
     public ControllerResponseException(HttpStatus httpStatus, String message, LocalDateTime timestamp, String path) {
         super(message);
         this.timestamp = timestamp;
