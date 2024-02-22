@@ -17,7 +17,7 @@ public class MoodTagControllerUtilConfig {
 
     private final ObjectStateLogger logger = ObjectStateLoggerFactory.getLogger(MoodTagController.class);
 
-    @Bean("moodTagResponseUtil")
+    @Bean("moodTagControllerUtil")
     public ResourceControllerUtil getMoodTagControllerUtil() {
         final String staticPath = "%s/%s".formatted(contextPath, MoodTagControllerPaths.BASE_URI);
         return new ResourceControllerUtil("Mood tag", staticPath, logger);

@@ -26,14 +26,12 @@ public class ResourceControllerUtil {
         return createResponse("%s list is empty".formatted(returnElementsName), HttpStatus.NO_CONTENT);
     }
 
-    public <T> Flux<T> createLoadingError(Throwable throwable) {
-        if (throwable instanceof ResourceNotFoundException) {
-            var errorResponse = new ControllerResponseException(throwable, HttpStatus.NOT_FOUND, staticPath);
-            log.error("Controller returning failed response", null, errorResponse);
-            return Flux.error(errorResponse);
-        }
-        log.error("Controller returning failed status", null, HttpStatus.INTERNAL_SERVER_ERROR);
-        return Flux.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+    public <T> Mono<T> createLoadingErrorMono(Throwable throwable) {
+        return Mono.error(createLoadingError(throwable));
+    }
+
+    public <T> Flux<T> createLoadingErrorFlux(Throwable throwable) {
+        return Flux.error(createLoadingError(throwable));
     }
 
     public <T> Mono<T> createSavingError(Throwable throwable) {
@@ -56,7 +54,7 @@ public class ResourceControllerUtil {
             log.error("Controller returning failed response", null, errorResponse);
             return Mono.error(errorResponse);
         }
-        return createLoadingError(throwable).then();
+        return createLoadingErrorMono(throwable).then();
     }
 
     public Mono<Void> createDeleteError(Throwable throwable) {
@@ -65,6 +63,17 @@ public class ResourceControllerUtil {
             log.error("Controller returning failed response", null, errorResponse);
             return Mono.error(errorResponse);
         }
-        return createLoadingError(throwable).then();
+        return createLoadingErrorMono(throwable).then();
+    }
+
+    private Throwable createLoadingError(Throwable throwable) {
+        Throwable errorResponse;
+        if (throwable instanceof ResourceNotFoundException) {
+            errorResponse = new ControllerResponseException(throwable, HttpStatus.NOT_FOUND, staticPath);
+            log.error("Controller returning failed response", null, errorResponse);
+            return errorResponse;
+        }
+        log.error("Controller returning failed status", null, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

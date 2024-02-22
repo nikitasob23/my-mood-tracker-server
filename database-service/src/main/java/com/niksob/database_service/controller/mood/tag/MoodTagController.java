@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 @RequestMapping(MoodTagControllerPaths.BASE_URI)
 public class MoodTagController {
     private final MoodTagControllerService moodTagControllerService;
-    @Qualifier("moodTagResponseUtil")
+    @Qualifier("moodTagControllerUtil")
     private final ResourceControllerUtil controllerUtil;
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(MoodTagController.class);
@@ -28,7 +28,7 @@ public class MoodTagController {
         return moodTagControllerService.loadByUserId(userIdDto)
                 .doOnNext(ignore -> log.debug("Successful mood tag loading", userIdDto))
                 .doOnNext(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
-                .onErrorResume(controllerUtil::createLoadingError)
+                .onErrorResume(controllerUtil::createLoadingErrorFlux)
                 .switchIfEmpty(controllerUtil.returnNoContentStatus());
     }
 
