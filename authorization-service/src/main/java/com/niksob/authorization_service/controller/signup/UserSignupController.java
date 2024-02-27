@@ -1,8 +1,7 @@
 package com.niksob.authorization_service.controller.signup;
 
 import com.niksob.domain.dto.user.signup.SignupDetailsDto;
-import com.niksob.domain.exception.http.HttpClientException;
-import com.niksob.domain.exception.rest.controller.response.ControllerResponseException;
+import com.niksob.domain.exception.rest.controller.response.HttpClientException;
 import com.niksob.domain.path.controller.authorization_service.UserSignupControllerPaths;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -34,16 +33,29 @@ public class UserSignupController {
     }
 
     public <T> Mono<T> createSignupError(Throwable throwable) {
-        ControllerResponseException errorResponse;
-        if (throwable instanceof HttpClientException) {
-            errorResponse = new ControllerResponseException(
-                    throwable, HttpStatus.BAD_REQUEST,
+        if (!(throwable instanceof HttpClientException httpClientException)) {
+            return createInternalServerError(throwable);
+        }
+        if (compareHttpStatus(httpClientException.getHttpStatus(), HttpStatus.CONFLICT)) {
+            HttpClientException errorResponse = new HttpClientException(
+                    httpClientException.getMessage(),
+                    httpClientException,
+                    httpClientException.getTimestamp(),
+                    httpClientException.getHttpStatus(),
                     "%s/%s".formatted(contextPath, UserSignupControllerPaths.BASE_URI)
             );
             log.error("Controller returning failed response", throwable, errorResponse);
             return Mono.error(errorResponse);
         }
+        return createInternalServerError(throwable);
+    }
+
+    private <T> Mono<T> createInternalServerError(Throwable throwable) {
         log.error("Controller returning failed status", throwable, HttpStatus.INTERNAL_SERVER_ERROR);
         return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+    private boolean compareHttpStatus(HttpStatus status, HttpStatus needed) {
+        return status.getReasonPhrase().equals(needed.getReasonPhrase());
     }
 }

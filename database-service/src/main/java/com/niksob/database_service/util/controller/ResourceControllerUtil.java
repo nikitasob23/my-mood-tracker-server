@@ -1,7 +1,7 @@
 package com.niksob.database_service.util.controller;
 
 import com.niksob.database_service.exception.resource.*;
-import com.niksob.domain.exception.rest.controller.response.ControllerResponseException;
+import com.niksob.domain.exception.rest.controller.response.HttpClientException;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ public class ResourceControllerUtil {
     private final ObjectStateLogger log;
 
     public <T> Flux<T> createResponse(String message, HttpStatus httpStatus) {
-        var statusResponse = new ControllerResponseException(message, httpStatus, staticPath);
+        var statusResponse = new HttpClientException(message, httpStatus, staticPath);
         log.debug("Controller returning success response", statusResponse);
         return Flux.error(statusResponse);
     }
@@ -35,11 +35,11 @@ public class ResourceControllerUtil {
     }
 
     public <T> Mono<T> createSavingError(Throwable throwable) {
-        ControllerResponseException errorResponse;
+        HttpClientException errorResponse;
         if (throwable instanceof ResourceSavingException) {
-            errorResponse = new ControllerResponseException(throwable, HttpStatus.BAD_REQUEST, staticPath);
+            errorResponse = new HttpClientException(throwable, HttpStatus.BAD_REQUEST, staticPath);
         } else if (throwable instanceof ResourceAlreadyExistsException) {
-            errorResponse = new ControllerResponseException(throwable, HttpStatus.CONFLICT, staticPath);
+            errorResponse = new HttpClientException(throwable, HttpStatus.CONFLICT, staticPath);
         } else {
             log.error("Controller returning failed status", throwable, HttpStatus.INTERNAL_SERVER_ERROR);
             return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
@@ -50,7 +50,7 @@ public class ResourceControllerUtil {
 
     public Mono<Void> createUpdatingError(Throwable throwable) {
         if (throwable instanceof ResourceUpdatingException) {
-            var errorResponse = new ControllerResponseException(throwable, HttpStatus.BAD_REQUEST, staticPath);
+            var errorResponse = new HttpClientException(throwable, HttpStatus.BAD_REQUEST, staticPath);
             log.error("Controller returning failed response", null, errorResponse);
             return Mono.error(errorResponse);
         }
@@ -59,7 +59,7 @@ public class ResourceControllerUtil {
 
     public Mono<Void> createDeleteError(Throwable throwable) {
         if (throwable instanceof ResourceDeletionException) {
-            var errorResponse = new ControllerResponseException(throwable, HttpStatus.BAD_REQUEST, staticPath);
+            var errorResponse = new HttpClientException(throwable, HttpStatus.BAD_REQUEST, staticPath);
             log.error("Controller returning failed response", null, errorResponse);
             return Mono.error(errorResponse);
         }
@@ -69,7 +69,7 @@ public class ResourceControllerUtil {
     private Throwable createLoadingError(Throwable throwable) {
         Throwable errorResponse;
         if (throwable instanceof ResourceNotFoundException) {
-            errorResponse = new ControllerResponseException(throwable, HttpStatus.NOT_FOUND, staticPath);
+            errorResponse = new HttpClientException(throwable, HttpStatus.NOT_FOUND, staticPath);
             log.error("Controller returning failed response", null, errorResponse);
             return errorResponse;
         }

@@ -6,40 +6,40 @@ import org.springframework.http.HttpStatus;
 import java.time.LocalDateTime;
 
 @Getter
-public class ControllerResponseException extends RuntimeException {
+public class HttpClientException extends RuntimeException {
 
     private final LocalDateTime timestamp;
     private final HttpStatus httpStatus;
     private final String path;
 
-    public ControllerResponseException(LocalDateTime timestamp, HttpStatus httpStatus, String path) {
+    public HttpClientException(LocalDateTime timestamp, HttpStatus httpStatus, String path) {
         this.timestamp = timestamp;
         this.httpStatus = httpStatus;
         this.path = path;
     }
 
-    public ControllerResponseException(Throwable cause, HttpStatus httpStatus, String path) {
+    public HttpClientException(Throwable cause, HttpStatus httpStatus, String path) {
         super(cause.getMessage(), cause);
         this.timestamp = LocalDateTime.now();
         this.httpStatus = httpStatus;
         this.path = path;
     }
 
-    public ControllerResponseException(String message, HttpStatus httpStatus, String path) {
+    public HttpClientException(String message, HttpStatus httpStatus, String path) {
         super(message);
         this.timestamp = LocalDateTime.now();
         this.httpStatus = httpStatus;
         this.path = path;
     }
 
-    public ControllerResponseException(HttpStatus httpStatus, String message, LocalDateTime timestamp, String path) {
+    public HttpClientException(HttpStatus httpStatus, String message, LocalDateTime timestamp, String path) {
         super(message);
         this.timestamp = timestamp;
         this.httpStatus = httpStatus;
         this.path = path;
     }
 
-    public ControllerResponseException(
+    public HttpClientException(
             String message,
             Throwable cause,
             LocalDateTime timestamp,
@@ -52,14 +52,14 @@ public class ControllerResponseException extends RuntimeException {
         this.path = path;
     }
 
-    public ControllerResponseException(Throwable cause, LocalDateTime timestamp, HttpStatus httpStatus, String path) {
+    public HttpClientException(Throwable cause, LocalDateTime timestamp, HttpStatus httpStatus, String path) {
         super(cause);
         this.timestamp = timestamp;
         this.httpStatus = httpStatus;
         this.path = path;
     }
 
-    public ControllerResponseException(
+    public HttpClientException(
             String message,
             HttpStatus httpStatus,
             LocalDateTime timestamp,
