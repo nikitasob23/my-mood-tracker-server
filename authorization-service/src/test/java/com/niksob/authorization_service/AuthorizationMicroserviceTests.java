@@ -1,4 +1,4 @@
-package org.niksob.authorization_service;
+package com.niksob.authorization_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

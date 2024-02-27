@@ -6,8 +6,8 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {
-        "com.niksob.domain",
         "com.niksob.logger",
+        "com.niksob.domain",
         "com.niksob.database_service"
 })
 public class DatabaseMicroservice {

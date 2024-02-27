@@ -1,6 +1,5 @@
 package com.niksob.logger.config.properties;
 
-import com.niksob.domain.config.properties.YamlPropertySourcesPlaceholderConfigurerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;

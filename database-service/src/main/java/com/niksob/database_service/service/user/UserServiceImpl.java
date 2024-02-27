@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     public Mono<UserInfo> load(Username username) {
         return MonoAsyncUtil.create(() -> userDao.load(username))
                 .doOnError(throwable -> log.error("User info loading error", throwable, username))
-                .map(this::loadMoodEntriesAndTags)
+                .flatMap(u -> MonoAsyncUtil.create(() -> loadMoodEntriesAndTags(u)))
                 .doOnNext(userInfo -> log.debug("Get user info from user DAO", userInfo));
     }
 
