@@ -1,4 +1,4 @@
-package com.niksob.authorization_service.service.signup;
+package com.niksob.authorization_service.service.auth.signup;
 
 import com.niksob.authorization_service.model.signup.SignupDetails;
 import com.niksob.authorization_service.service.password_encoder.PasswordEncoderService.PasswordEncoderService;

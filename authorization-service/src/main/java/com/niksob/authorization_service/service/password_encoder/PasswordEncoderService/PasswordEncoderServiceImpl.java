@@ -16,4 +16,9 @@ public class PasswordEncoderServiceImpl implements PasswordEncoderService {
         var passwordValue = passwordEncoder.encode(rowPassword.getValue());
         return new Password(passwordValue);
     }
+
+    @Override
+    public boolean matches(RowPassword rowPassword, Password password) {
+        return passwordEncoder.matches(rowPassword.getValue(), password.getValue());
+    }
 }

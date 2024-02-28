@@ -5,4 +5,6 @@ import com.niksob.domain.model.user.RowPassword;
 
 public interface PasswordEncoderService {
     Password encode(RowPassword rowPassword);
+
+    boolean matches(RowPassword rowPassword, Password password);
 }
