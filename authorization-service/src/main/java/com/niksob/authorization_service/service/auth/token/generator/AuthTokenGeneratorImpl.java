@@ -12,6 +12,10 @@ import com.niksob.domain.model.user.UserInfo;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
+
+import java.util.function.Function;
 
 @Service
 @AllArgsConstructor
@@ -25,13 +29,22 @@ public class AuthTokenGeneratorImpl implements AuthTokenGenerator {
     private final AuthTokenMapper authTokenMapper;
 
     @Override
-    public AuthToken generate(UserInfo userInfo) {
-        final JwtDetails jwtDetails = jwtDetailsMapper.fromUserInfo(userInfo);
-        final Jwt accessJwt = accessJwtTokenService.generate(jwtDetails);
-        final AccessToken accessToken = authTokenMapper.toAccessToken(accessJwt);
+    public Mono<AuthToken> generate(UserInfo userInfo) {
+        final Mono<JwtDetails> jwtDetailsMono = Mono.just(userInfo).map(jwtDetailsMapper::fromUserInfo);
 
-        final Jwt refreshJwt = refreshJwtTokenService.generate(jwtDetails);
-        final RefreshToken refreshToken = authTokenMapper.toRefreshToken(refreshJwt);
-        return new AuthToken(accessToken, refreshToken);
+        final Mono<AccessToken> accessTokenMono =
+                createTokenMono(jwtDetailsMono, accessJwtTokenService, authTokenMapper::toAccessToken);
+        final Mono<RefreshToken> refreshTokenMono =
+                createTokenMono(jwtDetailsMono, refreshJwtTokenService, authTokenMapper::toRefreshToken);
+
+        return accessTokenMono.zipWith(refreshTokenMono, AuthToken::new);
+    }
+
+    private <T> Mono<T> createTokenMono(
+            Mono<JwtDetails> jwtDetailsMono, JwtService jwtService, Function<Jwt, T> jwtToTokenMapper
+    ) {
+        return jwtDetailsMono.map(jwtService::generate)
+                .map(jwtToTokenMapper)
+                .subscribeOn(Schedulers.parallel());
     }
 }

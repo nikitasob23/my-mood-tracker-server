@@ -1,5 +1,6 @@
 package com.niksob.domain.dto.auth.login;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -7,5 +8,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class RowLoginInDetailsDto {
     private String username;
+    @JsonProperty("row_password")
     private String rowPassword;
 }

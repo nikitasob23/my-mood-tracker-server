@@ -8,5 +8,9 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 public class JwtClaims {
-    private Map<String, Object> storage = Map.of();
+    private final Map<String, Object> storage;
+
+    public JwtClaims() {
+        this.storage = Map.of();
+    }
 }

@@ -2,7 +2,7 @@ package com.niksob.database_service.dao.mood.tag.loader;
 
 import com.niksob.database_service.dao.mood.tag.cache.MoodTagEntityCache;
 import com.niksob.database_service.entity.mood.tag.MoodTagEntity;
-import com.niksob.database_service.exception.resource.ResourceLoadingException;
+import com.niksob.domain.exception.resource.ResourceLoadingException;
 import com.niksob.database_service.repository.mood.tag.MoodTagRepository;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;

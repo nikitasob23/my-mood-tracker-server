@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class JwtDetails {
-    private String subject;
-    private JwtClaims claims;
+    private final String subject;
+    private final JwtClaims claims = new JwtClaims();
 }

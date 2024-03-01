@@ -1,20 +1,20 @@
 package com.niksob.authorization_service.util.date.expiration;
 
-import org.springframework.stereotype.Component;
+import lombok.AllArgsConstructor;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.stream.Stream;
 
-@Component
+@AllArgsConstructor
 public class ExpirationDateUtilImpl implements ExpirationDateUtil {
+    private final int expirationInMinutes;
+
     @Override
-    public Date getExpiratedDateByMinutes(int minutes) {
+    public Date create() {
         final Instant dateInstant = LocalDateTime.now()
-                .plusMinutes(minutes)
+                .plusMinutes(expirationInMinutes)
                 .atZone(ZoneId.systemDefault())
                 .toInstant();
         return Date.from(dateInstant);

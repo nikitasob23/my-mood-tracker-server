@@ -2,8 +2,8 @@ package com.niksob.database_service.dao.mood.tag.cache;
 
 import com.niksob.database_service.dao.mood.tag.loader.CachedMoodTagEntityLoaderDaoImpl;
 import com.niksob.database_service.entity.mood.tag.MoodTagEntity;
-import com.niksob.database_service.exception.resource.ResourceNotFoundException;
-import com.niksob.database_service.exception.resource.ResourceUpdatingException;
+import com.niksob.domain.exception.resource.ResourceNotFoundException;
+import com.niksob.domain.exception.resource.ResourceUpdatingException;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;

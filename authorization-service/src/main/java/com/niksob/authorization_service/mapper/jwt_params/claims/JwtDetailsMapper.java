@@ -1,16 +1,10 @@
 package com.niksob.authorization_service.mapper.jwt_params.claims;
 
-import com.niksob.authorization_service.model.jwt.JwtClaims;
 import com.niksob.authorization_service.model.jwt.JwtDetails;
 import com.niksob.domain.model.user.UserInfo;
 import io.jsonwebtoken.Claims;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import java.time.*;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Mapper(componentModel = "spring", uses = JwtClaimsMapper.class)
 public interface JwtDetailsMapper {

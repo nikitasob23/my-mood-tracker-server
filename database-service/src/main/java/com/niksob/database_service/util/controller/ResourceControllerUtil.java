@@ -1,6 +1,6 @@
 package com.niksob.database_service.util.controller;
 
-import com.niksob.database_service.exception.resource.*;
+import com.niksob.domain.exception.resource.*;
 import com.niksob.domain.exception.rest.controller.response.HttpClientException;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import lombok.AllArgsConstructor;
