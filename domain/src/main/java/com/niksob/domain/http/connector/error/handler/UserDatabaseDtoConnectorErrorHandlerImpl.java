@@ -16,7 +16,6 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class UserDatabaseDtoConnectorErrorHandlerImpl implements UserDatabaseDtoConnectorErrorHandler {
-
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserDatabaseDtoConnectorImpl.class);
 
     @Override

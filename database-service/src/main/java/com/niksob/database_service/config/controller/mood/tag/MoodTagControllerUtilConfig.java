@@ -1,7 +1,7 @@
 package com.niksob.database_service.config.controller.mood.tag;
 
 import com.niksob.database_service.controller.mood.tag.MoodTagController;
-import com.niksob.database_service.util.controller.ResourceControllerUtil;
+import com.niksob.database_service.util.controller.ResourceControllerErrorUtil;
 import com.niksob.domain.path.controller.database_service.mood.tag.MoodTagControllerPaths;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -18,8 +18,8 @@ public class MoodTagControllerUtilConfig {
     private final ObjectStateLogger logger = ObjectStateLoggerFactory.getLogger(MoodTagController.class);
 
     @Bean("moodTagControllerUtil")
-    public ResourceControllerUtil getMoodTagControllerUtil() {
+    public ResourceControllerErrorUtil getMoodTagControllerUtil() {
         final String staticPath = "%s/%s".formatted(contextPath, MoodTagControllerPaths.BASE_URI);
-        return new ResourceControllerUtil("Mood tag", staticPath, logger);
+        return new ResourceControllerErrorUtil("Mood tag", staticPath, logger);
     }
 }

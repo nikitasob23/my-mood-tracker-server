@@ -1,6 +1,6 @@
 package com.niksob.database_service.controller.mood.entry;
 
-import com.niksob.database_service.util.controller.ResourceControllerUtil;
+import com.niksob.database_service.util.controller.ResourceControllerErrorUtil;
 import com.niksob.domain.dto.mood.entry.UserEntryDateRangeDto;
 import com.niksob.domain.dto.mood.entry.MoodEntryDto;
 import com.niksob.domain.dto.mood.entry.MoodEntryIdDto;
@@ -22,7 +22,7 @@ import java.time.LocalDate;
 public class MoodEntryController {
     private final MoodEntryControllerService moodEntryControllerService;
     @Qualifier("moodEntryControllerUtil")
-    private final ResourceControllerUtil controllerUtil;
+    private final ResourceControllerErrorUtil controllerUtil;
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(MoodEntryController.class);
 

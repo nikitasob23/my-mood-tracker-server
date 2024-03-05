@@ -1,7 +1,7 @@
 package com.niksob.database_service.config.controller.user;
 
 import com.niksob.database_service.controller.user.UserController;
-import com.niksob.database_service.util.controller.ResourceControllerUtil;
+import com.niksob.database_service.util.controller.ResourceControllerErrorUtil;
 import com.niksob.domain.path.controller.database_service.user.UserControllerPaths;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -18,8 +18,8 @@ public class UserControllerUtilConfig {
     private final ObjectStateLogger logger = ObjectStateLoggerFactory.getLogger(UserController.class);
 
     @Bean("userControllerUtil")
-    public ResourceControllerUtil getMoodTagControllerUtil() {
+    public ResourceControllerErrorUtil getMoodTagControllerUtil() {
         final String staticPath = "%s/%s".formatted(contextPath, UserControllerPaths.BASE_URI);
-        return new ResourceControllerUtil(null, staticPath, logger);
+        return new ResourceControllerErrorUtil(null, staticPath, logger);
     }
 }

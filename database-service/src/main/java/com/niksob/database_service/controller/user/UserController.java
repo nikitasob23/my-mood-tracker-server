@@ -1,6 +1,6 @@
 package com.niksob.database_service.controller.user;
 
-import com.niksob.database_service.util.controller.ResourceControllerUtil;
+import com.niksob.database_service.util.controller.ResourceControllerErrorUtil;
 import com.niksob.domain.path.controller.database_service.user.UserControllerPaths;
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;
@@ -19,7 +19,7 @@ public class UserController {
     private final UserControllerService userControllerService;
 
     @Qualifier("userControllerUtil")
-    private final ResourceControllerUtil controllerUtil;
+    private final ResourceControllerErrorUtil controllerErrorUtil;
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserController.class);
 
@@ -28,7 +28,7 @@ public class UserController {
         return userControllerService.load(usernameDto)
                 .doOnSuccess(ignore -> log.debug("Successful user loading", usernameDto))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
-                .onErrorResume(controllerUtil::createLoadingErrorMono);
+                .onErrorResume(controllerErrorUtil::createLoadingErrorMono);
     }
 
     @PostMapping
@@ -37,7 +37,7 @@ public class UserController {
         return userControllerService.save(userInfoDto)
                 .doOnNext(u -> log.debug("Successful user saving", u.getUsername()))
                 .doOnNext(ignore -> log.debug("Controller returning success status", HttpStatus.CREATED))
-                .onErrorResume(controllerUtil::createSavingError);
+                .onErrorResume(controllerErrorUtil::createSavingError);
     }
 
     @PutMapping
@@ -46,7 +46,7 @@ public class UserController {
         return userControllerService.update(userInfoDto)
                 .doOnSuccess(ignore -> log.debug("Successful user updating", userInfoDto))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
-                .onErrorResume(controllerUtil::createUpdatingError);
+                .onErrorResume(controllerErrorUtil::createUpdatingError);
     }
 
     @DeleteMapping
@@ -55,6 +55,6 @@ public class UserController {
         return userControllerService.delete(usernameDto)
                 .doOnSuccess(ignore -> log.debug("Successful user deletion", usernameDto))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
-                .onErrorResume(controllerUtil::createDeleteError);
+                .onErrorResume(controllerErrorUtil::createDeleteError);
     }
 }

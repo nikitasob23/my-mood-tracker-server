@@ -10,7 +10,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @AllArgsConstructor
-public class ResourceControllerUtil {
+public class ResourceControllerErrorUtil {
     private final String returnElementsName;
     private final String staticPath;
 

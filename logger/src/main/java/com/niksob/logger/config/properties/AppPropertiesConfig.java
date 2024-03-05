@@ -6,7 +6,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 @Configuration
-@PropertySource("classpath:logger-config.yml")
+@PropertySource("classpath:" + AppPropertiesConfig.PROPERTY_FILE_NAME)
 public class AppPropertiesConfig {
     public static final String PROPERTY_FILE_NAME = "logger-config.yml";
 
