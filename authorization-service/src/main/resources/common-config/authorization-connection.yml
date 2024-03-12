@@ -4,4 +4,4 @@ microservice:
       protocol: http
       hostname: localhost
       port: 8092
-      path: /api/service
+      path: /api/service/auth
