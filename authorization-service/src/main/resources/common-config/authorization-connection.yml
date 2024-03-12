@@ -1,0 +1,7 @@
+microservice:
+  connection:
+    authorization:
+      protocol: http
+      hostname: localhost
+      port: 8092
+      path: /api/service

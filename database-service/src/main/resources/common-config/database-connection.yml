@@ -1,0 +1,7 @@
+microservice:
+  connection:
+    database:
+      protocol: http
+      hostname: localhost
+      port: 8081
+      path: /api/service/database
