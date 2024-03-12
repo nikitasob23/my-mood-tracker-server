@@ -2,8 +2,8 @@ package com.niksob.database_service.dao.mood.entry;
 
 import com.niksob.database_service.entity.mood.entry.UserEntryDateRangeDaoDto;
 import com.niksob.database_service.entity.mood.entry.MoodEntryEntity;
-import com.niksob.database_service.exception.resource.*;
 import com.niksob.database_service.repository.mood.entry.MoodEntryEntityRepository;
+import com.niksob.domain.exception.resource.*;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;

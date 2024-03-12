@@ -1,4 +1,4 @@
-package com.niksob.database_service.exception.resource;
+package com.niksob.domain.exception.resource;
 
 import lombok.Getter;
 
