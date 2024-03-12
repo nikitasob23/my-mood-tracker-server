@@ -1,6 +1,6 @@
 package com.niksob.database_service.controller.mood.tag;
 
-import com.niksob.database_service.util.controller.ResourceControllerUtil;
+import com.niksob.database_service.util.controller.ResourceControllerErrorUtil;
 import com.niksob.domain.dto.mood.tag.MoodTagDto;
 import com.niksob.domain.dto.user.UserIdDto;
 import com.niksob.domain.path.controller.database_service.mood.tag.MoodTagControllerPaths;
@@ -19,7 +19,7 @@ import reactor.core.publisher.Mono;
 public class MoodTagController {
     private final MoodTagControllerService moodTagControllerService;
     @Qualifier("moodTagControllerUtil")
-    private final ResourceControllerUtil controllerUtil;
+    private final ResourceControllerErrorUtil controllerUtil;
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(MoodTagController.class);
 

@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import org.mapstruct.Mapper;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

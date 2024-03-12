@@ -8,17 +8,19 @@ import com.niksob.domain.exception.rest.controller.response.HttpClientException;
 import com.niksob.domain.http.connector.error.handler.InternalServerErrorUtil;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 @Component
+@RequiredArgsConstructor
 public class ControllerErrorHandler {
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
-    private InternalServerErrorUtil internalServerErrorUtil;
+    private final InternalServerErrorUtil internalServerErrorUtil;
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(ControllerErrorHandler.class);
 

@@ -1,0 +1,86 @@
+target/
+.mvn/
+.DS_Store
+mvnw
+mvnw.cmd
+
+.http
+/http-request
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+# Исключение логов и временных файлов
+.log
+*.log
+*.log.*
+*.log?
+*.swp
+*~
+.tmp
+
+# Исключение конфигурационных файлов
+application.properties
+application.yml
+application-dev.properties
+application-dev.yml
+application-prod.properties
+application-prod.yml
+
+# Исключение файлов настроек для разработчика
+*.xml
+*.properties
+
+# Исключение файлов с зависимостями и сгенерированных файлов
+.idea_modules/
+
+# Исключение файлов конфигурации Spring Boot
+/application-*.yml
+
+# Исключение файлов для настройки Spring Profiles
+/application-dev.properties
+/application-prod.properties
+
+# Исключение локальных файлов базы данных
+/data/
+
+# Исключение файлов конфигурации Docker
+Dockerfile
+
+# Исключение файлов с паролями и ключами
+*.jks
+*.p12
+*.pem
+*.key
+
+# Исключение файлов и директорий для тестов
+test-output/
+.surefire-report/
+failsafe-reports/
+*.idea
+
