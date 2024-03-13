@@ -10,9 +10,6 @@ import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
 
-import java.util.Objects;
-import java.util.stream.Stream;
-
 @Configuration
 public class UserDaoConfig {
 
@@ -20,16 +17,20 @@ public class UserDaoConfig {
 
     @Bean
     public UserEntityDao getCachedUserDao(UserRepository userRepository, CacheManager cacheManager) {
-        Cache userEntityCache = Stream.of(CachedUserEntityDao.USER_CACHE_ENTITY_NAME)
-                .map(cacheManager::getCache)
-                .filter(Objects::nonNull)
-                .findFirst().orElseThrow(this::createCacheStorageNotFoundException);
-        return new CachedUserEntityDao(userRepository, userEntityCache);
+        final Cache usernameToUserCache = cacheManager.getCache(CachedUserEntityDao.USER_BY_USERNAME_CACHE_NAME);
+        final Cache idToUserCache = cacheManager.getCache(CachedUserEntityDao.USER_BY_ID_CACHE_NAME);
+        if (usernameToUserCache == null) {
+            throwCacheStorageNotFoundException(CachedUserEntityDao.USER_BY_USERNAME_CACHE_NAME);
+        }
+        if (idToUserCache == null) {
+            throwCacheStorageNotFoundException(CachedUserEntityDao.USER_BY_ID_CACHE_NAME);
+        }
+        return new CachedUserEntityDao(userRepository, usernameToUserCache, idToUserCache);
     }
 
-    private IllegalStateException createCacheStorageNotFoundException() {
+    private void throwCacheStorageNotFoundException(String cacheName) {
         final IllegalStateException e = new IllegalStateException("User entity cache storage not found");
-        log.error("UserDao instance was not created by cache key", e, CachedUserEntityDao.USER_CACHE_ENTITY_NAME);
-        return e;
+        log.error("UserDao instance was not created by cache key", e, cacheName);
+        throw e;
     }
 }

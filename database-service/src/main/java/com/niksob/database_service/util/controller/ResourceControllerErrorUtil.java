@@ -35,23 +35,17 @@ public class ResourceControllerErrorUtil {
     }
 
     public <T> Mono<T> createSavingError(Throwable throwable) {
-        HttpClientException errorResponse;
         if (throwable instanceof ResourceSavingException) {
-            errorResponse = new HttpClientException(throwable, HttpStatus.BAD_REQUEST, staticPath);
+            return createAndLogHttpClientExceptionMono(throwable, HttpStatus.BAD_REQUEST);
         } else if (throwable instanceof ResourceAlreadyExistsException) {
-            errorResponse = new HttpClientException(throwable, HttpStatus.CONFLICT, staticPath);
-        } else {
-            log.error("Controller returning failed status", throwable, HttpStatus.INTERNAL_SERVER_ERROR);
-            return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+            return createAndLogHttpClientExceptionMono(throwable, HttpStatus.CONFLICT);
         }
-        log.error("Controller returning failed response", throwable, errorResponse);
-        return Mono.error(errorResponse);
+        return Mono.error(createLoadingError(throwable));
     }
 
     public Mono<Void> createUpdatingError(Throwable throwable) {
         if (throwable instanceof ResourceUpdatingException) {
-            var errorResponse = new HttpClientException(throwable, HttpStatus.BAD_REQUEST, staticPath);
-            log.error("Controller returning failed response", null, errorResponse);
+            final var errorResponse = createAndLogHttpClientException(throwable, HttpStatus.BAD_REQUEST);
             return Mono.error(errorResponse);
         }
         return createLoadingErrorMono(throwable).then();
@@ -59,21 +53,28 @@ public class ResourceControllerErrorUtil {
 
     public Mono<Void> createDeleteError(Throwable throwable) {
         if (throwable instanceof ResourceDeletionException) {
-            var errorResponse = new HttpClientException(throwable, HttpStatus.BAD_REQUEST, staticPath);
-            log.error("Controller returning failed response", null, errorResponse);
+            final var errorResponse = createAndLogHttpClientException(throwable, HttpStatus.BAD_REQUEST);
             return Mono.error(errorResponse);
         }
         return createLoadingErrorMono(throwable).then();
     }
 
     private Throwable createLoadingError(Throwable throwable) {
-        Throwable errorResponse;
         if (throwable instanceof ResourceNotFoundException) {
-            errorResponse = new HttpClientException(throwable, HttpStatus.NOT_FOUND, staticPath);
-            log.error("Controller returning failed response", null, errorResponse);
-            return errorResponse;
+            return createAndLogHttpClientException(throwable, HttpStatus.NOT_FOUND);
         }
         log.error("Controller returning failed status", null, HttpStatus.INTERNAL_SERVER_ERROR);
         return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private <T> Mono<T> createAndLogHttpClientExceptionMono(Throwable throwable, HttpStatus httpStatus) {
+        final var errorResponse = createAndLogHttpClientException(throwable, httpStatus);
+        return Mono.error(errorResponse);
+    }
+
+    private HttpClientException createAndLogHttpClientException(Throwable throwable, HttpStatus httpStatus) {
+        var errorResponse = new HttpClientException(throwable, httpStatus, staticPath);
+        log.error("Controller returning failed response", null, errorResponse);
+        return errorResponse;
     }
 }

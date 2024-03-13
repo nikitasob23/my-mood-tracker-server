@@ -25,7 +25,7 @@ public class UserController {
 
     @GetMapping
     public Mono<UserInfoDto> load(@RequestParam("username") UsernameDto usernameDto) {
-        return userControllerService.load(usernameDto)
+        return userControllerService.loadAllByUsername(usernameDto)
                 .doOnSuccess(ignore -> log.debug("Successful user loading", usernameDto))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
                 .onErrorResume(controllerErrorUtil::createLoadingErrorMono);

@@ -4,7 +4,9 @@ import com.niksob.database_service.cache.cleaner.CacheCleaner;
 import com.niksob.database_service.entity.user.UserEntity;
 
 public interface UserEntityDao extends CacheCleaner {
-    UserEntity load(String username);
+    UserEntity loadById(Long id);
+
+    UserEntity loadByUsername(String username);
 
     UserEntity save(UserEntity userEntity);
 
