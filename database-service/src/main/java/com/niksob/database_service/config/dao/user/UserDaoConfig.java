@@ -2,6 +2,7 @@ package com.niksob.database_service.config.dao.user;
 
 import com.niksob.database_service.dao.user.cached.CachedUserEntityDao;
 import com.niksob.database_service.dao.user.UserEntityDao;
+import com.niksob.database_service.dao.user.cached.CachedUserEntityExistenceDao;
 import com.niksob.database_service.repository.user.UserRepository;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -18,14 +19,18 @@ public class UserDaoConfig {
     @Bean
     public UserEntityDao getCachedUserDao(UserRepository userRepository, CacheManager cacheManager) {
         final Cache usernameToUserCache = cacheManager.getCache(CachedUserEntityDao.USER_BY_USERNAME_CACHE_NAME);
-        final Cache idToUserCache = cacheManager.getCache(CachedUserEntityDao.USER_BY_ID_CACHE_NAME);
         if (usernameToUserCache == null) {
             throwCacheStorageNotFoundException(CachedUserEntityDao.USER_BY_USERNAME_CACHE_NAME);
         }
+        final Cache idToUserCache = cacheManager.getCache(CachedUserEntityDao.USER_BY_ID_CACHE_NAME);
         if (idToUserCache == null) {
             throwCacheStorageNotFoundException(CachedUserEntityDao.USER_BY_ID_CACHE_NAME);
         }
-        return new CachedUserEntityDao(userRepository, usernameToUserCache, idToUserCache);
+        final Cache userExistenceCache = cacheManager.getCache(CachedUserEntityExistenceDao.USER_EXISTENCE_CACHE_NAME);
+        if (usernameToUserCache == null) {
+            throwCacheStorageNotFoundException(CachedUserEntityExistenceDao.USER_EXISTENCE_CACHE_NAME);
+        }
+        return new CachedUserEntityDao(userRepository, userExistenceCache, usernameToUserCache, idToUserCache);
     }
 
     private void throwCacheStorageNotFoundException(String cacheName) {

@@ -1,5 +1,7 @@
 package com.niksob.database_service.dao.user;
 
+import com.niksob.database_service.dao.user.cached.UserEntityExistenceDao;
+import com.niksob.database_service.dao.user.cached.loader.UserEntityLoaderDao;
 import com.niksob.database_service.mapper.entity.user.UserEntityMapper;
 import com.niksob.database_service.mapper.entity.user.id.UserIdEntityMapper;
 import com.niksob.domain.model.user.UserId;
@@ -7,7 +9,10 @@ import com.niksob.domain.model.user.UserInfo;
 import com.niksob.domain.model.user.Username;
 import com.niksob.layer_connector.annotation.LayerConnector;
 
-@LayerConnector(source = UserEntityDao.class, mapper = {UserEntityMapper.class, UserIdEntityMapper.class})
+@LayerConnector(
+        source = UserEntityDao.class,
+        sourceParents = {UserEntityExistenceDao.class, UserEntityLoaderDao.class},
+        mapper = {UserEntityMapper.class, UserIdEntityMapper.class})
 public interface UserDao {
     UserInfo loadById(UserId userId);
 
