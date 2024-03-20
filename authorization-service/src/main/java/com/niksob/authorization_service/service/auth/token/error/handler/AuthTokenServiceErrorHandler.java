@@ -2,6 +2,7 @@ package com.niksob.authorization_service.service.auth.token.error.handler;
 
 import com.niksob.authorization_service.exception.auth.UnauthorizedAccessException;
 import com.niksob.authorization_service.exception.auth.token.AuthTokenException;
+import com.niksob.authorization_service.model.login.password.WrongPasswordException;
 import com.niksob.authorization_service.service.auth.token.AuthTokenServiceImpl;
 import com.niksob.domain.exception.resource.ResourceLoadingException;
 import com.niksob.domain.exception.resource.ResourceNotFoundException;
@@ -26,5 +27,10 @@ public class AuthTokenServiceErrorHandler {
         }
         log.error("Auth token generation failure", e, state);
         return Mono.error(e);
+    }
+
+    public <T> Mono<T> createWrongPasswordException(Object state) {
+        log.error("The user entered wrong password", null, state);
+        return Mono.error(new WrongPasswordException("Wrong password"));
     }
 }
