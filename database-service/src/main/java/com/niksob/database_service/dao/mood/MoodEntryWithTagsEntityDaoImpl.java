@@ -1,38 +1,35 @@
 package com.niksob.database_service.dao.mood;
 
 import com.niksob.database_service.dao.mood.entry.MoodEntryEntityDaoImpl;
-import com.niksob.database_service.dao.mood.entry.MoodEntryWithTagsEntityDao;
-import com.niksob.database_service.dao.mood.tag.MoodTagEntityDao;
+import com.niksob.database_service.dao.mood.tag.updater.TagEntityUpdaterDao;
 import com.niksob.database_service.entity.mood.entry.MoodEntryEntity;
-import com.niksob.database_service.entity.mood.tag.MoodTagEntity;
+import com.niksob.database_service.entity.mood.tag.UserMoodTagEntities;
 import com.niksob.database_service.repository.mood.entry.MoodEntryEntityRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
-
 @Component
 public class MoodEntryWithTagsEntityDaoImpl extends MoodEntryEntityDaoImpl implements MoodEntryWithTagsEntityDao {
-    private final MoodTagEntityDao moodTagDao;
+    private final TagEntityUpdaterDao tagUpdaterDao;
 
-    public MoodEntryWithTagsEntityDaoImpl(MoodTagEntityDao moodTagDao, MoodEntryEntityRepository moodEntryRepository) {
+    public MoodEntryWithTagsEntityDaoImpl(TagEntityUpdaterDao tagUpdaterDao, MoodEntryEntityRepository moodEntryRepository) {
         super(moodEntryRepository);
-        this.moodTagDao = moodTagDao;
+        this.tagUpdaterDao = tagUpdaterDao;
     }
 
     @Override
     @Transactional
     public MoodEntryEntity saveEntryWithTags(MoodEntryEntity moodEntry) {
-        final Set<MoodTagEntity> mergedTags = moodTagDao.mergeAll(moodEntry.getMoodTags());
-        moodEntry.setMoodTags(mergedTags);
+        final UserMoodTagEntities userMergedTags = tagUpdaterDao.mergeAll(moodEntry.getMoodTags());
+        moodEntry.setMoodTags(userMergedTags.getTags());
         return super.save(moodEntry);
     }
 
     @Override
     @Transactional
     public void updateEntryWithTags(MoodEntryEntity moodEntry) {
-        final Set<MoodTagEntity> mergedTags = moodTagDao.mergeAll(moodEntry.getMoodTags());
-        moodEntry.setMoodTags(mergedTags);
+        final UserMoodTagEntities userMergedTags = tagUpdaterDao.mergeAll(moodEntry.getMoodTags());
+        moodEntry.setMoodTags(userMergedTags.getTags());
         super.update(moodEntry);
     }
 }

@@ -1,4 +1,4 @@
-package com.niksob.database_service.dao.mood.entry;
+package com.niksob.database_service.dao.mood;
 
 import com.niksob.database_service.entity.mood.entry.UserEntryDateRangeDaoDto;
 import com.niksob.database_service.entity.mood.entry.MoodEntryEntity;
