@@ -1,0 +1,10 @@
+org:
+  slf4j:
+    LoggerFactory: com.niksob.logger.object_state.factory.ObjectStateLoggerFactory
+  
+logger:
+  message:
+    masked:
+      field-names:
+        - password
+        - refreshToken

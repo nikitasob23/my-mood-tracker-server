@@ -1,6 +1,6 @@
 package com.niksob.database_service.controller.mood.entry;
 
-import com.niksob.database_service.util.controller.ResourceControllerUtil;
+import com.niksob.database_service.util.controller.ResourceControllerErrorUtil;
 import com.niksob.domain.dto.mood.entry.UserEntryDateRangeDto;
 import com.niksob.domain.dto.mood.entry.MoodEntryDto;
 import com.niksob.domain.dto.mood.entry.MoodEntryIdDto;
@@ -21,8 +21,8 @@ import java.time.LocalDate;
 @RequestMapping(MoodEntryControllerPaths.BASE_URI)
 public class MoodEntryController {
     private final MoodEntryControllerService moodEntryControllerService;
-    @Qualifier("moodEntryResponseUtil")
-    private final ResourceControllerUtil controllerUtil;
+    @Qualifier("moodEntryControllerUtil")
+    private final ResourceControllerErrorUtil controllerUtil;
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(MoodEntryController.class);
 
@@ -36,7 +36,7 @@ public class MoodEntryController {
         return moodEntryControllerService.loadByDateRange(userEntryDateRangeDto)
                 .doOnNext(ignore -> log.debug("Successful mood entries loading", userEntryDateRangeDto))
                 .doOnNext(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
-                .onErrorResume(controllerUtil::createLoadingError)
+                .onErrorResume(controllerUtil::createLoadingErrorFlux)
                 .switchIfEmpty(controllerUtil.returnNoContentStatus());
     }
 

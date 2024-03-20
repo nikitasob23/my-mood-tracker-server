@@ -122,21 +122,32 @@ public class LayerConnectorMethodCodeGeneratorImpl implements LayerConnectorMeth
         boolean returnTypeMappingIsNotPossible = interfaceReturnTypeMappingRequired && returnTypeMapperNotFound;
 
         if (paramMappingIsNotPossible) {
-            throwMappingNotPossibleException(methodDetails, interfaceName, MethodSignatureValues.PARAM_TYPE);
+            final String typeNameToConvert = methodDetails.getInterfaceSignature().getParamType();
+            final String typeNameFromConvert = methodDetails.getSourceMethod().getParamType();
+            throwMappingNotPossibleException(typeNameToConvert, typeNameFromConvert, interfaceName,
+                    MethodSignatureValues.PARAM_TYPE);
         } else if (returnTypeMappingIsNotPossible) {
-            throwMappingNotPossibleException(methodDetails, interfaceName, MethodSignatureValues.RETURN_TYPE);
+            final String typeNameToConvert = methodDetails.getInterfaceSignature().getReturnType();
+            final String typeNameFromConvert = methodDetails.getSourceMethod().getReturnType();
+            throwMappingNotPossibleException(typeNameToConvert, typeNameFromConvert, interfaceName,
+                    MethodSignatureValues.RETURN_TYPE);
         }
         return true;
     }
 
-    private void throwMappingNotPossibleException(MappingWrapperMethodDetails methodDetails, String interfaceName, MethodSignatureValues methodSignatureValue) {
+    private void throwMappingNotPossibleException(
+            String typeNameToConvert,
+            String typeNameFromConvert,
+            String interfaceName,
+            MethodSignatureValues methodSignatureValue
+    ) {
         throw new IllegalStateException(
                 String.format(
                         "Error: Mappers for the LayerConnector interface %s lack a method to map all values. Required for mapping %s from %s to %s",
                         interfaceName,
                         methodSignatureValue.getValue(),
-                        methodDetails.getInterfaceSignature().getParamType(),
-                        methodDetails.getSourceMethod().getParamType()
+                        typeNameFromConvert,
+                        typeNameToConvert
                 ));
     }
 

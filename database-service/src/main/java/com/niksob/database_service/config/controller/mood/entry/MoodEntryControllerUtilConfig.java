@@ -1,7 +1,7 @@
 package com.niksob.database_service.config.controller.mood.entry;
 
 import com.niksob.database_service.controller.mood.entry.MoodEntryController;
-import com.niksob.database_service.util.controller.ResourceControllerUtil;
+import com.niksob.database_service.util.controller.ResourceControllerErrorUtil;
 import com.niksob.domain.path.controller.database_service.mood.entry.MoodEntryControllerPaths;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -17,9 +17,9 @@ public class MoodEntryControllerUtilConfig {
 
     private final ObjectStateLogger logger = ObjectStateLoggerFactory.getLogger(MoodEntryController.class);
 
-    @Bean("moodEntryResponseUtil")
-    public ResourceControllerUtil getMoodTagControllerUtil() {
+    @Bean("moodEntryControllerUtil")
+    public ResourceControllerErrorUtil getMoodTagControllerUtil() {
         final String staticPath = "%s/%s".formatted(contextPath, MoodEntryControllerPaths.BASE_URI);
-        return new ResourceControllerUtil("Mood entry", staticPath, logger);
+        return new ResourceControllerErrorUtil("Mood entry", staticPath, logger);
     }
 }

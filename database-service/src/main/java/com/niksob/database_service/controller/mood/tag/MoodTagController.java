@@ -1,6 +1,6 @@
 package com.niksob.database_service.controller.mood.tag;
 
-import com.niksob.database_service.util.controller.ResourceControllerUtil;
+import com.niksob.database_service.util.controller.ResourceControllerErrorUtil;
 import com.niksob.domain.dto.mood.tag.MoodTagDto;
 import com.niksob.domain.dto.user.UserIdDto;
 import com.niksob.domain.path.controller.database_service.mood.tag.MoodTagControllerPaths;
@@ -18,8 +18,8 @@ import reactor.core.publisher.Mono;
 @RequestMapping(MoodTagControllerPaths.BASE_URI)
 public class MoodTagController {
     private final MoodTagControllerService moodTagControllerService;
-    @Qualifier("moodTagResponseUtil")
-    private final ResourceControllerUtil controllerUtil;
+    @Qualifier("moodTagControllerUtil")
+    private final ResourceControllerErrorUtil controllerUtil;
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(MoodTagController.class);
 
@@ -28,7 +28,7 @@ public class MoodTagController {
         return moodTagControllerService.loadByUserId(userIdDto)
                 .doOnNext(ignore -> log.debug("Successful mood tag loading", userIdDto))
                 .doOnNext(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
-                .onErrorResume(controllerUtil::createLoadingError)
+                .onErrorResume(controllerUtil::createLoadingErrorFlux)
                 .switchIfEmpty(controllerUtil.returnNoContentStatus());
     }
 

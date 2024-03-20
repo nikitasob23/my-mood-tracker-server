@@ -1,6 +1,5 @@
 package com.niksob.database_service.dao.mood;
 
-import com.niksob.database_service.dao.mood.entry.MoodEntryWithTagsEntityDao;
 import com.niksob.database_service.mapper.entity.mood.entry.DateRangeDaoDtoMapper;
 import com.niksob.database_service.mapper.entity.mood.entry.MoodEntryEntityMapper;
 import com.niksob.domain.model.mood.entry.UserEntryDateRange;

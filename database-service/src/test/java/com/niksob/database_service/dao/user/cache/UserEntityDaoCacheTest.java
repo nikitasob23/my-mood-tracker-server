@@ -35,8 +35,8 @@ public class UserEntityDaoCacheTest extends MainContextTest {
 
     @Test
     public void testCachingUserInfoAfterLoading() {
-        userEntityDao.load(userEntity.getUsername());
-        userEntityDao.load(userEntity.getUsername());
+        userEntityDao.loadByUsername(userEntity.getUsername());
+        userEntityDao.loadByUsername(userEntity.getUsername());
 
         Mockito.verify(userRepository, Mockito.times(1)).getByUsername(userEntity.getUsername());
     }
@@ -44,25 +44,25 @@ public class UserEntityDaoCacheTest extends MainContextTest {
     @Test
     public void testCachingUserInfoAfterSaving() {
         userEntityDao.save(userEntity);
-        userEntityDao.load(userEntity.getUsername());
+        userEntityDao.loadByUsername(userEntity.getUsername());
         Mockito.verify(userRepository, Mockito.times(0)).getByUsername(userEntity.getUsername());
     }
 
     @Test
     public void testCachingUserInfoAfterUpdating() {
         userEntityDao.update(userEntity);
-        userEntityDao.load(userEntity.getUsername());
+        userEntityDao.loadByUsername(userEntity.getUsername());
         Mockito.verify(userRepository, Mockito.times(0)).getByUsername(userEntity.getUsername());
     }
 
     @Test
     public void testCachingUserInfoAfterDeleting() {
-        userEntityDao.load(userEntity.getUsername()); // userEntity is caching
-        userEntityDao.load(userEntity.getUsername()); // Checks that userEntity is cached. If not, the userRepository.getByUsername() method will be called 2 times, not 1
+        userEntityDao.loadByUsername(userEntity.getUsername()); // userEntity is caching
+        userEntityDao.loadByUsername(userEntity.getUsername()); // Checks that userEntity is cached. If not, the userRepository.getByUsername() method will be called 2 times, not 1
         Mockito.verify(userRepository, Mockito.times(1)).getByUsername(userEntity.getUsername());
 
         userEntityDao.delete(userEntity.getUsername());
-        userEntityDao.load(userEntity.getUsername()); // Checks that userEntity not cached. If cached, the userRepository.getByUsername() method will be called 3 times, not 2
+        userEntityDao.loadByUsername(userEntity.getUsername()); // Checks that userEntity not cached. If cached, the userRepository.getByUsername() method will be called 3 times, not 2
         Mockito.verify(userRepository, Mockito.times(2)).getByUsername(userEntity.getUsername());
     }
 }
