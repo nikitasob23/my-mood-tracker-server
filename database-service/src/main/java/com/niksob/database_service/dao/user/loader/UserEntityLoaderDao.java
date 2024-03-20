@@ -1,4 +1,4 @@
-package com.niksob.database_service.dao.user.cached.loader;
+package com.niksob.database_service.dao.user.loader;
 
 import com.niksob.database_service.entity.user.UserEntity;
 

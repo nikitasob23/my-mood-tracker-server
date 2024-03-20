@@ -3,7 +3,7 @@ package com.niksob.database_service.service.user;
 import com.niksob.database_service.dao.user.UserDao;
 import com.niksob.database_service.service.mood.entry.MoodEntryService;
 import com.niksob.database_service.service.mood.tag.loader.MoodTagLoader;
-import com.niksob.database_service.service.user.loader.UserLoaderImpl;
+import com.niksob.database_service.service.user.existence.UserExistenceServiceImpl;
 import com.niksob.database_service.util.async.MonoAsyncUtil;
 import com.niksob.database_service.util.date.DefUserDateRangeUtil;
 import com.niksob.domain.model.user.UserInfo;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 @Service
-public class UserServiceImpl extends UserLoaderImpl implements UserService {
+public class UserServiceImpl extends UserExistenceServiceImpl implements UserService {
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserServiceImpl.class);
 
     public UserServiceImpl(

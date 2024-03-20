@@ -2,7 +2,7 @@ package com.niksob.database_service.service.mood.tag;
 
 import com.niksob.database_service.dao.mood.tag.MoodTagDao;
 import com.niksob.database_service.service.mood.tag.loader.MoodTagLoaderImpl;
-import com.niksob.database_service.service.user.UserService;
+import com.niksob.database_service.service.user.existence.UserExistenceService;
 import com.niksob.database_service.util.async.MonoAsyncUtil;
 import com.niksob.domain.exception.resource.ResourceUpdatingException;
 import com.niksob.domain.model.mood.tag.MoodTag;
@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 public class MoodTagServiceImpl extends MoodTagLoaderImpl implements MoodTagService {
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(MoodTagServiceImpl.class);
 
-    public MoodTagServiceImpl(UserService userService, MoodTagDao moodTagDao) {
-        super(userService, moodTagDao);
+    public MoodTagServiceImpl(UserExistenceService userExistenceService, MoodTagDao moodTagDao) {
+        super(userExistenceService, moodTagDao);
     }
 
     @Override
