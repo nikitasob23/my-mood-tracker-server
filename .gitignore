@@ -19,6 +19,9 @@ mvnw.cmd
 *.iml
 *.ipr
 
+### Redis files ###
+*.rdb
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
