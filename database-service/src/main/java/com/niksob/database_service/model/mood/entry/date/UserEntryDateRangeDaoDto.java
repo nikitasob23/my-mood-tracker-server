@@ -1,4 +1,4 @@
-package com.niksob.database_service.entity.mood.entry;
+package com.niksob.database_service.model.mood.entry.date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

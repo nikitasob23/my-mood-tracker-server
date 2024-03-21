@@ -3,7 +3,7 @@ package com.niksob.database_service.dao.mood;
 import com.niksob.database_service.dao.mood.entry.MoodEntryEntityDaoImpl;
 import com.niksob.database_service.dao.mood.tag.updater.TagEntityUpdaterDao;
 import com.niksob.database_service.entity.mood.entry.MoodEntryEntity;
-import com.niksob.database_service.entity.mood.tag.UserMoodTagEntities;
+import com.niksob.database_service.model.mood.tag.user.UserMoodTagEntities;
 import com.niksob.database_service.repository.mood.entry.MoodEntryEntityRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

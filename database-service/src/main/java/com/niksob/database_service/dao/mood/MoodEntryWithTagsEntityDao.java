@@ -1,6 +1,6 @@
 package com.niksob.database_service.dao.mood;
 
-import com.niksob.database_service.entity.mood.entry.UserEntryDateRangeDaoDto;
+import com.niksob.database_service.model.mood.entry.date.UserEntryDateRangeDaoDto;
 import com.niksob.database_service.entity.mood.entry.MoodEntryEntity;
 
 import java.util.Set;

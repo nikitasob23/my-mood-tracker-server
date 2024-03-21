@@ -3,7 +3,7 @@ package com.niksob.database_service.dao.mood.tag.facade;
 import com.niksob.database_service.dao.mood.tag.loader.TagEntityLoaderDao;
 import com.niksob.database_service.dao.mood.tag.updater.TagEntityUpdaterDao;
 import com.niksob.database_service.entity.mood.tag.MoodTagEntity;
-import com.niksob.database_service.entity.mood.tag.UserMoodTagEntities;
+import com.niksob.database_service.model.mood.tag.user.UserMoodTagEntities;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 

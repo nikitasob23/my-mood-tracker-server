@@ -1,5 +1,6 @@
-package com.niksob.database_service.entity.mood.tag;
+package com.niksob.database_service.model.mood.tag.user;
 
+import com.niksob.database_service.entity.mood.tag.MoodTagEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
