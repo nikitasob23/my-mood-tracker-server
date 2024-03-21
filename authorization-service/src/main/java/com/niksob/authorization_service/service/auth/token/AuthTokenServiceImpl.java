@@ -2,6 +2,7 @@ package com.niksob.authorization_service.service.auth.token;
 
 import com.niksob.authorization_service.service.auth.token.error.handler.AuthTokenServiceErrorHandler;
 import com.niksob.authorization_service.service.auth.token.generator.AuthTokenGenerator;
+import com.niksob.authorization_service.service.auth.token.saver.AuthTokenSaverService;
 import com.niksob.authorization_service.service.password_encoder.PasswordEncoderService.PasswordEncoderService;
 import com.niksob.domain.http.connector.UserDatabaseConnector;
 import com.niksob.domain.model.auth.login.RowLoginInDetails;
@@ -21,6 +22,7 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     private final UserDatabaseConnector userDatabaseConnector;
 
     private final AuthTokenGenerator authTokenGenerator;
+    private final AuthTokenSaverService authTokenSaverService;
     private final PasswordEncoderService passwordEncoderService;
 
     private final AuthTokenServiceErrorHandler errorHandler;
@@ -32,6 +34,7 @@ public class AuthTokenServiceImpl implements AuthTokenService {
         return userDatabaseConnector.load(rowLoginInDetails.getUsername())
                 .flatMap(user -> passwordMatches(rowLoginInDetails, user))
                 .flatMap(authTokenGenerator::generate)
+                .doOnNext(authTokenSaverService::save)
                 .doOnNext(authToken -> log.info("Successful generation of auth token", rowLoginInDetails))
                 .onErrorResume(throwable -> errorHandler.createGeneratingError(throwable, rowLoginInDetails));
     }
