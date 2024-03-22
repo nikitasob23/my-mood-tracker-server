@@ -6,7 +6,7 @@ import com.niksob.authorization_service.model.jwt.Jwt;
 import com.niksob.authorization_service.model.jwt.JwtDetails;
 import com.niksob.authorization_service.service.jwt.JwtService;
 import com.niksob.domain.model.auth.token.AccessToken;
-import com.niksob.domain.model.auth.token.UserAuthToken;
+import com.niksob.domain.model.auth.token.AuthToken;
 import com.niksob.domain.model.auth.token.RefreshToken;
 import com.niksob.domain.model.user.UserInfo;
 import lombok.AllArgsConstructor;
@@ -29,7 +29,7 @@ public class AuthTokenGeneratorImpl implements AuthTokenGenerator {
     private final JwtMapper jwtMapper;
 
     @Override
-    public Mono<UserAuthToken> generate(UserInfo userInfo) {
+    public Mono<AuthToken> generate(UserInfo userInfo) {
         final Mono<JwtDetails> jwtDetailsMono = Mono.just(userInfo).map(jwtDetailsMapper::fromUserInfo);
 
         final Mono<AccessToken> accessTokenMono =
@@ -38,7 +38,7 @@ public class AuthTokenGeneratorImpl implements AuthTokenGenerator {
                 createTokenMono(jwtDetailsMono, refreshJwtTokenService, jwtMapper::toRefreshToken);
 
         return accessTokenMono.zipWith(refreshTokenMono,
-                (access, refresh) -> new UserAuthToken(userInfo.getId(), access, refresh));
+                (access, refresh) -> new AuthToken(userInfo.getId(), access, refresh));
     }
 
     private <T> Mono<T> createTokenMono(

@@ -4,6 +4,7 @@ import com.niksob.authorization_service.exception.auth.UnauthorizedAccessExcepti
 import com.niksob.authorization_service.exception.auth.signup.DuplicateSignupAttemptException;
 import com.niksob.authorization_service.exception.auth.signup.SignupException;
 import com.niksob.authorization_service.exception.auth.token.AuthTokenException;
+import com.niksob.authorization_service.exception.auth.token.saving.AuthTokenSavingException;
 import com.niksob.authorization_service.model.login.password.WrongPasswordException;
 import com.niksob.domain.exception.rest.controller.response.HttpClientException;
 import com.niksob.domain.http.connector.error.handler.InternalServerErrorUtil;
@@ -45,6 +46,8 @@ public class ControllerErrorHandler {
         } else if (throwable instanceof UnauthorizedAccessException) {
             errorResponse = new HttpClientException(throwable, HttpStatus.NOT_FOUND, contextPath);
         } else if (throwable instanceof AuthTokenException) {
+            errorResponse = new HttpClientException(throwable, HttpStatus.BAD_REQUEST, contextPath);
+        } else if (throwable instanceof AuthTokenSavingException) {
             errorResponse = new HttpClientException(throwable, HttpStatus.BAD_REQUEST, contextPath);
         } else {
             return internalServerErrorUtil.createMonoResponse(throwable, ControllerErrorHandler.class);

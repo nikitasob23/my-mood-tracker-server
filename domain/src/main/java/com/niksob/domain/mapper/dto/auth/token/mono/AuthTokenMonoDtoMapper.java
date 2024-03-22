@@ -1,8 +1,8 @@
 package com.niksob.domain.mapper.dto.auth.token.mono;
 
-import com.niksob.domain.dto.auth.token.UserAuthTokenDto;
+import com.niksob.domain.dto.auth.token.AuthTokenDto;
 import com.niksob.domain.mapper.dto.auth.token.AuthTokenDtoMapper;
-import com.niksob.domain.model.auth.token.UserAuthToken;
+import com.niksob.domain.model.auth.token.AuthToken;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -12,11 +12,11 @@ import reactor.core.publisher.Mono;
 public class AuthTokenMonoDtoMapper {
     private final AuthTokenDtoMapper dtoMapper;
 
-    public Mono<UserAuthTokenDto> toDto(Mono<UserAuthToken> mono) {
+    public Mono<AuthTokenDto> toDto(Mono<AuthToken> mono) {
         return mono.map(dtoMapper::toDto);
     }
 
-    public Mono<UserAuthToken> fromDto(Mono<UserAuthTokenDto> mono) {
+    public Mono<AuthToken> fromDto(Mono<AuthTokenDto> mono) {
         return mono.map(dtoMapper::fromDto);
     }
 }

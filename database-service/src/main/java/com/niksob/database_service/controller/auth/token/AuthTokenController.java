@@ -1,6 +1,6 @@
 package com.niksob.database_service.controller.auth.token;
 
-import com.niksob.domain.dto.auth.token.UserAuthTokenDto;
+import com.niksob.domain.dto.auth.token.encoded.EncodedAuthTokenDto;
 import com.niksob.domain.exception.resource.ResourceSavingException;
 import com.niksob.domain.exception.rest.controller.response.HttpClientException;
 import com.niksob.domain.path.controller.database_service.auth.token.AuthTokenDBControllerPaths;
@@ -26,7 +26,7 @@ public class AuthTokenController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<UserAuthTokenDto> save(@RequestBody UserAuthTokenDto authToken) {
+    public Mono<EncodedAuthTokenDto> save(@RequestBody EncodedAuthTokenDto authToken) {
         return authTokenService.save(authToken)
                 .doOnNext(token -> log.debug("Successful user saving", token))
                 .doOnNext(ignore -> log.debug("Controller returning success status", HttpStatus.CREATED))

@@ -1,10 +1,10 @@
 package com.niksob.database_service.dao.auth.token;
 
-import com.niksob.database_service.mapper.entity.auth.token.AuthTokenEntityMapper;
-import com.niksob.domain.model.auth.token.UserAuthToken;
+import com.niksob.database_service.mapper.entity.auth.token.encoded.EncodedAuthTokenEntityMapper;
+import com.niksob.domain.model.auth.token.encoded.EncodedAuthToken;
 import com.niksob.layer_connector.annotation.LayerConnector;
 
-@LayerConnector(source = AuthTokenEntityDao.class, mapper = AuthTokenEntityMapper.class)
+@LayerConnector(source = AuthTokenEntityDao.class, mapper = EncodedAuthTokenEntityMapper.class)
 public interface AuthTokenDao {
-    UserAuthToken save(UserAuthToken authToken);
+    EncodedAuthToken save(EncodedAuthToken authToken);
 }

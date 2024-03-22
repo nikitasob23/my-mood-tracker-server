@@ -1,13 +1,14 @@
 package com.niksob.database_service.controller.auth.token;
 
 import com.niksob.database_service.service.auth.token.AuthTokenService;
-import com.niksob.domain.dto.auth.token.UserAuthTokenDto;
-import com.niksob.domain.mapper.dto.auth.token.AuthTokenDtoMapper;
-import com.niksob.domain.mapper.dto.auth.token.mono.AuthTokenMonoDtoMapper;
+import com.niksob.domain.dto.auth.token.encoded.EncodedAuthTokenDto;
+import com.niksob.domain.mapper.dto.auth.token.encoded.EncodedAuthTokenDtoMapper;
+import com.niksob.domain.mapper.dto.auth.token.encoded.mono.EncodedAuthTokenMonoDtoMapper;
 import com.niksob.layer_connector.annotation.LayerConnector;
 import reactor.core.publisher.Mono;
 
-@LayerConnector(source = AuthTokenService.class, mapper = {AuthTokenDtoMapper.class, AuthTokenMonoDtoMapper.class})
+@LayerConnector(source = AuthTokenService.class,
+        mapper = {EncodedAuthTokenDtoMapper.class, EncodedAuthTokenMonoDtoMapper.class})
 public interface AuthTokenControllerService {
-    Mono<UserAuthTokenDto> save(UserAuthTokenDto authTokenDto);
+    Mono<EncodedAuthTokenDto> save(EncodedAuthTokenDto authTokenDto);
 }
