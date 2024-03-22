@@ -72,7 +72,7 @@ public class ResourceControllerErrorUtil {
         return Mono.error(errorResponse);
     }
 
-    private HttpClientException createAndLogHttpClientException(Throwable throwable, HttpStatus httpStatus) {
+    private HttpClientException  createAndLogHttpClientException(Throwable throwable, HttpStatus httpStatus) {
         var errorResponse = new HttpClientException(throwable, httpStatus, staticPath);
         log.error("Controller returning failed response", null, errorResponse);
         return errorResponse;

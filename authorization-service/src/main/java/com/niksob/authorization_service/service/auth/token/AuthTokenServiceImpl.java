@@ -6,7 +6,7 @@ import com.niksob.authorization_service.service.auth.token.saver.AuthTokenSaverS
 import com.niksob.authorization_service.service.password_encoder.PasswordEncoderService.PasswordEncoderService;
 import com.niksob.domain.http.connector.UserDatabaseConnector;
 import com.niksob.domain.model.auth.login.RowLoginInDetails;
-import com.niksob.domain.model.auth.token.AuthToken;
+import com.niksob.domain.model.auth.token.UserAuthToken;
 import com.niksob.domain.model.user.Password;
 import com.niksob.domain.model.user.RowPassword;
 import com.niksob.domain.model.user.UserInfo;
@@ -30,7 +30,7 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(AuthTokenServiceImpl.class);
 
     @Override
-    public Mono<AuthToken> generate(RowLoginInDetails rowLoginInDetails) {
+    public Mono<UserAuthToken> generate(RowLoginInDetails rowLoginInDetails) {
         return userDatabaseConnector.load(rowLoginInDetails.getUsername())
                 .flatMap(user -> passwordMatches(rowLoginInDetails, user))
                 .flatMap(authTokenGenerator::generate)

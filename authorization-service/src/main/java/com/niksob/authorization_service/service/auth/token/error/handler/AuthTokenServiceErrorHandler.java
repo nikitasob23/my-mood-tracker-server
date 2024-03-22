@@ -6,7 +6,7 @@ import com.niksob.authorization_service.model.login.password.WrongPasswordExcept
 import com.niksob.authorization_service.service.auth.token.AuthTokenServiceImpl;
 import com.niksob.domain.exception.resource.ResourceLoadingException;
 import com.niksob.domain.exception.resource.ResourceNotFoundException;
-import com.niksob.domain.model.auth.token.AuthToken;
+import com.niksob.domain.model.auth.token.UserAuthToken;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 public class AuthTokenServiceErrorHandler {
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(AuthTokenServiceImpl.class);
 
-    public Mono<AuthToken> createGeneratingError(Throwable throwable, Object state) {
+    public Mono<UserAuthToken> createGeneratingError(Throwable throwable, Object state) {
         Throwable e;
         if (throwable instanceof ResourceNotFoundException) {
             e = new UnauthorizedAccessException("An unregistered user is trying to get an auth token", throwable);

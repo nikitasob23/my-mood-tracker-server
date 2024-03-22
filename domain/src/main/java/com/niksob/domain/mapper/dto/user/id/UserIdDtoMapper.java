@@ -14,4 +14,9 @@ public interface UserIdDtoMapper {
         final Long value = Long.parseLong(dto.getValue());
         return new UserId(value);
     }
+
+    default UserId fromDto(String idValue) {
+        final long idLong = Long.parseLong(idValue);
+        return new UserId(idLong);
+    }
 }

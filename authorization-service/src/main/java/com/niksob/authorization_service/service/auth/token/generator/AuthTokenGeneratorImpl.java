@@ -1,12 +1,12 @@
 package com.niksob.authorization_service.service.auth.token.generator;
 
-import com.niksob.authorization_service.mapper.auth.token.AuthTokenMapper;
+import com.niksob.authorization_service.mapper.auth.token.JwtMapper;
 import com.niksob.authorization_service.mapper.jwt_params.claims.JwtDetailsMapper;
 import com.niksob.authorization_service.model.jwt.Jwt;
 import com.niksob.authorization_service.model.jwt.JwtDetails;
 import com.niksob.authorization_service.service.jwt.JwtService;
 import com.niksob.domain.model.auth.token.AccessToken;
-import com.niksob.domain.model.auth.token.AuthToken;
+import com.niksob.domain.model.auth.token.UserAuthToken;
 import com.niksob.domain.model.auth.token.RefreshToken;
 import com.niksob.domain.model.user.UserInfo;
 import lombok.AllArgsConstructor;
@@ -26,18 +26,19 @@ public class AuthTokenGeneratorImpl implements AuthTokenGenerator {
     private final JwtService refreshJwtTokenService;
 
     private final JwtDetailsMapper jwtDetailsMapper;
-    private final AuthTokenMapper authTokenMapper;
+    private final JwtMapper jwtMapper;
 
     @Override
-    public Mono<AuthToken> generate(UserInfo userInfo) {
+    public Mono<UserAuthToken> generate(UserInfo userInfo) {
         final Mono<JwtDetails> jwtDetailsMono = Mono.just(userInfo).map(jwtDetailsMapper::fromUserInfo);
 
         final Mono<AccessToken> accessTokenMono =
-                createTokenMono(jwtDetailsMono, accessJwtTokenService, authTokenMapper::toAccessToken);
+                createTokenMono(jwtDetailsMono, accessJwtTokenService, jwtMapper::toAccessToken);
         final Mono<RefreshToken> refreshTokenMono =
-                createTokenMono(jwtDetailsMono, refreshJwtTokenService, authTokenMapper::toRefreshToken);
+                createTokenMono(jwtDetailsMono, refreshJwtTokenService, jwtMapper::toRefreshToken);
 
-        return accessTokenMono.zipWith(refreshTokenMono, AuthToken::new);
+        return accessTokenMono.zipWith(refreshTokenMono,
+                (access, refresh) -> new UserAuthToken(userInfo.getId(), access, refresh));
     }
 
     private <T> Mono<T> createTokenMono(

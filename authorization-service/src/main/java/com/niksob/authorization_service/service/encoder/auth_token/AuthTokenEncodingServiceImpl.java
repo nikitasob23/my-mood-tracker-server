@@ -1,7 +1,7 @@
 package com.niksob.authorization_service.service.encoder.auth_token;
 
 import com.niksob.domain.model.auth.token.AccessToken;
-import com.niksob.domain.model.auth.token.AuthToken;
+import com.niksob.domain.model.auth.token.UserAuthToken;
 import com.niksob.domain.model.auth.token.RefreshToken;
 import com.niksob.domain.model.auth.token.encoded.EncodedAccessToken;
 import com.niksob.domain.model.auth.token.encoded.EncodedAuthToken;
@@ -16,7 +16,7 @@ public class AuthTokenEncodingServiceImpl implements AuthTokenEncodingService {
     private final PasswordEncoder encoder;
 
     @Override
-    public EncodedAuthToken encode(AuthToken authToken) {
+    public EncodedAuthToken encode(UserAuthToken authToken) {
         final EncodedAccessToken encodedAccessToken = encode(authToken.getAccess());
         final EncodedRefreshToken encodedRefreshToken = encode(authToken.getRefresh());
         return new EncodedAuthToken(encodedAccessToken, encodedRefreshToken);
@@ -35,7 +35,7 @@ public class AuthTokenEncodingServiceImpl implements AuthTokenEncodingService {
     }
 
     @Override
-    public boolean matches(AuthToken authToken, EncodedAuthToken encodedAuthToken) {
+    public boolean matches(UserAuthToken authToken, EncodedAuthToken encodedAuthToken) {
         final boolean accessTokenMatches = matches(authToken.getAccess(), encodedAuthToken.getAccess());
         final boolean refreshTokenMatches = matches(authToken.getRefresh(), encodedAuthToken.getRefresh());
         return accessTokenMatches && refreshTokenMatches;

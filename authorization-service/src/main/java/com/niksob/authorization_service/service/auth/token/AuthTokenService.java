@@ -1,9 +1,9 @@
 package com.niksob.authorization_service.service.auth.token;
 
 import com.niksob.domain.model.auth.login.RowLoginInDetails;
-import com.niksob.domain.model.auth.token.AuthToken;
+import com.niksob.domain.model.auth.token.UserAuthToken;
 import reactor.core.publisher.Mono;
 
 public interface AuthTokenService {
-    Mono<AuthToken> generate(RowLoginInDetails rowLoginInDetails);
+    Mono<UserAuthToken> generate(RowLoginInDetails rowLoginInDetails);
 }

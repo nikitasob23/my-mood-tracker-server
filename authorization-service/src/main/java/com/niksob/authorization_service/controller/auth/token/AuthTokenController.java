@@ -2,7 +2,7 @@ package com.niksob.authorization_service.controller.auth.token;
 
 import com.niksob.authorization_service.controller.auth.ControllerErrorHandler;
 import com.niksob.domain.dto.auth.login.RowLoginInDetailsDto;
-import com.niksob.domain.dto.auth.token.AuthTokenDto;
+import com.niksob.domain.dto.auth.token.UserAuthTokenDto;
 import com.niksob.domain.path.controller.authorization_service.AuthTokenControllerPaths;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -22,7 +22,7 @@ public class AuthTokenController {
 
     @PostMapping(AuthTokenControllerPaths.SIGNUP)
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<AuthTokenDto> generate(@RequestBody RowLoginInDetailsDto rowLoginInDetailsDto) {
+    public Mono<UserAuthTokenDto> generate(@RequestBody RowLoginInDetailsDto rowLoginInDetailsDto) {
         return authTokenControllerService.generate(rowLoginInDetailsDto)
                 .doOnNext(authTokenDto -> log.info("Auth token was generated", null, authTokenDto))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.CREATED))

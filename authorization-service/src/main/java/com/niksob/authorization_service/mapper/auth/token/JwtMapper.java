@@ -6,7 +6,7 @@ import com.niksob.domain.model.auth.token.RefreshToken;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface AuthTokenMapper {
+public interface JwtMapper {
     AccessToken toAccessToken(Jwt jwt);
 
     RefreshToken toRefreshToken(Jwt jwt);
