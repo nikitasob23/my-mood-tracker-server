@@ -1,0 +1,1 @@
+ALTER TABLE encoded_auth_tokens ADD COLUMN device VARCHAR(25);

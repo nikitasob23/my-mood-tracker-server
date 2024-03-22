@@ -17,4 +17,5 @@ public class AuthTokenDto {
     private String access;
     @JsonProperty("refresh_token")
     private String refresh;
+    private String device;
 }

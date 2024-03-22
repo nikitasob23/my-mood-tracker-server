@@ -10,4 +10,5 @@ import lombok.Data;
 public class RowLoginInDetails {
     private final Username username;
     private final RowPassword rowPassword;
+    private final String device;
 }

@@ -8,8 +8,8 @@ import lombok.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "encoded_auth_tokens",
-        uniqueConstraints = @UniqueConstraint(name = "uk_auth_tokens_user_id", columnNames = "user_id"))
+@Table(name = "encoded_auth_tokens", uniqueConstraints = @UniqueConstraint(
+        name = "uk_auth_tokens_user_id_device", columnNames = {"user_id", "device"}))
 @Data
 @ToString(exclude = "user")
 @EqualsAndHashCode(exclude = "user")
@@ -28,6 +28,9 @@ public class AuthTokenEntity implements Serializable {
 
     @Column(name = "refresh", nullable = false)
     private String encodedRefresh;
+
+    @Column(nullable = false)
+    private String device;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, insertable = false, updatable = false,

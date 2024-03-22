@@ -1,5 +1,6 @@
 package com.niksob.authorization_service.service.auth.token.generator;
 
+import com.niksob.authorization_service.mapper.auth.token.AuthTokenMapper;
 import com.niksob.authorization_service.mapper.auth.token.JwtMapper;
 import com.niksob.authorization_service.mapper.jwt_params.claims.JwtDetailsMapper;
 import com.niksob.authorization_service.model.jwt.Jwt;
@@ -27,6 +28,7 @@ public class AuthTokenGeneratorImpl implements AuthTokenGenerator {
 
     private final JwtDetailsMapper jwtDetailsMapper;
     private final JwtMapper jwtMapper;
+    private final AuthTokenMapper authTokenMapper;
 
     @Override
     public Mono<AuthToken> generate(UserInfo userInfo) {
@@ -38,7 +40,7 @@ public class AuthTokenGeneratorImpl implements AuthTokenGenerator {
                 createTokenMono(jwtDetailsMono, refreshJwtTokenService, jwtMapper::toRefreshToken);
 
         return accessTokenMono.zipWith(refreshTokenMono,
-                (access, refresh) -> new AuthToken(userInfo.getId(), access, refresh));
+                (access, refresh) -> authTokenMapper.combine(userInfo, access, refresh));
     }
 
     private <T> Mono<T> createTokenMono(

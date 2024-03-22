@@ -10,4 +10,5 @@ public class RowLoginInDetailsDto {
     private String username;
     @JsonProperty("password")
     private String rowPassword;
+    private String device;
 }

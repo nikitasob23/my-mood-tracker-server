@@ -5,6 +5,7 @@ import com.niksob.domain.model.auth.token.AuthToken;
 import com.niksob.domain.model.auth.token.RefreshToken;
 import com.niksob.domain.model.auth.token.encoded.EncodedAccessToken;
 import com.niksob.domain.model.auth.token.encoded.EncodedAuthToken;
+import com.niksob.domain.model.auth.token.encoded.EncodedAuthTokenMapper;
 import com.niksob.domain.model.auth.token.encoded.EncodedRefreshToken;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,11 +16,13 @@ import org.springframework.stereotype.Service;
 public class AuthTokenEncodingServiceImpl implements AuthTokenEncodingService {
     private final PasswordEncoder encoder;
 
+    private final EncodedAuthTokenMapper authTokenMapper;
+
     @Override
     public EncodedAuthToken encode(AuthToken authToken) {
         final EncodedAccessToken encodedAccessToken = encode(authToken.getAccess());
         final EncodedRefreshToken encodedRefreshToken = encode(authToken.getRefresh());
-        return new EncodedAuthToken(authToken.getId(), authToken.getUserId(), encodedAccessToken, encodedRefreshToken);
+        return authTokenMapper.combine(authToken, encodedAccessToken, encodedRefreshToken);
     }
 
     @Override

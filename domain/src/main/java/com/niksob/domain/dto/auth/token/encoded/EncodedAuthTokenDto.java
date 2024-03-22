@@ -16,4 +16,5 @@ public class EncodedAuthTokenDto {
     private String access;
     @JsonProperty("encoded_refresh_token")
     private String refresh;
+    private String device;
 }

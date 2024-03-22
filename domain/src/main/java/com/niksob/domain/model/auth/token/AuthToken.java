@@ -10,19 +10,22 @@ public class AuthToken {
     private final UserId userId;
     private final AccessToken access;
     private final RefreshToken refresh;
+    private String device;
 
     @Default
-    public AuthToken(AuthTokenId id, UserId userId, AccessToken access, RefreshToken refresh) {
+    public AuthToken(AuthTokenId id, UserId userId, AccessToken access, RefreshToken refresh, String device) {
         this.id = id;
         this.userId = userId;
         this.access = access;
         this.refresh = refresh;
+        this.device = device;
     }
 
-    public AuthToken(UserId userId, AccessToken access, RefreshToken refresh) {
+    public AuthToken(UserId userId, AccessToken access, RefreshToken refresh, String device) {
         this.id = null;
         this.userId = userId;
         this.access = access;
         this.refresh = refresh;
+        this.device = device;
     }
 }

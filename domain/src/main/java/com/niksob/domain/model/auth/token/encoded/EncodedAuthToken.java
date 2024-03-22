@@ -12,4 +12,5 @@ public class EncodedAuthToken {
     private final UserId userId;
     private final EncodedAccessToken access;
     private final EncodedRefreshToken refresh;
+    private final String device;
 }

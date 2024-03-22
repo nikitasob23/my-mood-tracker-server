@@ -33,8 +33,9 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     public Mono<AuthToken> generate(RowLoginInDetails rowLoginInDetails) {
         return userDatabaseConnector.load(rowLoginInDetails.getUsername())
                 .flatMap(user -> passwordMatches(rowLoginInDetails, user))
-                .flatMap(authTokenGenerator::generate)
-                .flatMap(authTokenSaverService::save)
+                .flatMap(authTokenGenerator::generate).doOnNext(authToken ->
+                        authToken.setDevice(rowLoginInDetails.getDevice())
+                ).flatMap(authTokenSaverService::save)
                 .doOnNext(authToken -> log.info("Successful generation of auth token", rowLoginInDetails))
                 .onErrorResume(throwable -> errorHandler.createGeneratingError(throwable, rowLoginInDetails));
     }
