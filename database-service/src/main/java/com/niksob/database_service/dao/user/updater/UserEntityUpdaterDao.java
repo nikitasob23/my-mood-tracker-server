@@ -7,5 +7,5 @@ public interface UserEntityUpdaterDao {
 
     UserEntity update(UserEntity userEntity);
 
-    UserEntity delete(String username);
+    UserEntity delete(UserEntity user);
 }

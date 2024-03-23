@@ -1,9 +1,12 @@
 package com.niksob.database_service.dao.user.facade;
 
-import com.niksob.database_service.dao.user.existence.UserEntityExistenceDao;
 import com.niksob.database_service.entity.user.UserEntity;
 
-public interface UserEntityDaoFacade extends UserEntityExistenceDao {
+public interface UserEntityDaoFacade {
+    boolean existsByUsername(String username);
+
+    boolean existsById(Long id);
+
     UserEntity loadById(Long id);
 
     UserEntity loadByUsername(String username);

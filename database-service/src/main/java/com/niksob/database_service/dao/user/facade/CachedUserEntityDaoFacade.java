@@ -4,7 +4,7 @@ import com.niksob.database_service.dao.user.existence.UserEntityExistenceDao;
 import com.niksob.database_service.dao.user.loader.UserEntityLoaderDao;
 import com.niksob.database_service.dao.user.updater.UserEntityUpdaterDao;
 import com.niksob.database_service.entity.user.UserEntity;
-import com.niksob.database_service.handler.exception.UserDaoExceptionHandler;
+import com.niksob.database_service.handler.exception.DaoExceptionHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -13,11 +13,11 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class CachedUserEntityDaoFacade implements UserEntityDaoFacade {
     private final UserEntityLoaderDao loaderDao;
-    @Qualifier("userEntityExistenceDao")
     private final UserEntityExistenceDao existenceDao;
     private final UserEntityUpdaterDao updaterDao;
 
-    private final UserDaoExceptionHandler exceptionHandler;
+    @Qualifier("userDaoExceptionHandler")
+    private final DaoExceptionHandler exceptionHandler;
 
     @Override
     public boolean existsByUsername(String username) {
@@ -68,6 +68,7 @@ public class CachedUserEntityDaoFacade implements UserEntityDaoFacade {
         if (!existsByUsername(username)) {
             throw exceptionHandler.createResourceNotFoundException(username);
         }
-        updaterDao.delete(username);
+        final UserEntity user = loaderDao.loadByUsername(username);
+        updaterDao.delete(user);
     }
 }

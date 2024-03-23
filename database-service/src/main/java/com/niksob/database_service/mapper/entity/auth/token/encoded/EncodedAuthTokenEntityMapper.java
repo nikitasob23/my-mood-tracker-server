@@ -1,6 +1,6 @@
 package com.niksob.database_service.mapper.entity.auth.token.encoded;
 
-import com.niksob.database_service.entity.user.token.refresh.AuthTokenEntity;
+import com.niksob.database_service.entity.auth.token.AuthTokenEntity;
 import com.niksob.domain.model.auth.token.encoded.EncodedAuthToken;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

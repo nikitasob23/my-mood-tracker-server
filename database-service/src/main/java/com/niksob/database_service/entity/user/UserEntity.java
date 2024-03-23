@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.niksob.database_service.entity.mood.entry.MoodEntryEntity;
 import com.niksob.database_service.entity.mood.tag.MoodTagEntity;
-import com.niksob.database_service.entity.user.token.refresh.AuthTokenEntity;
+import com.niksob.database_service.entity.auth.token.AuthTokenEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

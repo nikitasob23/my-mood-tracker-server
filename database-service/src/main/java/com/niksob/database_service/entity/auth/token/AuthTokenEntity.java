@@ -1,4 +1,4 @@
-package com.niksob.database_service.entity.user.token.refresh;
+package com.niksob.database_service.entity.auth.token;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.niksob.database_service.entity.user.UserEntity;

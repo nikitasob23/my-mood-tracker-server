@@ -15,10 +15,10 @@ import java.util.Set;
 
 @Component
 @AllArgsConstructor
-public class CachedTagLoaderDaoImpl implements TagEntityLoaderDao {
+public class CachedTagLoaderDao implements TagEntityLoaderDao {
     protected final MoodTagRepository moodTagRepository;
 
-    private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(CachedTagLoaderDaoImpl.class);
+    private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(CachedTagLoaderDao.class);
 
     @Override
     @Cacheable(value = MoodTagCacheNames.MOOD_TAG_BY_USER_ID_CACHE_NAME, key = "#userId")

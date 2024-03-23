@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
-public class CachedTagUpdaterDaoImpl implements TagEntityUpdaterDao {
+public class CachedTagUpdaterDao implements TagEntityUpdaterDao {
     private final TagEntityLoaderDao loaderDao;
     private final MoodTagRepository moodTagRepository;
 
-    private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(CachedTagUpdaterDaoImpl.class);
+    private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(CachedTagUpdaterDao.class);
 
     @Override
     @Transactional
