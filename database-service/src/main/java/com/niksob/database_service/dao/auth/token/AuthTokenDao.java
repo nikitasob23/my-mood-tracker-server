@@ -11,6 +11,8 @@ import com.niksob.layer_connector.annotation.LayerConnector;
         EncodedAuthTokenEntityMapper.class, AuthTokenEntityDetailsMapper.class
 })
 public interface AuthTokenDao {
+    boolean existsByDetails(AuthTokenDetails authTokenDetails);
+
     EncodedAuthToken load(AuthTokenDetails authTokenDetails);
 
     EncodedAuthToken save(EncodedAuthToken authToken);

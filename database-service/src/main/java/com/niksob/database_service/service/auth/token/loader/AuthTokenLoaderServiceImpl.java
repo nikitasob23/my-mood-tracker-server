@@ -16,6 +16,13 @@ public class AuthTokenLoaderServiceImpl implements AuthTokenLoaderService {
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(AuthTokenLoaderServiceImpl.class);
 
     @Override
+    public Mono<Boolean> existsByDetails(AuthTokenDetails authTokenDetails) {
+        return MonoAsyncUtil.create(() -> authTokenDao.existsByDetails(authTokenDetails))
+                .doOnNext(moodTags -> log.debug("Get auth token from DAO", moodTags))
+                .doOnError(throwable -> log.error("Auth token existence check error", throwable, authTokenDetails));
+    }
+
+    @Override
     public Mono<EncodedAuthToken> load(AuthTokenDetails authTokenDetails) {
         return MonoAsyncUtil.create(() -> authTokenDao.load(authTokenDetails))
                 .doOnNext(moodTags -> log.debug("Get auth token from DAO", moodTags))

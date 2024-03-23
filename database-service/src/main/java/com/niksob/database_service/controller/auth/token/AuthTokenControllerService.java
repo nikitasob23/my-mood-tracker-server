@@ -14,6 +14,8 @@ import reactor.core.publisher.Mono;
         sourceParents = AuthTokenLoaderService.class,
         mapper = {EncodedAuthTokenDtoMapper.class, EncodedAuthTokenMonoDtoMapper.class, AuthTokenDetailsDtoMapper.class})
 public interface AuthTokenControllerService {
+    Mono<Boolean> existsByDetails(AuthTokenDetailsDto authTokenDetails);
+
     Mono<EncodedAuthTokenDto> load(AuthTokenDetailsDto authTokenDetails);
 
     Mono<EncodedAuthTokenDto> save(EncodedAuthTokenDto authTokenDto);

@@ -22,6 +22,14 @@ public class AuthTokenController {
     private final ResourceControllerErrorUtil controllerErrorUtil;
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(AuthTokenController.class);
 
+    @GetMapping("/exists")
+    public Mono<Boolean> existsByDetails(@ModelAttribute AuthTokenDetailsDto authTokenDetails) {
+        return authTokenService.existsByDetails(authTokenDetails)
+                .doOnSuccess(ignore -> log.debug("Successful auth token existence check", authTokenDetails))
+                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
+                .onErrorResume(controllerErrorUtil::createLoadingErrorMono);
+    }
+
     @GetMapping
     public Mono<EncodedAuthTokenDto> load(@ModelAttribute AuthTokenDetailsDto authTokenDetails) {
         return authTokenService.load(authTokenDetails)
