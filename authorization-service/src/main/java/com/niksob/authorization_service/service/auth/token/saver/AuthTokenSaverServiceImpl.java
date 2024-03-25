@@ -6,6 +6,9 @@ import com.niksob.authorization_service.service.encoder.auth_token.AuthTokenEnco
 import com.niksob.domain.exception.resource.ResourceSavingException;
 import com.niksob.domain.http.connector.auth.token.AuthTokenDatabaseConnector;
 import com.niksob.domain.model.auth.token.AuthToken;
+import com.niksob.domain.model.auth.token.details.AuthTokenDetails;
+import com.niksob.domain.model.auth.token.encoded.EncodedAuthToken;
+import com.niksob.domain.model.auth.token.encoded.EncodedAuthTokenMapper;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
@@ -19,7 +22,9 @@ public class AuthTokenSaverServiceImpl implements AuthTokenSaverService {
 
     private final AuthTokenDatabaseConnector databaseConnector;
     private final AuthTokenEncodingService encodingService;
+
     private final AuthTokenMapper authTokenMapper;
+    private final EncodedAuthTokenMapper encodedAuthTokenMapper;
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(AuthTokenSaverServiceImpl.class);
 
@@ -27,10 +32,24 @@ public class AuthTokenSaverServiceImpl implements AuthTokenSaverService {
     public Mono<AuthToken> save(AuthToken authToken) {
         return Mono.just(authToken)
                 .map(encodingService::encode)
-                .flatMap(databaseConnector::save)
+                .flatMap(this::saveInStorage)
                 .map(encodedToken -> authTokenMapper.combine(encodedToken, authToken))
                 .doOnSuccess(ignore -> log.info("Successful saving user's auth token", null, authToken))
                 .onErrorResume(throwable -> createSavingError(throwable, authToken));
+    }
+
+    private Mono<EncodedAuthToken> saveInStorage(EncodedAuthToken authToken) {
+        return Mono.just(authToken)
+                .map(encodedAuthTokenMapper::getDetails)
+                .flatMap(this::existsInStorage)
+                .flatMap(ignore -> databaseConnector.update(authToken)
+                        .then(Mono.just(authToken))
+                ).switchIfEmpty(databaseConnector.save(authToken));
+    }
+
+    private Mono<AuthTokenDetails> existsInStorage(AuthTokenDetails authTokenDetails) {
+        return databaseConnector.existsByDetails(authTokenDetails)
+                .flatMap(exists -> exists ? Mono.just(authTokenDetails) : Mono.empty());
     }
 
     private <T> Mono<T> createSavingError(Throwable throwable, Object state) {
