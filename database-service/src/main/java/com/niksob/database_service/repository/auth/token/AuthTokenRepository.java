@@ -1,7 +1,7 @@
 package com.niksob.database_service.repository.auth.token;
 
 import com.niksob.database_service.entity.auth.token.AuthTokenEntity;
-import com.niksob.domain.model.auth.token.details.AuthTokenEntityDetails;
+import com.niksob.database_service.model.auth.token.details.AuthTokenEntityDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

@@ -1,4 +1,4 @@
-package com.niksob.authorization_service.mapper.auth.token;
+package com.niksob.authorization_service.mapper.jwt;
 
 import com.niksob.authorization_service.model.jwt.Jwt;
 import com.niksob.domain.model.auth.token.AccessToken;
@@ -10,4 +10,8 @@ public interface JwtMapper {
     AccessToken toAccessToken(Jwt jwt);
 
     RefreshToken toRefreshToken(Jwt jwt);
+
+    Jwt fromAccessToken(AccessToken accessToken);
+
+    Jwt fromRefreshToken(RefreshToken refreshToken);
 }

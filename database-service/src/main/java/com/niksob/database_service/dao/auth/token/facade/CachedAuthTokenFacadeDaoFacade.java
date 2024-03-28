@@ -6,7 +6,7 @@ import com.niksob.database_service.dao.auth.token.updater.AuthTokenEntityUpdater
 import com.niksob.database_service.entity.auth.token.AuthTokenEntity;
 import com.niksob.database_service.handler.exception.DaoExceptionHandler;
 import com.niksob.database_service.mapper.entity.auth.token.details.AuthTokenEntityDetailsMapper;
-import com.niksob.domain.model.auth.token.details.AuthTokenEntityDetails;
+import com.niksob.database_service.model.auth.token.details.AuthTokenEntityDetails;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

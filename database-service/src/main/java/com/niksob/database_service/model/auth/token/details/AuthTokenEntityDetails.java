@@ -1,4 +1,4 @@
-package com.niksob.domain.model.auth.token.details;
+package com.niksob.database_service.model.auth.token.details;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

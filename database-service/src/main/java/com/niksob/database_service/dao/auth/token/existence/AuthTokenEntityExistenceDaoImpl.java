@@ -1,7 +1,7 @@
 package com.niksob.database_service.dao.auth.token.existence;
 
 import com.niksob.database_service.dao.auth.token.loader.AuthTokenEntityLoaderDao;
-import com.niksob.domain.model.auth.token.details.AuthTokenEntityDetails;
+import com.niksob.database_service.model.auth.token.details.AuthTokenEntityDetails;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 

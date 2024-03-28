@@ -29,16 +29,23 @@ public class AuthTokenSaverServiceImpl implements AuthTokenSaverService {
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(AuthTokenSaverServiceImpl.class);
 
     @Override
-    public Mono<AuthToken> save(AuthToken authToken) {
+    public Mono<AuthToken> upsert(AuthToken authToken) {
         return Mono.just(authToken)
                 .map(encodingService::encode)
-                .flatMap(this::saveInStorage)
+                .flatMap(this::upsertInStorage)
                 .map(encodedToken -> authTokenMapper.combine(encodedToken, authToken))
-                .doOnSuccess(ignore -> log.info("Successful saving user's auth token", null, authToken))
-                .onErrorResume(throwable -> createSavingError(throwable, authToken));
+                .doOnSuccess(ignore -> log.info("Successful upsert user's auth token", null, authToken))
+                .onErrorResume(throwable -> createUpsertError(throwable, authToken));
     }
 
-    private Mono<EncodedAuthToken> saveInStorage(EncodedAuthToken authToken) {
+    @Override
+    public Mono<Void> update(AuthToken authToken) {
+        return Mono.just(authToken)
+                .map(encodingService::encode)
+                .flatMap(databaseConnector::update);
+    }
+
+    private Mono<EncodedAuthToken> upsertInStorage(EncodedAuthToken authToken) {
         return Mono.just(authToken)
                 .map(encodedAuthTokenMapper::getDetails)
                 .flatMap(this::existsInStorage)
@@ -52,7 +59,7 @@ public class AuthTokenSaverServiceImpl implements AuthTokenSaverService {
                 .flatMap(exists -> exists ? Mono.just(authTokenDetails) : Mono.empty());
     }
 
-    private <T> Mono<T> createSavingError(Throwable throwable, Object state) {
+    private <T> Mono<T> createUpsertError(Throwable throwable, Object state) {
         Throwable e;
         if (throwable instanceof ResourceSavingException) {
             e = new AuthTokenSavingException(FAILURE_SAVING_USER_AUTH_TOKEN_MESSAGE, throwable);

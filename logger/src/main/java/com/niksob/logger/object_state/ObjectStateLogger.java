@@ -21,6 +21,8 @@ public interface ObjectStateLogger {
 
     void warn(String s, Throwable throwable, Object... objects);
 
+    void error(String s);
+
     void error(String s, Throwable throwable, Object o);
 
     void error(String s, Throwable throwable, Object... objects);

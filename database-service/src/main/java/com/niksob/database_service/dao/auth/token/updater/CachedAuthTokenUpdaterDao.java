@@ -6,7 +6,7 @@ import com.niksob.database_service.repository.auth.token.AuthTokenRepository;
 import com.niksob.domain.exception.resource.ResourceDeletionException;
 import com.niksob.domain.exception.resource.ResourceSavingException;
 import com.niksob.domain.exception.resource.ResourceUpdatingException;
-import com.niksob.domain.model.auth.token.details.AuthTokenEntityDetails;
+import com.niksob.database_service.model.auth.token.details.AuthTokenEntityDetails;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;

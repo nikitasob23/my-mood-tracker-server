@@ -2,7 +2,7 @@ package com.niksob.database_service.mapper.entity.auth.token.details;
 
 import com.niksob.database_service.entity.auth.token.AuthTokenEntity;
 import com.niksob.domain.model.auth.token.details.AuthTokenDetails;
-import com.niksob.domain.model.auth.token.details.AuthTokenEntityDetails;
+import com.niksob.database_service.model.auth.token.details.AuthTokenEntityDetails;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
