@@ -17,7 +17,7 @@ public interface AuthTokenDao {
 
     EncodedAuthToken save(EncodedAuthToken authToken);
 
-    void update(EncodedAuthToken authToken);
+    EncodedAuthToken update(EncodedAuthToken authToken);
 
     void delete(AuthTokenDetails authTokenDetails);
 }

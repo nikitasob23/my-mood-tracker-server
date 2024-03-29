@@ -30,10 +30,10 @@ public class AuthTokenUpdaterServiceImpl extends AuthTokenLoaderServiceImpl impl
     }
 
     @Override
-    public Mono<Void> update(EncodedAuthToken authToken) {
+    public Mono<EncodedAuthToken> update(EncodedAuthToken authToken) {
         return setIdIfNull(authToken).flatMap(token ->
                 MonoAsyncUtil.create(() -> authTokenDao.update(token))
-                        .doOnSuccess(ignore -> log.debug("Update auth token in DAO", authToken))
+                        .doOnNext(t -> log.debug("Update auth token in DAO", t))
                         .doOnError(throwable -> log.error("Auth token updating error", throwable, authToken)));
     }
 

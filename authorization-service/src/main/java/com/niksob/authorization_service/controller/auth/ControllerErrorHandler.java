@@ -4,8 +4,10 @@ import com.niksob.authorization_service.exception.auth.UnauthorizedAccessExcepti
 import com.niksob.authorization_service.exception.auth.signup.DuplicateSignupAttemptException;
 import com.niksob.authorization_service.exception.auth.signup.SignupException;
 import com.niksob.authorization_service.exception.auth.token.AuthTokenException;
-import com.niksob.authorization_service.exception.auth.token.saving.AuthTokenSavingException;
+import com.niksob.authorization_service.exception.auth.token.expired.ExpiredAuthTokenException;
 import com.niksob.authorization_service.model.login.password.WrongPasswordException;
+import com.niksob.domain.exception.resource.ResourceSavingException;
+import com.niksob.domain.exception.resource.ResourceUpdatingException;
 import com.niksob.domain.exception.rest.controller.response.HttpClientException;
 import com.niksob.domain.http.connector.error.handler.InternalServerErrorUtil;
 import com.niksob.logger.object_state.ObjectStateLogger;
@@ -39,15 +41,15 @@ public class ControllerErrorHandler {
         return Mono.error(errorResponse);
     }
 
-    public  <T> Mono<T> createAuthTokenNotGenerated(Throwable throwable) {
+    public <T> Mono<T> createAuthTokenNotGenerated(Throwable throwable) {
         HttpClientException errorResponse;
-        if (throwable instanceof WrongPasswordException) {
-            errorResponse = new HttpClientException(throwable, HttpStatus.BAD_REQUEST, contextPath);
-        } else if (throwable instanceof UnauthorizedAccessException) {
+        if (throwable instanceof UnauthorizedAccessException) {
             errorResponse = new HttpClientException(throwable, HttpStatus.NOT_FOUND, contextPath);
-        } else if (throwable instanceof AuthTokenException) {
-            errorResponse = new HttpClientException(throwable, HttpStatus.BAD_REQUEST, contextPath);
-        } else if (throwable instanceof AuthTokenSavingException) {
+        } else if (throwable instanceof WrongPasswordException
+                || throwable instanceof ExpiredAuthTokenException
+                || throwable instanceof AuthTokenException
+                || throwable instanceof ResourceSavingException // Auth token saving or updating exception
+                || throwable instanceof ResourceUpdatingException) {
             errorResponse = new HttpClientException(throwable, HttpStatus.BAD_REQUEST, contextPath);
         } else {
             return internalServerErrorUtil.createMonoResponse(throwable, ControllerErrorHandler.class);

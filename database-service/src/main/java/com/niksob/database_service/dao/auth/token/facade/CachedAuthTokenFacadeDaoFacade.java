@@ -52,11 +52,11 @@ public class CachedAuthTokenFacadeDaoFacade implements AuthTokenEntityFacadeDao 
     }
 
     @Override
-    public void update(AuthTokenEntity authToken) {
+    public AuthTokenEntity update(AuthTokenEntity authToken) {
         if (!exists(authToken)) {
             throw exceptionHandler.createResourceNotFoundException(authToken.getId());
         }
-        updaterDao.update(authToken);
+        return updaterDao.update(authToken);
     }
 
     @Override

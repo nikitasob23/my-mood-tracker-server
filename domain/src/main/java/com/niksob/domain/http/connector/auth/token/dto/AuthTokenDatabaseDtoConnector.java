@@ -9,5 +9,5 @@ public interface AuthTokenDatabaseDtoConnector {
 
     Mono<EncodedAuthTokenDto> save(EncodedAuthTokenDto authTokenDto);
 
-    Mono<Void> update(EncodedAuthTokenDto authToken);
+    Mono<EncodedAuthTokenDto> update(EncodedAuthTokenDto authToken);
 }

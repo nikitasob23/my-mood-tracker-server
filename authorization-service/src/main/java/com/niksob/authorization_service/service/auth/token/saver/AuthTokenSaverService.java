@@ -6,5 +6,5 @@ import reactor.core.publisher.Mono;
 public interface AuthTokenSaverService {
     Mono<AuthToken> upsert(AuthToken authToken);
 
-    Mono<Void> update(AuthToken authToken);
+    Mono<AuthToken> update(AuthToken authToken);
 }

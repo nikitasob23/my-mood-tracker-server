@@ -51,10 +51,10 @@ public class AuthTokenDatabaseDtoConnectorImpl extends BaseDatabaseConnector imp
     }
 
     @Override
-    public Mono<Void> update(EncodedAuthTokenDto authToken) {
+    public Mono<EncodedAuthTokenDto> update(EncodedAuthTokenDto authToken) {
         return httpClient.sendPutRequest(
                 restPath.post(connectionProperties, AuthTokenDBControllerPaths.BASE_URI),
-                authToken, EncodedAuthTokenDto.class, Void.class
+                authToken, EncodedAuthTokenDto.class, EncodedAuthTokenDto.class
         ).onErrorResume(throwable -> errorHandler.createUpdatingError(throwable, authToken));
     }
 }

@@ -48,11 +48,10 @@ public class AuthTokenController {
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> update(@RequestBody EncodedAuthTokenDto authTokenDto) {
+    public Mono<EncodedAuthTokenDto> update(@RequestBody EncodedAuthTokenDto authTokenDto) {
         return authTokenService.update(authTokenDto)
-                .doOnSuccess(ignore -> log.debug("Successful auth token updating", authTokenDto))
-                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
+                .doOnNext(ignore -> log.debug("Successful auth token updating", authTokenDto))
+                .doOnNext(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
                 .onErrorResume(controllerErrorUtil::createUpdatingError);
     }
 

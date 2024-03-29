@@ -12,7 +12,7 @@ public interface AuthTokenEntityFacadeDao {
 
     AuthTokenEntity save(AuthTokenEntity authToken);
 
-    void update(AuthTokenEntity authToken);
+    AuthTokenEntity update(AuthTokenEntity authToken);
 
     void delete(AuthTokenEntityDetails authTokenDetails);
 }

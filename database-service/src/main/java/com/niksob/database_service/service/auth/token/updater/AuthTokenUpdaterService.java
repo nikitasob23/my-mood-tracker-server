@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono;
 public interface AuthTokenUpdaterService extends AuthTokenLoaderService {
     Mono<EncodedAuthToken> save(EncodedAuthToken authToken);
 
-    Mono<Void> update(EncodedAuthToken authToken);
+    Mono<EncodedAuthToken> update(EncodedAuthToken authToken);
 
     Mono<Void> delete(AuthTokenDetails authTokenDetails);
 }

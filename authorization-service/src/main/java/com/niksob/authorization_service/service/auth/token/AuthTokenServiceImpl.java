@@ -1,6 +1,5 @@
 package com.niksob.authorization_service.service.auth.token;
 
-import com.niksob.authorization_service.exception.auth.token.AuthTokenException;
 import com.niksob.authorization_service.service.auth.login.LoginInService;
 import com.niksob.authorization_service.service.auth.token.generator.AuthTokenAdapter;
 import com.niksob.authorization_service.service.auth.token.saver.AuthTokenSaverService;
@@ -30,23 +29,24 @@ public class AuthTokenServiceImpl implements AuthTokenService {
                 .map(userId -> new AuthTokenDetails(userId, rowLoginInDetails.getDevice()))
                 .flatMap(authTokenAdapter::generate)
                 .flatMap(authTokenSaverService::upsert)
-                .doOnNext(authToken -> log.info("Successful generation of auth token", rowLoginInDetails))
-                .onErrorResume(throwable -> createGeneratingError(throwable, rowLoginInDetails));
+                .doOnNext(this::logSuccessGeneration)
+                .doOnError(throwable -> logFailureGeneration(throwable, rowLoginInDetails));
     }
 
     @Override
     public Mono<AuthToken> generateByRefresh(RefreshToken refreshToken) {
         return authTokenAdapter.extractAuthTokenDetails(refreshToken) // if expired then throw exception
                 .flatMap(authTokenAdapter::generate)
-                .doOnNext(authTokenSaverService::update)
-                .doOnNext(authToken -> log.info("Successful generation of auth token", refreshToken))
-                .onErrorResume(throwable -> createGeneratingError(throwable, refreshToken));
+                .flatMap(authTokenSaverService::update)
+                .doOnNext(this::logSuccessGeneration)
+                .doOnError(throwable -> logFailureGeneration(throwable, refreshToken));
     }
 
-    private Mono<AuthToken> createGeneratingError(Throwable throwable, Object state) {
-        final String message = "Failed auth token generation";
-        var e = new AuthTokenException(message);
-        log.error(message, throwable, state);
-        return Mono.error(e);
+    private void logSuccessGeneration(Object state) {
+        log.info("Successful generation of auth token", state);
+    }
+
+    private void logFailureGeneration(Throwable throwable, Object state) {
+        log.error("Failure generation of auth token", throwable, state);
     }
 }

@@ -20,7 +20,7 @@ public interface AuthTokenControllerService {
 
     Mono<EncodedAuthTokenDto> save(EncodedAuthTokenDto authTokenDto);
 
-    Mono<Void> update(EncodedAuthTokenDto authTokenDto);
+    Mono<EncodedAuthTokenDto> update(EncodedAuthTokenDto authTokenDto);
 
     Mono<Void> delete(AuthTokenDetailsDto authTokenDetails);
 }

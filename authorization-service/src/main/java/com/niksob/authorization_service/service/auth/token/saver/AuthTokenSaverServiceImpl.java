@@ -1,9 +1,7 @@
 package com.niksob.authorization_service.service.auth.token.saver;
 
-import com.niksob.authorization_service.exception.auth.token.saving.AuthTokenSavingException;
 import com.niksob.authorization_service.mapper.auth.token.AuthTokenMapper;
 import com.niksob.authorization_service.service.encoder.auth_token.AuthTokenEncodingService;
-import com.niksob.domain.exception.resource.ResourceSavingException;
 import com.niksob.domain.http.connector.auth.token.AuthTokenDatabaseConnector;
 import com.niksob.domain.model.auth.token.AuthToken;
 import com.niksob.domain.model.auth.token.details.AuthTokenDetails;
@@ -18,8 +16,6 @@ import reactor.core.publisher.Mono;
 @Service
 @AllArgsConstructor
 public class AuthTokenSaverServiceImpl implements AuthTokenSaverService {
-    public static final String FAILURE_SAVING_USER_AUTH_TOKEN_MESSAGE = "Failure saving user's auth token";
-
     private final AuthTokenDatabaseConnector databaseConnector;
     private final AuthTokenEncodingService encodingService;
 
@@ -34,39 +30,30 @@ public class AuthTokenSaverServiceImpl implements AuthTokenSaverService {
                 .map(encodingService::encode)
                 .flatMap(this::upsertInStorage)
                 .map(encodedToken -> authTokenMapper.combine(encodedToken, authToken))
-                .doOnSuccess(ignore -> log.info("Successful upsert user's auth token", null, authToken))
-                .onErrorResume(throwable -> createUpsertError(throwable, authToken));
+                .doOnNext(token -> log.info("Successful upsert user's auth token", null, token))
+                .doOnError(throwable -> log.error("Failure upsert user's auth token", null, authToken));
     }
 
     @Override
-    public Mono<Void> update(AuthToken authToken) {
+    public Mono<AuthToken> update(AuthToken authToken) {
         return Mono.just(authToken)
                 .map(encodingService::encode)
-                .flatMap(databaseConnector::update);
+                .flatMap(databaseConnector::update)
+                .map(encodedToken -> authTokenMapper.combine(encodedToken, authToken))
+                .doOnNext(token -> log.info("Successful update user's auth token", null, token))
+                .doOnError(throwable -> log.error("Failure update user's auth token", null, authToken));
     }
 
     private Mono<EncodedAuthToken> upsertInStorage(EncodedAuthToken authToken) {
         return Mono.just(authToken)
                 .map(encodedAuthTokenMapper::getDetails)
                 .flatMap(this::existsInStorage)
-                .flatMap(ignore -> databaseConnector.update(authToken)
-                        .then(Mono.just(authToken))
-                ).switchIfEmpty(databaseConnector.save(authToken));
+                .flatMap(ignore -> databaseConnector.update(authToken))
+                .switchIfEmpty(databaseConnector.save(authToken));
     }
 
     private Mono<AuthTokenDetails> existsInStorage(AuthTokenDetails authTokenDetails) {
         return databaseConnector.existsByDetails(authTokenDetails)
                 .flatMap(exists -> exists ? Mono.just(authTokenDetails) : Mono.empty());
-    }
-
-    private <T> Mono<T> createUpsertError(Throwable throwable, Object state) {
-        Throwable e;
-        if (throwable instanceof ResourceSavingException) {
-            e = new AuthTokenSavingException(FAILURE_SAVING_USER_AUTH_TOKEN_MESSAGE, throwable);
-        } else {
-            e = throwable;
-        }
-        log.error(FAILURE_SAVING_USER_AUTH_TOKEN_MESSAGE, throwable, state);
-        return Mono.error(e);
     }
 }
