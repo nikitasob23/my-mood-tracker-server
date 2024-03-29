@@ -8,6 +8,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class RowLoginInDetailsDto {
     private String username;
-    @JsonProperty("row_password")
+    @JsonProperty("password")
     private String rowPassword;
 }

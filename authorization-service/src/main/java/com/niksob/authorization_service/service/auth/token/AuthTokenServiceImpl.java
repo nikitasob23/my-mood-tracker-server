@@ -30,15 +30,18 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     @Override
     public Mono<AuthToken> generate(RowLoginInDetails rowLoginInDetails) {
         return userDatabaseConnector.load(rowLoginInDetails.getUsername())
-                .filter(userInfo -> passwordMatches(rowLoginInDetails, userInfo))
+                .flatMap(user -> passwordMatches(rowLoginInDetails, user))
                 .flatMap(authTokenGenerator::generate)
-                .doOnNext(authToken -> log.info("Successful generation of auth token", null))
+                .doOnNext(authToken -> log.info("Successful generation of auth token", rowLoginInDetails))
                 .onErrorResume(throwable -> errorHandler.createGeneratingError(throwable, rowLoginInDetails));
     }
 
-    private boolean passwordMatches(RowLoginInDetails rowLoginInDetails, UserInfo userInfo) {
-        final RowPassword rowPassword = rowLoginInDetails.getRowPassword();
-        final Password encodedPassword = userInfo.getPassword();
-        return passwordEncoderService.matches(rowPassword, encodedPassword);
+    private Mono<UserInfo> passwordMatches(RowLoginInDetails rowLoginInDetails, UserInfo userInfo) {
+        return Mono.just(userInfo)
+                .filter(user -> {
+                    final RowPassword rowPassword = rowLoginInDetails.getRowPassword();
+                    final Password encodedPassword = user.getPassword();
+                    return passwordEncoderService.matches(rowPassword, encodedPassword);
+                }).switchIfEmpty(errorHandler.createWrongPasswordException(rowLoginInDetails));
     }
 }
