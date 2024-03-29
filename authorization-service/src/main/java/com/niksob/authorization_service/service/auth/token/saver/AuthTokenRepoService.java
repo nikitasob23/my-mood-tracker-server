@@ -2,6 +2,7 @@ package com.niksob.authorization_service.service.auth.token.saver;
 
 import com.niksob.domain.model.auth.token.AuthToken;
 import com.niksob.domain.model.auth.token.details.AuthTokenDetails;
+import com.niksob.domain.model.user.UserId;
 import reactor.core.publisher.Mono;
 
 public interface AuthTokenRepoService {
@@ -14,4 +15,6 @@ public interface AuthTokenRepoService {
     Mono<AuthToken> update(AuthToken authToken);
 
     Mono<Void> delete(AuthTokenDetails authTokenDetails);
+
+    Mono<Void> deleteByUserId(UserId userId);
 }

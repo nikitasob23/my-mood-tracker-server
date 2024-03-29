@@ -13,6 +13,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+import java.util.Set;
 
 @Component
 @AllArgsConstructor
@@ -37,5 +38,19 @@ public class CachedAuthTokenEntityLoaderDao implements AuthTokenEntityLoaderDao 
         log.info("Auth token entity loaded from repository", Objects.requireNonNullElse(authToken, ""));
         log.info("Cached auth token entity", Objects.requireNonNullElse(authToken, ""));
         return authToken;
+    }
+
+    @Override
+    public Set<AuthTokenEntity> loadAllByUserId(Long userId) {
+        log.info("Start loading all user's auth tokens from repository", userId);
+        final Set<AuthTokenEntity> authTokens;
+        try {
+            authTokens = authTokenRepository.getAllByUserId(userId);
+        } catch (Exception e) {
+            throw exceptionHandler.createResourceNotFoundException(userId, e);
+        }
+        log.info("All user's auth tokens loaded from repository",
+                Objects.requireNonNullElse(authTokens, ""));
+        return authTokens;
     }
 }

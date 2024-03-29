@@ -8,6 +8,7 @@ import com.niksob.domain.model.auth.login.RowLoginInDetails;
 import com.niksob.domain.model.auth.token.AuthToken;
 import com.niksob.domain.model.auth.token.RefreshToken;
 import com.niksob.domain.model.auth.token.details.AuthTokenDetails;
+import com.niksob.domain.model.user.UserId;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
@@ -47,8 +48,15 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     @Override
     public Mono<Void> invalidate(AuthTokenDetails authTokenDetails) {
         return authTokenRepoService.delete(authTokenDetails)
-                .doOnSuccess(ignore -> log.info("Successful generation of auth token", authTokenDetails))
+                .doOnSuccess(ignore -> log.info("Successful deletion of auth token", authTokenDetails))
                 .doOnError(throwable -> log.error("Failure deletion of auth token", throwable, authTokenDetails));
+    }
+
+    @Override
+    public Mono<Void> invalidateByUserId(UserId userId) {
+        return authTokenRepoService.deleteByUserId(userId)
+                .doOnSuccess(ignore -> log.info("Successful deletion auth tokens for all devices", userId))
+                .doOnError(t -> log.error("Failure deletion auth tokens for all devices", null, userId));
     }
 
     private Mono<AuthTokenDetails> validOrThrow(AuthTokenDetails authTokenDetails) {

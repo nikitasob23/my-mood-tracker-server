@@ -2,6 +2,7 @@ package com.niksob.domain.http.connector.auth.token.dto;
 
 import com.niksob.domain.dto.auth.token.details.AuthTokenDetailsDto;
 import com.niksob.domain.dto.auth.token.encoded.EncodedAuthTokenDto;
+import com.niksob.domain.dto.user.UserIdDto;
 import reactor.core.publisher.Mono;
 
 public interface AuthTokenDatabaseDtoConnector {
@@ -12,4 +13,6 @@ public interface AuthTokenDatabaseDtoConnector {
     Mono<EncodedAuthTokenDto> update(EncodedAuthTokenDto authToken);
 
     Mono<Void> delete(AuthTokenDetailsDto authTokenDetails);
+
+    Mono<Void> deleteByUserId(UserIdDto userId);
 }

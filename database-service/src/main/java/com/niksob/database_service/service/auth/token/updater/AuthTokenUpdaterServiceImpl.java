@@ -6,6 +6,7 @@ import com.niksob.database_service.util.async.MonoAsyncUtil;
 import com.niksob.domain.model.auth.token.details.AuthTokenDetails;
 import com.niksob.domain.model.auth.token.encoded.EncodedAuthToken;
 import com.niksob.domain.model.auth.token.encoded.EncodedAuthTokenMapper;
+import com.niksob.domain.model.user.UserId;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,13 @@ public class AuthTokenUpdaterServiceImpl extends AuthTokenLoaderServiceImpl impl
         return MonoAsyncUtil.create(() -> authTokenDao.delete(authTokenDetails))
                 .doOnSuccess(ignore -> log.debug("Delete auth token from DAO", authTokenDetails))
                 .doOnError(throwable -> log.error("Auth token deleting error", throwable, authTokenDetails));
+    }
+
+    @Override
+    public Mono<Void> deleteByUserId(UserId userId) {
+        return MonoAsyncUtil.create(() -> authTokenDao.deleteByUserId(userId))
+                .doOnSuccess(ignore -> log.debug("Delete all user's auth tokens from DAO", userId))
+                .doOnError(throwable -> log.error("All user's auth token deleting error", throwable, userId));
     }
 
     private Mono<EncodedAuthToken> setIdIfNull(EncodedAuthToken authToken) {

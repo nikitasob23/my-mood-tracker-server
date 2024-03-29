@@ -11,6 +11,7 @@ import com.niksob.domain.exception.resource.ResourceAlreadyExistsException;
 import com.niksob.domain.exception.resource.ResourceSavingException;
 import com.niksob.domain.http.connector.UserDatabaseConnector;
 import com.niksob.domain.model.auth.login.SignOutDetails;
+import com.niksob.domain.model.user.UserId;
 import com.niksob.domain.model.user.UserInfo;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -45,7 +46,16 @@ public class UserSignupServiceImpl implements UserSignupService {
     @Override
     public Mono<Void> signOut(SignOutDetails signOutDetails) {
         return Mono.fromCallable(() -> signOutDetailsMapper.toAuthTokenDetails(signOutDetails))
-                .flatMap(authTokenService::invalidate);
+                .flatMap(authTokenService::invalidate)
+                .doOnSuccess(ignore -> log.info("Successful sign out of user", null, signOutDetails))
+                .doOnError(throwable -> log.error("Failure sign out of user", null, signOutDetails));
+    }
+
+    @Override
+    public Mono<Void> signOutAll(UserId userId) {
+        return authTokenService.invalidateByUserId(userId)
+                .doOnSuccess(ignore -> log.info("Successful user sign out from all devices", null, userId))
+                .doOnError(throwable -> log.error("Failure sign out of user", null, userId));
     }
 
     private Mono<Void> createSignupError(Throwable throwable, Object state) {

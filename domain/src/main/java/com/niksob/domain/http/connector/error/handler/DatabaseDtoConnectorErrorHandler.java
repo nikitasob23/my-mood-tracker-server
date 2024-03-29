@@ -74,7 +74,20 @@ public class DatabaseDtoConnectorErrorHandler {
         if (httpClientException.getHttpStatus().compareTo(HttpStatus.BAD_REQUEST) == 0) {
             logSavingError(state);
             return Mono.error(new ResourceUpdatingException(
-                    "%s was not delete in the database".formatted(entityName), throwable, state)
+                    "%s was not delete from the database".formatted(entityName), throwable, state)
+            );
+        }
+        return checkNotFoundResponse(httpClientException, throwable, state);
+    }
+
+    public <T> Mono<T> createDeletionAllError(Throwable throwable, Object state) {
+        if (!(throwable instanceof HttpClientException httpClientException)) {
+            return createInternalServerException(throwable, state);
+        }
+        if (httpClientException.getHttpStatus().compareTo(HttpStatus.BAD_REQUEST) == 0) {
+            logSavingError(state);
+            return Mono.error(new ResourceUpdatingException(
+                    "All %ss was not delete by user id from the database".formatted(entityName), throwable, state)
             );
         }
         return checkNotFoundResponse(httpClientException, throwable, state);

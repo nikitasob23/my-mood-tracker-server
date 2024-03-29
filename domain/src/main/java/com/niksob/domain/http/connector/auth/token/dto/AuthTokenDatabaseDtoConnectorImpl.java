@@ -3,6 +3,7 @@ package com.niksob.domain.http.connector.auth.token.dto;
 import com.niksob.domain.config.properties.DatabaseConnectionProperties;
 import com.niksob.domain.dto.auth.token.details.AuthTokenDetailsDto;
 import com.niksob.domain.dto.auth.token.encoded.EncodedAuthTokenDto;
+import com.niksob.domain.dto.user.UserIdDto;
 import com.niksob.domain.http.client.HttpClient;
 import com.niksob.domain.http.connector.base.BaseDatabaseConnector;
 import com.niksob.domain.http.connector.error.handler.DatabaseDtoConnectorErrorHandler;
@@ -64,5 +65,14 @@ public class AuthTokenDatabaseDtoConnectorImpl extends BaseDatabaseConnector imp
         final String uri = restPath.getWithParams(connectionProperties, AuthTokenDBControllerPaths.BASE_URI, params);
         return httpClient.sendDeleteRequest(uri, Void.class)
                 .onErrorResume(throwable -> errorHandler.createDeletionError(throwable, authTokenDetails));
+    }
+
+    @Override
+    public Mono<Void> deleteByUserId(UserIdDto userId) {
+        final Map<String, String> params = authTokenGetParamsMapper.getHttpParams(userId);
+        final String resourceUri = AuthTokenDBControllerPaths.BASE_URI + AuthTokenDBControllerPaths.ALL;
+        final String uri = restPath.getWithParams(connectionProperties, resourceUri, params);
+        return httpClient.sendDeleteRequest(uri, Void.class)
+                .onErrorResume(throwable -> errorHandler.createDeletionAllError(throwable, userId));
     }
 }

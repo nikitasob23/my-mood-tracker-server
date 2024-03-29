@@ -4,6 +4,7 @@ import com.niksob.domain.model.auth.login.RowLoginInDetails;
 import com.niksob.domain.model.auth.token.AuthToken;
 import com.niksob.domain.model.auth.token.RefreshToken;
 import com.niksob.domain.model.auth.token.details.AuthTokenDetails;
+import com.niksob.domain.model.user.UserId;
 import reactor.core.publisher.Mono;
 
 public interface AuthTokenService {
@@ -12,4 +13,6 @@ public interface AuthTokenService {
     Mono<AuthToken> generateByRefresh(RefreshToken refreshToken);
 
     Mono<Void> invalidate(AuthTokenDetails authTokenDetails);
+
+    Mono<Void> invalidateByUserId(UserId userId);
 }

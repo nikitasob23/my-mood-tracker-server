@@ -1,6 +1,7 @@
 package com.niksob.authorization_service.controller.auth.signup;
 
 import com.niksob.authorization_service.controller.auth.ControllerErrorHandler;
+import com.niksob.domain.dto.user.UserIdDto;
 import com.niksob.domain.dto.user.signup.SignupDetailsDto;
 import com.niksob.domain.dto.auth.login.SignOutDetailsDto;
 import com.niksob.domain.path.controller.authorization_service.LoginControllerPaths;
@@ -33,6 +34,15 @@ public class LoginController {
     public Mono<Void> signOut(@ModelAttribute SignOutDetailsDto signOutDetails) {
         return signupService.signOut(signOutDetails)
                 .doOnSuccess(u -> log.debug("User is sign out", signOutDetails))
+                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
+                .onErrorResume(errorHandler::createLoginError);
+    }
+
+    @GetMapping(LoginControllerPaths.SIGNOUT_ALL)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> signOutAll(@RequestParam("user_id") UserIdDto userId) {
+        return signupService.signOutAll(userId)
+                .doOnSuccess(ignore -> log.debug("User is sign out from all devices", userId))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
                 .onErrorResume(errorHandler::createLoginError);
     }

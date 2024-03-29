@@ -3,6 +3,7 @@ package com.niksob.database_service.controller.auth.token;
 import com.niksob.database_service.util.controller.ResourceControllerErrorUtil;
 import com.niksob.domain.dto.auth.token.details.AuthTokenDetailsDto;
 import com.niksob.domain.dto.auth.token.encoded.EncodedAuthTokenDto;
+import com.niksob.domain.dto.user.UserIdDto;
 import com.niksob.domain.path.controller.database_service.auth.token.AuthTokenDBControllerPaths;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -60,6 +61,15 @@ public class AuthTokenController {
     public Mono<Void> delete(@ModelAttribute AuthTokenDetailsDto authTokenDetails) {
         return authTokenService.delete(authTokenDetails)
                 .doOnSuccess(ignore -> log.debug("Successful auth token deletion", authTokenDetails))
+                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
+                .onErrorResume(controllerErrorUtil::createDeleteError);
+    }
+
+    @DeleteMapping(AuthTokenDBControllerPaths.ALL)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> deleteByUserId(@RequestParam("userId") UserIdDto userId) {
+        return authTokenService.deleteByUserId(userId)
+                .doOnSuccess(ignore -> log.debug("Successful deletion of all user's auth tokens", userId))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
                 .onErrorResume(controllerErrorUtil::createDeleteError);
     }

@@ -15,4 +15,6 @@ public interface AuthTokenEntityFacadeDao {
     AuthTokenEntity update(AuthTokenEntity authToken);
 
     void delete(AuthTokenEntityDetails authTokenDetails);
+
+    void deleteByUserId(Long userId);
 }

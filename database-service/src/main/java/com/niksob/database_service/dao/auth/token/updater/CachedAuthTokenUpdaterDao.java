@@ -6,7 +6,6 @@ import com.niksob.database_service.repository.auth.token.AuthTokenRepository;
 import com.niksob.domain.exception.resource.ResourceDeletionException;
 import com.niksob.domain.exception.resource.ResourceSavingException;
 import com.niksob.domain.exception.resource.ResourceUpdatingException;
-import com.niksob.database_service.model.auth.token.details.AuthTokenEntityDetails;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
@@ -60,19 +59,30 @@ public class CachedAuthTokenUpdaterDao implements AuthTokenEntityUpdaterDao {
     @Override
     @Transactional
     @CachePut(value = AuthTokenCacheNames.USER_ID_AND_DEVICE_TO_AUTH_TOKEN_CACHE_NAME,
-            key = "#authTokenEntityDetails.userId + #authTokenEntityDetails.device")
-    public AuthTokenEntity delete(AuthTokenEntityDetails authTokenEntityDetails) {
-        log.info("Start deleting auth token by username from repository", authTokenEntityDetails);
-        final AuthTokenEntity authToken;
+            key = "#authToken.getId() + #authToken.getDevice()")
+    public AuthTokenEntity delete(AuthTokenEntity authToken) {
+        log.info("Start deleting auth token from repository", authToken);
         try {
-            authToken = repository.getByDetails(authTokenEntityDetails);
-            repository.deleteByDetails(authTokenEntityDetails);
+            repository.delete(authToken);
         } catch (Exception e) {
-            log.error("Failed deleting auth token by details from repository", null, authTokenEntityDetails);
-            throw new ResourceDeletionException("The auth token was not deleted", e, authTokenEntityDetails);
+            log.error("Failed deleting auth token from repository", null, authToken);
+            throw new ResourceDeletionException("The auth token was not deleted", e, authToken);
         }
-        log.info("Auth token deleted from repository by details", authToken);
+        log.info("Auth token deleted from repository", authToken);
         log.info("Deleted auth token cache", authToken);
         return null;
+    }
+
+    @Override
+    @Transactional
+    public void deleteByUserId(Long userId) {
+        log.info("Start deleting all user's auth tokens from repository", userId);
+        try {
+            repository.deleteAllByUserId(userId);
+        } catch (Exception e) {
+            log.error("Failed deleting all user's auth tokens from repository", null, userId);
+            throw new ResourceDeletionException("All user's auth tokens were not deleted", e, userId);
+        }
+        log.info("Successful deletion all user's auth tokens from repository", userId);
     }
 }

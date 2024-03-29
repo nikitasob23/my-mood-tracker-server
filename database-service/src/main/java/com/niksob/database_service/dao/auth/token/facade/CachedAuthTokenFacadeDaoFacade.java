@@ -7,21 +7,27 @@ import com.niksob.database_service.entity.auth.token.AuthTokenEntity;
 import com.niksob.database_service.handler.exception.DaoExceptionHandler;
 import com.niksob.database_service.mapper.entity.auth.token.details.AuthTokenEntityDetailsMapper;
 import com.niksob.database_service.model.auth.token.details.AuthTokenEntityDetails;
+import com.niksob.logger.object_state.ObjectStateLogger;
+import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
+import org.springframework.cache.Cache;
+import org.springframework.transaction.annotation.Transactional;
 
-@Component
+import java.util.Set;
+
 @AllArgsConstructor
 public class CachedAuthTokenFacadeDaoFacade implements AuthTokenEntityFacadeDao {
     private final AuthTokenEntityLoaderDao loaderDao;
     private final AuthTokenEntityExistenceDao existenceDao;
     private final AuthTokenEntityUpdaterDao updaterDao;
 
+    private final Cache cache;
+
     private final AuthTokenEntityDetailsMapper authTokenDetailsMapper;
 
-    @Qualifier("authTokenDaoExceptionHandler")
     private final DaoExceptionHandler exceptionHandler;
+
+    private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(CachedAuthTokenFacadeDaoFacade.class);
 
     @Override
     public boolean existsByDetails(AuthTokenEntityDetails authTokenDetails) {
@@ -44,6 +50,7 @@ public class CachedAuthTokenFacadeDaoFacade implements AuthTokenEntityFacadeDao 
     }
 
     @Override
+    @Transactional
     public AuthTokenEntity save(AuthTokenEntity authToken) {
         if (exists(authToken)) {
             throw exceptionHandler.createResourceAlreadyExistsException(authToken);
@@ -52,6 +59,7 @@ public class CachedAuthTokenFacadeDaoFacade implements AuthTokenEntityFacadeDao 
     }
 
     @Override
+    @Transactional
     public AuthTokenEntity update(AuthTokenEntity authToken) {
         if (!exists(authToken)) {
             throw exceptionHandler.createResourceNotFoundException(authToken.getId());
@@ -60,10 +68,31 @@ public class CachedAuthTokenFacadeDaoFacade implements AuthTokenEntityFacadeDao 
     }
 
     @Override
+    @Transactional
     public void delete(AuthTokenEntityDetails authTokenDetails) {
         if (!existsByDetails(authTokenDetails)) {
             throw exceptionHandler.createResourceNotFoundException(authTokenDetails);
         }
-        updaterDao.delete(authTokenDetails);
+        final AuthTokenEntity authToken = load(authTokenDetails);
+        updaterDao.delete(authToken);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByUserId(Long userId) {
+        final Set<AuthTokenEntity> authTokens = loaderDao.loadAllByUserId(userId); // non cached
+        if (authTokens != null && authTokens.isEmpty()) {
+            throw exceptionHandler.createResourceNotFoundException(userId);
+        }
+        deleteAllByUserIdFromCache(authTokens);
+        updaterDao.deleteByUserId(userId);
+    }
+
+    private void deleteAllByUserIdFromCache(Set<AuthTokenEntity> authTokens) {
+        log.info("Start deleting all user's auth tokens from cache", authTokens);
+        authTokens.stream()
+                .map(token -> token.getUserId() + token.getDevice())
+                .forEach(cacheKey -> cache.put(cacheKey, null));
+        log.info("Successful deletion all user's auth tokens from cache", authTokens);
     }
 }

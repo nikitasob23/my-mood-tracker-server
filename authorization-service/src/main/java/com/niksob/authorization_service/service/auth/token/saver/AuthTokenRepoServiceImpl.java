@@ -7,6 +7,7 @@ import com.niksob.domain.model.auth.token.AuthToken;
 import com.niksob.domain.model.auth.token.details.AuthTokenDetails;
 import com.niksob.domain.model.auth.token.encoded.EncodedAuthToken;
 import com.niksob.domain.model.auth.token.encoded.EncodedAuthTokenMapper;
+import com.niksob.domain.model.user.UserId;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
@@ -59,6 +60,13 @@ public class AuthTokenRepoServiceImpl implements AuthTokenRepoService {
         return databaseConnector.delete(authTokenDetails)
                 .doOnSuccess(ignore -> log.info("Successful deletion auth token", null, authTokenDetails))
                 .doOnError(throwable -> log.error("Failure deletion auth token", null, authTokenDetails));
+    }
+
+    @Override
+    public Mono<Void> deleteByUserId(UserId userId) {
+        return databaseConnector.deleteByUserId(userId)
+                .doOnSuccess(ignore -> log.info("Successful deletion all user's auth tokens", null, userId))
+                .doOnError(throwable -> log.error("Failure deletion all user's auth tokens", null, userId));
     }
 
     private Mono<EncodedAuthToken> upsertInStorage(EncodedAuthToken authToken) {
