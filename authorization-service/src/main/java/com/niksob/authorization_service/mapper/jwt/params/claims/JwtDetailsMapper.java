@@ -15,10 +15,10 @@ public interface JwtDetailsMapper {
     String DEVICE_KEY = "dev";
 
     @Mapping(target = "userId", expression = "java(toStringUserId(authTokenDetails))")
-    JwtDetails fromDetails(AuthTokenDetails authTokenDetails);
+    JwtDetails toAuthTokenDetails(AuthTokenDetails authTokenDetails);
 
     @Mapping(target = "userId", expression = "java(toUserId(jwtDetails))")
-    AuthTokenDetails toDetails(JwtDetails jwtDetails);
+    AuthTokenDetails toAuthTokenDetails(JwtDetails jwtDetails);
 
     default Map<String, Object> toClaimsMap(JwtDetails jwtDetails) {
         return Map.of(DEVICE_KEY, jwtDetails.getDevice());

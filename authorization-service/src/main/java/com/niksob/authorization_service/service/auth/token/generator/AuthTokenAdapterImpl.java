@@ -40,7 +40,7 @@ public class AuthTokenAdapterImpl implements AuthTokenAdapter {
     @Override
     public Mono<AuthToken> generate(AuthTokenDetails authTokenDetails) {
         final Mono<JwtDetails> jwtDetailsMono = Mono.just(authTokenDetails)
-                .map(jwtDetailsMapper::fromDetails);
+                .map(jwtDetailsMapper::toAuthTokenDetails);
 
         final Mono<AccessToken> accessTokenMono =
                 createTokenMono(jwtDetailsMono, accessJwtTokenService, jwtMapper::toAccessToken);
@@ -53,10 +53,11 @@ public class AuthTokenAdapterImpl implements AuthTokenAdapter {
 
     @Override
     public Mono<AuthTokenDetails> extractAuthTokenDetails(RefreshToken refreshToken) {
-        return Mono.just(refreshToken)
-                .map(jwtMapper::fromRefreshToken)
-                .map(refreshJwtTokenService::getJwtDetails)
-                .map(jwtDetailsMapper::toDetails);
+        return Mono.fromCallable(() -> {
+            final Jwt jwt = jwtMapper.fromRefreshToken(refreshToken);
+            final JwtDetails jwtDetails = refreshJwtTokenService.getJwtDetails(jwt);
+            return jwtDetailsMapper.toAuthTokenDetails(jwtDetails);
+        });
     }
 
     private <T> Mono<T> createTokenMono(
