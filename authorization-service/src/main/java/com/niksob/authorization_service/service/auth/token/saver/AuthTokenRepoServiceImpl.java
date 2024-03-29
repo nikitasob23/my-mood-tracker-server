@@ -15,14 +15,24 @@ import reactor.core.publisher.Mono;
 
 @Service
 @AllArgsConstructor
-public class AuthTokenSaverServiceImpl implements AuthTokenSaverService {
+public class AuthTokenRepoServiceImpl implements AuthTokenRepoService {
     private final AuthTokenDatabaseConnector databaseConnector;
     private final AuthTokenEncodingService encodingService;
 
     private final AuthTokenMapper authTokenMapper;
     private final EncodedAuthTokenMapper encodedAuthTokenMapper;
 
-    private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(AuthTokenSaverServiceImpl.class);
+    private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(AuthTokenRepoServiceImpl.class);
+
+    @Override
+    public Mono<Boolean> existsByDetails(AuthTokenDetails authTokenDetails) {
+        return databaseConnector.existsByDetails(authTokenDetails);
+    }
+
+    @Override
+    public Mono<AuthTokenDetails> filterExists(AuthTokenDetails authTokenDetails) {
+        return existsByDetails(authTokenDetails).flatMap(exists -> exists ? Mono.just(authTokenDetails) : Mono.empty());
+    }
 
     @Override
     public Mono<AuthToken> upsert(AuthToken authToken) {
@@ -47,13 +57,8 @@ public class AuthTokenSaverServiceImpl implements AuthTokenSaverService {
     private Mono<EncodedAuthToken> upsertInStorage(EncodedAuthToken authToken) {
         return Mono.just(authToken)
                 .map(encodedAuthTokenMapper::getDetails)
-                .flatMap(this::existsInStorage)
+                .flatMap(this::filterExists)
                 .flatMap(ignore -> databaseConnector.update(authToken))
                 .switchIfEmpty(databaseConnector.save(authToken));
-    }
-
-    private Mono<AuthTokenDetails> existsInStorage(AuthTokenDetails authTokenDetails) {
-        return databaseConnector.existsByDetails(authTokenDetails)
-                .flatMap(exists -> exists ? Mono.just(authTokenDetails) : Mono.empty());
     }
 }

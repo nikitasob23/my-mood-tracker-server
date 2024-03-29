@@ -1,8 +1,9 @@
 package com.niksob.authorization_service.service.auth.token;
 
+import com.niksob.authorization_service.exception.auth.token.invalid.InvalidAuthTokenException;
 import com.niksob.authorization_service.service.auth.login.LoginInService;
 import com.niksob.authorization_service.service.auth.token.generator.AuthTokenAdapter;
-import com.niksob.authorization_service.service.auth.token.saver.AuthTokenSaverService;
+import com.niksob.authorization_service.service.auth.token.saver.AuthTokenRepoService;
 import com.niksob.domain.model.auth.login.RowLoginInDetails;
 import com.niksob.domain.model.auth.token.AuthToken;
 import com.niksob.domain.model.auth.token.RefreshToken;
@@ -19,7 +20,7 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     private final LoginInService loginInService;
 
     private final AuthTokenAdapter authTokenAdapter;
-    private final AuthTokenSaverService authTokenSaverService;
+    private final AuthTokenRepoService authTokenRepoService;
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(AuthTokenServiceImpl.class);
 
@@ -28,7 +29,7 @@ public class AuthTokenServiceImpl implements AuthTokenService {
         return loginInService.loginInOrThrow(rowLoginInDetails)
                 .map(userId -> new AuthTokenDetails(userId, rowLoginInDetails.getDevice()))
                 .flatMap(authTokenAdapter::generate)
-                .flatMap(authTokenSaverService::upsert)
+                .flatMap(authTokenRepoService::upsert)
                 .doOnNext(this::logSuccessGeneration)
                 .doOnError(throwable -> logFailureGeneration(throwable, rowLoginInDetails));
     }
@@ -36,10 +37,23 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     @Override
     public Mono<AuthToken> generateByRefresh(RefreshToken refreshToken) {
         return authTokenAdapter.extractAuthTokenDetails(refreshToken) // if expired then throw exception
+                .flatMap(this::validOrThrow)
                 .flatMap(authTokenAdapter::generate)
-                .flatMap(authTokenSaverService::update)
+                .flatMap(authTokenRepoService::update)
                 .doOnNext(this::logSuccessGeneration)
                 .doOnError(throwable -> logFailureGeneration(throwable, refreshToken));
+    }
+
+    private Mono<AuthTokenDetails> validOrThrow(AuthTokenDetails authTokenDetails) {
+        return authTokenRepoService.filterExists(authTokenDetails)
+                .switchIfEmpty(createInvalidTokenException(authTokenDetails));
+    }
+
+    private <T> Mono<T> createInvalidTokenException(Object state) {
+        final String message = "Invalid authorization token";
+        var e = new InvalidAuthTokenException(message);
+        log.error(message, null, state);
+        return Mono.error(e);
     }
 
     private void logSuccessGeneration(Object state) {
