@@ -1,0 +1,17 @@
+### POST Request
+POST http://localhost:8092/api/service/auth/token/signup
+Content-Type: application/json
+
+{
+  "username": "TEST_USERNAME",
+  "password": "TEST_PASSWORD",
+  "device": "TEST_DEVICE"
+}
+
+### POST Request
+POST http://localhost:8092/api/service/auth/token/refresh
+Content-Type: application/json
+
+{
+  "refresh_token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiZXhwIjoxNzEyOTk4ODI0LCJkZXYiOiJURVNUX0RFVklDRSJ9.coiw06M-1u9ig9DjlGRd2eWv3eLNSGeVN_25leA72CfBnUw0A5hG4uBTm2-BbDUhF_o-etq3ZfRSPxifvfqM3w"
+}

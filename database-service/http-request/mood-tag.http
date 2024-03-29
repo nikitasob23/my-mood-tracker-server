@@ -1,0 +1,32 @@
+### GET Request
+GET http://localhost:8081/api/service/database/mood_tag?user_id=4
+
+### POST Request
+POST http://localhost:8081/api/service/database/mood_tag
+Content-Type: application/json
+
+{
+  "name": "home",
+  "degree": 3,
+  "userId": 4
+}
+
+### PUT Request
+PUT http://localhost:8081/api/service/database/mood_tag
+Content-Type: application/json
+
+{
+  "id": 6,
+  "name": "home",
+  "degree": 4,
+  "userId": 4
+}
+
+### DELETE Request
+DELETE http://localhost:8081/api/service/database/mood_tag
+Content-Type: application/json
+
+{
+  "id": 6,
+  "userId": 4
+}

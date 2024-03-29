@@ -4,10 +4,7 @@ target/
 mvnw
 mvnw.cmd
 
-.http
-/http-requests
-
-### STS ###
+### STS ###`
 .apt_generated
 .classpath
 .factorypath
@@ -21,6 +18,9 @@ mvnw.cmd
 *.iws
 *.iml
 *.ipr
+
+### Redis files ###
+*.rdb
 
 ### NetBeans ###
 /nbproject/private/
@@ -42,29 +42,9 @@ build/
 *.log?
 *.swp
 *~
-.tmp
-
-# Исключение конфигурационных файлов
-application.properties
-application.yml
-application-dev.properties
-application-dev.yml
-application-prod.properties
-application-prod.yml
-
-# Исключение файлов настроек для разработчика
-*.xml
-*.properties
 
 # Исключение файлов с зависимостями и сгенерированных файлов
 .idea_modules/
-
-# Исключение файлов конфигурации Spring Boot
-/application-*.yml
-
-# Исключение файлов для настройки Spring Profiles
-/application-dev.properties
-/application-prod.properties
 
 # Исключение локальных файлов базы данных
 /data/
@@ -83,4 +63,3 @@ test-output/
 .surefire-report/
 failsafe-reports/
 *.idea
-

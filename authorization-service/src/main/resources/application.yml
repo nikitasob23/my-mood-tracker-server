@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: authorization-service
+  config:
+    import:
+      - configserver:http://localhost:9191/logger
+      - configserver:http://localhost:9191/database-connection
+      - configserver:http://localhost:9191/authorization-connection
+
+server:
+  address: ${microservice.connection.authorization.hostname}
+  port: ${microservice.connection.authorization.port}
+  servlet:
+    context-path: ${microservice.connection.authorization.path}
+
+auth:
+  token:
+    expiration-in-minutes:
+      access: 5
+      refresh: 21600
+    secret-key:
+      access: "qBTmv4oX6FR2GwjezDJ4t6fsIUIUxhXqlktXjldkcyXgs8nPVEwMfo29VDRRepYDVV5IkIxBMzr7OEHXEHd37w=="
+      refresh: "zL1HB3Pch05AvfyBovxrf/kpF9t2m4NC9KJUjEp27s9J2jEz3ifiKCGylaZ8fDeoONSTJP/wAzKawB8F9rOMNg=="

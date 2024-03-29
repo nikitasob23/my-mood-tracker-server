@@ -1,0 +1,26 @@
+### GET Request
+GET http://localhost:8081/api/service/database/user?username=TEST_USERNAME
+
+### POST Request
+POST http://localhost:8081/api/service/database/user
+Content-Type: application/json
+
+{
+  "username": "TEST_USERNAME",
+  "nickname": "TEST_NICKNAME",
+  "password": "TEST_PASSWORD"
+}
+
+### PUT Request
+PUT http://localhost:8081/api/service/database/user
+Content-Type: application/json
+
+{
+"id": 4,
+"username": "TEST_USERNAME",
+"nickname": "TEST_NICKNAME",
+"password": "0000"
+}
+
+### DELETE Request
+DELETE http://localhost:8081/api/service/database/user?username=TEST_USERNAME

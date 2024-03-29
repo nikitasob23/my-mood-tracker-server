@@ -1,0 +1,58 @@
+### GET Request
+GET http://localhost:8081/api/service/database/mood_entry?user_id=4&start_date=2024-01-18&end_date=2024-01-19
+
+### POST Request
+POST http://localhost:8081/api/service/database/mood_entry
+Content-Type: application/json
+
+{
+  "degree": 1,
+  "user_id": 4,
+  "date_time": "2024-01-19T16:24:37",
+  "mood_tags": [
+    {
+      "id": 6,
+      "name": "home",
+      "degree": 3,
+      "userId": 4
+    },
+    {
+      "name": "sleep",
+      "degree": 0,
+      "userId": 4
+    }
+  ]
+}
+
+### PUT Request
+PUT http://localhost:8081/api/service/database/mood_entry
+Content-Type: application/json
+
+{
+  "id": 4,
+  "degree": 3,
+  "user_id": 4,
+  "date_time": "2024-01-19T16:27:01",
+  "mood_tags": [
+    {
+      "name": "impro",
+      "degree": 3,
+      "userId": 4
+    },
+    {
+      "id": 7,
+      "name": "sleep",
+      "degree": 1,
+      "userId": 4
+    },
+    {
+      "name": "friends",
+      "degree": 4,
+      "userId": 4
+    }
+  ]
+}
+
+
+### DELETE Request
+DELETE http://localhost:8081/api/service/database/mood_entry?id=4
