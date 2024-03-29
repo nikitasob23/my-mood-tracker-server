@@ -18,4 +18,6 @@ public interface AuthTokenDatabaseConnector {
     Mono<EncodedAuthToken> save(EncodedAuthToken authToken);
 
     Mono<EncodedAuthToken> update(EncodedAuthToken authToken);
+
+    Mono<Void> delete(AuthTokenDetails authTokenDetails);
 }

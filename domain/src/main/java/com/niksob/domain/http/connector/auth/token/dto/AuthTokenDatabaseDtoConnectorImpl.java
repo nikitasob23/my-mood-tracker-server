@@ -37,7 +37,7 @@ public class AuthTokenDatabaseDtoConnectorImpl extends BaseDatabaseConnector imp
     public Mono<Boolean> existsByDetails(AuthTokenDetailsDto authTokenDetails) {
         final Map<String, String> params = authTokenGetParamsMapper.getHttpParams(authTokenDetails);
         final String baseUri = AuthTokenDBControllerPaths.BASE_URI + AuthTokenDBControllerPaths.EXISTS;
-        final String uri = restPath.get(connectionProperties, baseUri, params);
+        final String uri = restPath.getWithParams(connectionProperties, baseUri, params);
         return httpClient.sendGetRequest(uri, Boolean.class)
                 .onErrorResume(throwable -> errorHandler.createLoadingError(throwable, authTokenDetails));
     }
@@ -45,7 +45,7 @@ public class AuthTokenDatabaseDtoConnectorImpl extends BaseDatabaseConnector imp
     @Override
     public Mono<EncodedAuthTokenDto> save(EncodedAuthTokenDto authToken) {
         return httpClient.sendPostRequest(
-                restPath.post(connectionProperties, AuthTokenDBControllerPaths.BASE_URI),
+                restPath.getWithBody(connectionProperties, AuthTokenDBControllerPaths.BASE_URI),
                 authToken, EncodedAuthTokenDto.class, EncodedAuthTokenDto.class
         ).onErrorResume(throwable -> errorHandler.createSavingError(throwable, authToken));
     }
@@ -53,8 +53,16 @@ public class AuthTokenDatabaseDtoConnectorImpl extends BaseDatabaseConnector imp
     @Override
     public Mono<EncodedAuthTokenDto> update(EncodedAuthTokenDto authToken) {
         return httpClient.sendPutRequest(
-                restPath.post(connectionProperties, AuthTokenDBControllerPaths.BASE_URI),
+                restPath.getWithBody(connectionProperties, AuthTokenDBControllerPaths.BASE_URI),
                 authToken, EncodedAuthTokenDto.class, EncodedAuthTokenDto.class
         ).onErrorResume(throwable -> errorHandler.createUpdatingError(throwable, authToken));
+    }
+
+    @Override
+    public Mono<Void> delete(AuthTokenDetailsDto authTokenDetails) {
+        final Map<String, String> params = authTokenGetParamsMapper.getHttpParams(authTokenDetails);
+        final String uri = restPath.getWithParams(connectionProperties, AuthTokenDBControllerPaths.BASE_URI, params);
+        return httpClient.sendDeleteRequest(uri, Void.class)
+                .onErrorResume(throwable -> errorHandler.createDeletionError(throwable, authTokenDetails));
     }
 }

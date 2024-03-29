@@ -8,7 +8,7 @@ import java.util.Map;
 @Component
 public class RestPathImpl implements RestPath {
     @Override
-    public String get(DatabaseConnectionProperties connectionProperties, String resourceUri, Map<String, String> params) {
+    public String getWithParams(DatabaseConnectionProperties connectionProperties, String resourceUri, Map<String, String> params) {
         final String uri = "%s://%s:%s%s/%s".formatted(
                 connectionProperties.getProtocol(),
                 connectionProperties.getHostname(),
@@ -28,7 +28,7 @@ public class RestPathImpl implements RestPath {
     }
 
     @Override
-    public String post(DatabaseConnectionProperties connectionProperties, String resourceUri) {
+    public String getWithBody(DatabaseConnectionProperties connectionProperties, String resourceUri) {
         return "%s://%s:%s%s/%s".formatted(
                 connectionProperties.getProtocol(),
                 connectionProperties.getHostname(),

@@ -23,13 +23,12 @@ public class HttpClient {
 
     public <T> Mono<T> sendGetRequest(String uri, Class<T> returnClass) {
         final WebClient client = webBuilder.baseUrl(uri).build();
+        return sendRequest(client.get(), uri, returnClass);
+    }
 
-        return client.get()
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .onStatus(HttpStatusCode::isError, response -> createHttpClientNotFoundError(response, uri))
-                .bodyToMono(returnClass)
-                .doOnSuccess(o -> log.info("Http client RECEIVE an answer", null, uri));
+    public <T> Mono<T> sendDeleteRequest(String uri, Class<T> returnClass) {
+        final WebClient client = webBuilder.baseUrl(uri).build();
+        return sendRequest(client.delete(), uri, returnClass);
     }
 
     public <T, R> Mono<R> sendPostRequest(String uri, T body, Class<T> bodyClass, Class<R> resultClass) {
@@ -42,18 +41,26 @@ public class HttpClient {
         return sendRequest(client.put(), body, bodyClass, resultClass);
     }
 
+    private <T> Mono<T> sendRequest(WebClient.RequestHeadersUriSpec<?> client, String uri, Class<T> returnClass) {
+        return client.accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, response -> createHttpClientError(response, uri))
+                .bodyToMono(returnClass)
+                .doOnSuccess(o -> log.info("Http client RECEIVE an answer", null, uri));
+    }
+
     private <T, R> Mono<R> sendRequest(
             WebClient.RequestBodyUriSpec client, T body, Class<T> bodyClass, Class<R> resultClass
     ) {
         return client.body(Mono.just(body), bodyClass)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .onStatus(HttpStatusCode::isError, response -> createHttpClientNotFoundError(response, body))
+                .onStatus(HttpStatusCode::isError, response -> createHttpClientError(response, body))
                 .bodyToMono(resultClass)
                 .doOnSuccess(result -> logSuccess(result, resultClass));
     }
 
-    private <T> Mono<T> createHttpClientNotFoundError(ClientResponse response, Object logState) {
+    private <T> Mono<T> createHttpClientError(ClientResponse response, Object logState) {
         return response.bodyToMono(ErrorDetails.class)
                 .doOnNext(answer -> log.error("Http client did NOT RECEIVE an answer", null, logState))
                 .flatMap(errorDetails -> Mono.error(new HttpClientException(

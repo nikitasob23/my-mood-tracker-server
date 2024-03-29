@@ -29,16 +29,17 @@ public class ControllerErrorHandler {
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(ControllerErrorHandler.class);
 
-    public <T> Mono<T> createSignupError(Throwable throwable) {
-        HttpClientException errorResponse;
+    public <T> Mono<T> createLoginError(Throwable throwable) {
+        final HttpStatus httpStatus;
         if (throwable instanceof DuplicateSignupAttemptException) {
-            errorResponse = new HttpClientException(throwable, HttpStatus.CONFLICT, contextPath);
+            httpStatus = HttpStatus.CONFLICT;
         } else if (throwable instanceof SignupException) {
-            errorResponse = new HttpClientException(throwable, HttpStatus.BAD_REQUEST, contextPath);
+            httpStatus = HttpStatus.BAD_REQUEST;
         } else {
             return internalServerErrorUtil.createMonoResponse(throwable, ControllerErrorHandler.class);
         }
-        log.error("Controller returning failed response", throwable, errorResponse);
+        final Throwable errorResponse = new HttpClientException(throwable, httpStatus, contextPath);
+        log.error("Controller returning failed response", null, errorResponse);
         return Mono.error(errorResponse);
     }
 

@@ -12,4 +12,6 @@ public interface AuthTokenRepoService {
     Mono<AuthToken> upsert(AuthToken authToken);
 
     Mono<AuthToken> update(AuthToken authToken);
+
+    Mono<Void> delete(AuthTokenDetails authTokenDetails);
 }

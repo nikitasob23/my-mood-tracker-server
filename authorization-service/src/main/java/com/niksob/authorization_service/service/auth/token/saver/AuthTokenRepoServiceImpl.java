@@ -54,6 +54,13 @@ public class AuthTokenRepoServiceImpl implements AuthTokenRepoService {
                 .doOnError(throwable -> log.error("Failure update user's auth token", null, authToken));
     }
 
+    @Override
+    public Mono<Void> delete(AuthTokenDetails authTokenDetails) {
+        return databaseConnector.delete(authTokenDetails)
+                .doOnSuccess(ignore -> log.info("Successful deletion auth token", null, authTokenDetails))
+                .doOnError(throwable -> log.error("Failure deletion auth token", null, authTokenDetails));
+    }
+
     private Mono<EncodedAuthToken> upsertInStorage(EncodedAuthToken authToken) {
         return Mono.just(authToken)
                 .map(encodedAuthTokenMapper::getDetails)

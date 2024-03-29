@@ -32,7 +32,7 @@ public class DatabaseDtoConnectorErrorHandler {
                     "%s was not loaded from the database".formatted(entityName), state, throwable)
             );
         }
-        return checkNotFoundResposne(httpClientException, throwable, state);
+        return checkNotFoundResponse(httpClientException, throwable, state);
     }
 
     public <T> Mono<T> createSavingError(Throwable throwable, Object state) {
@@ -48,7 +48,7 @@ public class DatabaseDtoConnectorErrorHandler {
         if (httpClientException.getHttpStatus().compareTo(HttpStatus.BAD_REQUEST) == 0) {
             logSavingError(state);
             return Mono.error(new ResourceSavingException(
-                    "%s was not saved in the database".formatted(entityName), state, throwable)
+                    "%s was not save in the database".formatted(entityName), state, throwable)
             );
         }
         return createInternalServerException(throwable, state);
@@ -61,13 +61,26 @@ public class DatabaseDtoConnectorErrorHandler {
         if (httpClientException.getHttpStatus().compareTo(HttpStatus.BAD_REQUEST) == 0) {
             logSavingError(state);
             return Mono.error(new ResourceUpdatingException(
-                    "%s was not updated in the database".formatted(entityName), throwable, state)
+                    "%s was not update in the database".formatted(entityName), throwable, state)
             );
         }
-        return checkNotFoundResposne(httpClientException, throwable, state);
+        return checkNotFoundResponse(httpClientException, throwable, state);
     }
 
-    private <T> Mono<T> checkNotFoundResposne(HttpClientException httpClientException, Throwable throwable, Object state) {
+    public <T> Mono<T> createDeletionError(Throwable throwable, Object state) {
+        if (!(throwable instanceof HttpClientException httpClientException)) {
+            return createInternalServerException(throwable, state);
+        }
+        if (httpClientException.getHttpStatus().compareTo(HttpStatus.BAD_REQUEST) == 0) {
+            logSavingError(state);
+            return Mono.error(new ResourceUpdatingException(
+                    "%s was not delete in the database".formatted(entityName), throwable, state)
+            );
+        }
+        return checkNotFoundResponse(httpClientException, throwable, state);
+    }
+
+    private <T> Mono<T> checkNotFoundResponse(HttpClientException httpClientException, Throwable throwable, Object state) {
         if (httpClientException.getHttpStatus().compareTo(HttpStatus.NOT_FOUND) == 0) {
             logLoadingError(state);
             return Mono.error(new ResourceNotFoundException(

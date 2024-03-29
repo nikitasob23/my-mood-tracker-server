@@ -36,7 +36,7 @@ public class UserDatabaseDtoConnectorImpl extends BaseDatabaseConnector implemen
     @Override
     public Mono<UserInfoDto> load(UsernameDto usernameDto) {
         final Map<String, String> params = userGetParamsMapper.getHttpParams(usernameDto);
-        final String uri = restPath.get(connectionProperties, UserControllerPaths.BASE_URI, params);
+        final String uri = restPath.getWithParams(connectionProperties, UserControllerPaths.BASE_URI, params);
         return httpClient.sendGetRequest(uri, UserInfoDto.class)
                 .onErrorResume(throwable -> errorHandler.createLoadingError(throwable, usernameDto));
     }
@@ -44,7 +44,7 @@ public class UserDatabaseDtoConnectorImpl extends BaseDatabaseConnector implemen
     @Override
     public Mono<Void> save(UserInfoDto userInfoDto) {
         return httpClient.sendPostRequest(
-                restPath.post(connectionProperties, UserControllerPaths.BASE_URI),
+                restPath.getWithBody(connectionProperties, UserControllerPaths.BASE_URI),
                 userInfoDto, UserInfoDto.class, Void.class
         ).onErrorResume(throwable -> errorHandler.createSavingError(throwable, userInfoDto));
     }

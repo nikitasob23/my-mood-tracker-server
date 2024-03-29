@@ -44,6 +44,13 @@ public class AuthTokenServiceImpl implements AuthTokenService {
                 .doOnError(throwable -> logFailureGeneration(throwable, refreshToken));
     }
 
+    @Override
+    public Mono<Void> invalidate(AuthTokenDetails authTokenDetails) {
+        return authTokenRepoService.delete(authTokenDetails)
+                .doOnSuccess(ignore -> log.info("Successful generation of auth token", authTokenDetails))
+                .doOnError(throwable -> log.error("Failure deletion of auth token", throwable, authTokenDetails));
+    }
+
     private Mono<AuthTokenDetails> validOrThrow(AuthTokenDetails authTokenDetails) {
         return authTokenRepoService.filterExists(authTokenDetails)
                 .switchIfEmpty(createInvalidTokenException(authTokenDetails));
