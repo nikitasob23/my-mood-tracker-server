@@ -18,7 +18,7 @@ public class UserControllerUtilConfig {
     private final ObjectStateLogger logger = ObjectStateLoggerFactory.getLogger(UserController.class);
 
     @Bean("userControllerUtil")
-    public ResourceControllerErrorUtil getMoodTagControllerUtil() {
+    public ResourceControllerErrorUtil getUserControllerUtil() {
         final String staticPath = "%s/%s".formatted(contextPath, UserControllerPaths.BASE_URI);
         return new ResourceControllerErrorUtil(null, staticPath, logger);
     }

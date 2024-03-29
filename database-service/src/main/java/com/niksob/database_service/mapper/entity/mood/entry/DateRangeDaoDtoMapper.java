@@ -1,6 +1,6 @@
 package com.niksob.database_service.mapper.entity.mood.entry;
 
-import com.niksob.database_service.entity.mood.entry.UserEntryDateRangeDaoDto;
+import com.niksob.database_service.model.mood.entry.date.UserEntryDateRangeDaoDto;
 import com.niksob.domain.model.mood.entry.UserEntryDateRange;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

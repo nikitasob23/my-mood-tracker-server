@@ -34,9 +34,18 @@ public class HttpClient {
 
     public <T, R> Mono<R> sendPostRequest(String uri, T body, Class<T> bodyClass, Class<R> resultClass) {
         final WebClient client = webBuilder.baseUrl(uri).build();
+        return sendRequest(client.post(), body, bodyClass, resultClass);
+    }
 
-        return client.post()
-                .body(Mono.just(body), bodyClass)
+    public <T, R> Mono<R> sendPutRequest(String uri, T body, Class<T> bodyClass, Class<R> resultClass) {
+        final WebClient client = webBuilder.baseUrl(uri).build();
+        return sendRequest(client.put(), body, bodyClass, resultClass);
+    }
+
+    private <T, R> Mono<R> sendRequest(
+            WebClient.RequestBodyUriSpec client, T body, Class<T> bodyClass, Class<R> resultClass
+    ) {
+        return client.body(Mono.just(body), bodyClass)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, response -> createHttpClientNotFoundError(response, body))

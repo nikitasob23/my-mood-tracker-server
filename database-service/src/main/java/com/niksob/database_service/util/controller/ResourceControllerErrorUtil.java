@@ -43,12 +43,12 @@ public class ResourceControllerErrorUtil {
         return Mono.error(createLoadingError(throwable));
     }
 
-    public Mono<Void> createUpdatingError(Throwable throwable) {
+    public <T> Mono<T> createUpdatingError(Throwable throwable) {
         if (throwable instanceof ResourceUpdatingException) {
             final var errorResponse = createAndLogHttpClientException(throwable, HttpStatus.BAD_REQUEST);
             return Mono.error(errorResponse);
         }
-        return createLoadingErrorMono(throwable).then();
+        return createLoadingErrorMono(throwable);
     }
 
     public Mono<Void> createDeleteError(Throwable throwable) {
@@ -72,7 +72,7 @@ public class ResourceControllerErrorUtil {
         return Mono.error(errorResponse);
     }
 
-    private HttpClientException createAndLogHttpClientException(Throwable throwable, HttpStatus httpStatus) {
+    private HttpClientException  createAndLogHttpClientException(Throwable throwable, HttpStatus httpStatus) {
         var errorResponse = new HttpClientException(throwable, httpStatus, staticPath);
         log.error("Controller returning failed response", null, errorResponse);
         return errorResponse;

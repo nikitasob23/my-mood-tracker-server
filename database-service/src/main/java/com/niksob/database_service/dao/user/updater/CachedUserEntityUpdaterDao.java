@@ -1,14 +1,12 @@
 package com.niksob.database_service.dao.user.updater;
 
 import com.niksob.database_service.dao.user.values.UserCacheNames;
-import com.niksob.database_service.dao.user.loader.UserEntityLoaderDao;
 import com.niksob.database_service.entity.user.UserEntity;
 import com.niksob.database_service.repository.user.UserRepository;
 import com.niksob.domain.exception.resource.*;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Component;
@@ -17,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @AllArgsConstructor
 public class CachedUserEntityUpdaterDao implements UserEntityUpdaterDao {
-    private final UserEntityLoaderDao userEntityLoaderDao;
     private final UserRepository userRepository;
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserCacheNames.class);
@@ -63,22 +60,20 @@ public class CachedUserEntityUpdaterDao implements UserEntityUpdaterDao {
 
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = UserCacheNames.USER_BY_USERNAME_CACHE_NAME, key = "#username"),
-            @CacheEvict(value = UserCacheNames.USER_BY_ID_CACHE_NAME, key = "#result.id")
+    @Caching(put = {
+            @CachePut(value = UserCacheNames.USER_BY_USERNAME_CACHE_NAME, key = "#user.username"),
+            @CachePut(value = UserCacheNames.USER_BY_ID_CACHE_NAME, key = "#user.id")
     })
-    public UserEntity delete(String username) {
-        log.info("Start deleting user by username from repository", username);
-        final UserEntity user;
+    public UserEntity delete(UserEntity user) {
+        log.info("Start deleting user by user from repository", user);
         try {
-            user = userEntityLoaderDao.loadByUsername(username);
-            userRepository.deleteByUsername(username);
+            userRepository.delete(user);
         } catch (Exception e) {
-            log.error("Failed deleting user by username from repository", null, username);
-            throw new ResourceDeletionException("The user was not deleted", e, username);
+            log.error("Failed deleting user by user from repository", null, user);
+            throw new ResourceDeletionException("The user was not deleted", e, user);
         }
-        log.info("User deleted from repository", username);
-        log.info("Deleted user cache", username);
-        return user;
+        log.info("User deleted from repository", user);
+        log.info("Deleted user cache", user);
+        return null;
     }
 }

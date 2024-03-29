@@ -2,11 +2,12 @@ package com.niksob.database_service.dao.user.loader;
 
 import com.niksob.database_service.dao.user.values.UserCacheNames;
 import com.niksob.database_service.entity.user.UserEntity;
-import com.niksob.database_service.handler.exception.UserDaoExceptionHandler;
+import com.niksob.database_service.handler.exception.DaoExceptionHandler;
 import com.niksob.database_service.repository.user.UserRepository;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Component;
@@ -18,8 +19,8 @@ import java.util.Objects;
 public class CachedUserEntityLoaderDao implements UserEntityLoaderDao {
     protected final UserRepository userRepository;
 
-
-    private final UserDaoExceptionHandler exceptionHandler;
+    @Qualifier("userDaoExceptionHandler")
+    private final DaoExceptionHandler exceptionHandler;
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(CachedUserEntityLoaderDao.class);
 
     @Override

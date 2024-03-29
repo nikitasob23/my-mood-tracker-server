@@ -1,6 +1,6 @@
 package com.niksob.authorization_service.config.service.jwt.access;
 
-import com.niksob.authorization_service.mapper.jwt_params.claims.JwtDetailsMapper;
+import com.niksob.authorization_service.mapper.jwt.params.claims.JwtDetailsMapper;
 import com.niksob.authorization_service.service.jwt.JwtService;
 import com.niksob.authorization_service.service.jwt.JwtServiceImpl;
 import com.niksob.authorization_service.util.date.expiration.ExpirationDateUtil;

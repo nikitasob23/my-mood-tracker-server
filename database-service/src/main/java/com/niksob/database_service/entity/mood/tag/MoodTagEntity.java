@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "mood_tags", uniqueConstraints = @UniqueConstraint(
-        name = "uk_mood_tags_unique_name_user_id", columnNames = {"name", "user_id"}))
+        name = "uk_mood_tags_name_user_id", columnNames = {"name", "user_id"}))
 @Data
 @ToString(exclude = {"user", "moodEntries"})
 @EqualsAndHashCode(exclude = {"user", "moodEntries"})

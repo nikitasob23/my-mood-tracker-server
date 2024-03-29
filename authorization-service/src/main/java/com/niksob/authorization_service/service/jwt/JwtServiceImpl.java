@@ -1,19 +1,15 @@
 package com.niksob.authorization_service.service.jwt;
 
-import com.niksob.authorization_service.exception.auth.token.AuthTokenException;
-import com.niksob.authorization_service.exception.auth.token.expired.ExpiredAuthTokenException;
 import com.niksob.authorization_service.exception.jwt.JwtGenerationException;
-import com.niksob.authorization_service.mapper.jwt_params.claims.JwtDetailsMapper;
+import com.niksob.authorization_service.mapper.jwt.params.claims.JwtDetailsMapper;
 import com.niksob.authorization_service.model.jwt.Jwt;
 import com.niksob.authorization_service.model.jwt.JwtDetails;
 import com.niksob.authorization_service.util.date.expiration.ExpirationDateUtil;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
-import com.niksob.authorization_service.model.jwt.JwtClaims;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
@@ -34,10 +30,10 @@ public class JwtServiceImpl implements JwtService {
     public Jwt generate(@NonNull JwtDetails jwtDetails) {
         try {
             final JwtBuilder jwtBuilder = Jwts.builder()
-                    .setSubject(jwtDetails.getSubject())
+                    .setSubject(jwtDetails.getUserId())
                     .setExpiration(expirationDateUtil.create())
                     .signWith(secretKey);
-            setJwtBuilderClaims(jwtBuilder, jwtDetails.getClaims());
+            setJwtBuilderClaims(jwtBuilder, jwtDetails);
 
             final String jwtValue = jwtBuilder.compact();
             return new Jwt(jwtValue);
@@ -60,17 +56,12 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public Claims getClaims(@NonNull Jwt jwt) {
-        try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(jwt.getValue())
-                    .getBody();
-        } catch (ExpiredJwtException e) {
-            throw new ExpiredAuthTokenException("Token is expired", e);
-        } catch (Exception e) {
-            throw new AuthTokenException("Failed to get auth token claims", e);
-        }
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(jwt.getValue())
+                .getBody();
+
     }
 
     @Override
@@ -79,7 +70,8 @@ public class JwtServiceImpl implements JwtService {
         return jwtDetailsMapper.fromClaims(claims);
     }
 
-    private void setJwtBuilderClaims(JwtBuilder jwtBuilder, JwtClaims jwtClaims) {
-        jwtClaims.getStorage().forEach(jwtBuilder::claim);
+    private void setJwtBuilderClaims(JwtBuilder jwtBuilder, JwtDetails jwtDetails) {
+        jwtDetailsMapper.toClaimsMap(jwtDetails)
+                .forEach(jwtBuilder::claim);
     }
 }

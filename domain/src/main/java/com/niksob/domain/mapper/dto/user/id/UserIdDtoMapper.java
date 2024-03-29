@@ -10,8 +10,26 @@ public interface UserIdDtoMapper {
         return new UserIdDto(userId.getValue().toString());
     }
 
-    default UserId toDto(UserIdDto dto) {
+    default String toStringDto(UserId userId) {
+        if (userId == null) {
+            return null;
+        }
+        return userId.getValue().toString();
+    }
+
+    default UserId fromDto(UserIdDto dto) {
+        if (dto == null) {
+            return null;
+        }
         final Long value = Long.parseLong(dto.getValue());
+        return new UserId(value);
+    }
+
+    default UserId fromStringDto(String dto) {
+        if (dto == null) {
+            return null;
+        }
+        final Long value = Long.parseLong(dto);
         return new UserId(value);
     }
 }

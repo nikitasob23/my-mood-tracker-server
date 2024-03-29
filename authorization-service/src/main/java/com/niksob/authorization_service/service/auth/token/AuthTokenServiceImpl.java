@@ -1,14 +1,12 @@
 package com.niksob.authorization_service.service.auth.token;
 
-import com.niksob.authorization_service.service.auth.token.error.handler.AuthTokenServiceErrorHandler;
-import com.niksob.authorization_service.service.auth.token.generator.AuthTokenGenerator;
-import com.niksob.authorization_service.service.password_encoder.PasswordEncoderService.PasswordEncoderService;
-import com.niksob.domain.http.connector.UserDatabaseConnector;
+import com.niksob.authorization_service.service.auth.login.LoginInService;
+import com.niksob.authorization_service.service.auth.token.generator.AuthTokenAdapter;
+import com.niksob.authorization_service.service.auth.token.saver.AuthTokenSaverService;
 import com.niksob.domain.model.auth.login.RowLoginInDetails;
 import com.niksob.domain.model.auth.token.AuthToken;
-import com.niksob.domain.model.user.Password;
-import com.niksob.domain.model.user.RowPassword;
-import com.niksob.domain.model.user.UserInfo;
+import com.niksob.domain.model.auth.token.RefreshToken;
+import com.niksob.domain.model.auth.token.details.AuthTokenDetails;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
@@ -18,30 +16,37 @@ import reactor.core.publisher.Mono;
 @Service
 @AllArgsConstructor
 public class AuthTokenServiceImpl implements AuthTokenService {
-    private final UserDatabaseConnector userDatabaseConnector;
+    private final LoginInService loginInService;
 
-    private final AuthTokenGenerator authTokenGenerator;
-    private final PasswordEncoderService passwordEncoderService;
-
-    private final AuthTokenServiceErrorHandler errorHandler;
+    private final AuthTokenAdapter authTokenAdapter;
+    private final AuthTokenSaverService authTokenSaverService;
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(AuthTokenServiceImpl.class);
 
     @Override
     public Mono<AuthToken> generate(RowLoginInDetails rowLoginInDetails) {
-        return userDatabaseConnector.load(rowLoginInDetails.getUsername())
-                .flatMap(user -> passwordMatches(rowLoginInDetails, user))
-                .flatMap(authTokenGenerator::generate)
-                .doOnNext(authToken -> log.info("Successful generation of auth token", rowLoginInDetails))
-                .onErrorResume(throwable -> errorHandler.createGeneratingError(throwable, rowLoginInDetails));
+        return loginInService.loginInOrThrow(rowLoginInDetails)
+                .map(userId -> new AuthTokenDetails(userId, rowLoginInDetails.getDevice()))
+                .flatMap(authTokenAdapter::generate)
+                .flatMap(authTokenSaverService::upsert)
+                .doOnNext(this::logSuccessGeneration)
+                .doOnError(throwable -> logFailureGeneration(throwable, rowLoginInDetails));
     }
 
-    private Mono<UserInfo> passwordMatches(RowLoginInDetails rowLoginInDetails, UserInfo userInfo) {
-        return Mono.just(userInfo)
-                .filter(user -> {
-                    final RowPassword rowPassword = rowLoginInDetails.getRowPassword();
-                    final Password encodedPassword = user.getPassword();
-                    return passwordEncoderService.matches(rowPassword, encodedPassword);
-                }).switchIfEmpty(errorHandler.createWrongPasswordException(rowLoginInDetails));
+    @Override
+    public Mono<AuthToken> generateByRefresh(RefreshToken refreshToken) {
+        return authTokenAdapter.extractAuthTokenDetails(refreshToken) // if expired then throw exception
+                .flatMap(authTokenAdapter::generate)
+                .flatMap(authTokenSaverService::update)
+                .doOnNext(this::logSuccessGeneration)
+                .doOnError(throwable -> logFailureGeneration(throwable, refreshToken));
+    }
+
+    private void logSuccessGeneration(Object state) {
+        log.info("Successful generation of auth token", state);
+    }
+
+    private void logFailureGeneration(Throwable throwable, Object state) {
+        log.error("Failure generation of auth token", throwable, state);
     }
 }
