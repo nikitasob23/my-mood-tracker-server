@@ -1,4 +1,4 @@
-package com.niksob.database_service.controller.mood.entry;
+package com.niksob.database_service.mapper.entity.mood.entry;
 
 import com.niksob.domain.dto.mood.entry.UserEntryDateRangeDto;
 import com.niksob.domain.model.mood.entry.UserEntryDateRange;
