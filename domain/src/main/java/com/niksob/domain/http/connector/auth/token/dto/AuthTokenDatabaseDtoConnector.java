@@ -8,6 +8,8 @@ import reactor.core.publisher.Mono;
 public interface AuthTokenDatabaseDtoConnector {
     Mono<Boolean> existsByDetails(AuthTokenDetailsDto authTokenDetails);
 
+    Mono<EncodedAuthTokenDto> load(AuthTokenDetailsDto authTokenDetails);
+
     Mono<EncodedAuthTokenDto> save(EncodedAuthTokenDto authTokenDto);
 
     Mono<EncodedAuthTokenDto> update(EncodedAuthTokenDto authToken);

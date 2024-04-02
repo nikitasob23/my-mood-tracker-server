@@ -36,6 +36,14 @@ public class AuthTokenRepoServiceImpl implements AuthTokenRepoService {
     }
 
     @Override
+    public Mono<EncodedAuthToken> load(AuthTokenDetails authTokenDetails) {
+        return databaseConnector.load(authTokenDetails)
+                .doOnNext(token -> log.info("Successful loading user's encoded auth token", null, token))
+                .doOnError(e ->
+                        log.error("Failure loading user's encoded auth token", null, authTokenDetails));
+    }
+
+    @Override
     public Mono<AuthToken> upsert(AuthToken authToken) {
         return Mono.just(authToken)
                 .map(encodingService::encode)

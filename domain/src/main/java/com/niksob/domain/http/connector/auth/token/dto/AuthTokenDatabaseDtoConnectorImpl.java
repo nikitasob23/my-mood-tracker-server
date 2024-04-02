@@ -44,6 +44,14 @@ public class AuthTokenDatabaseDtoConnectorImpl extends BaseDatabaseConnector imp
     }
 
     @Override
+    public Mono<EncodedAuthTokenDto> load(AuthTokenDetailsDto authTokenDetails) {
+        final Map<String, String> params = authTokenGetParamsMapper.getHttpParams(authTokenDetails);
+        final String uri = restPath.getWithParams(connectionProperties, AuthTokenDBControllerPaths.BASE_URI, params);
+        return httpClient.sendGetRequest(uri, EncodedAuthTokenDto.class)
+                .onErrorResume(throwable -> errorHandler.createLoadingError(throwable, authTokenDetails));
+    }
+
+    @Override
     public Mono<EncodedAuthTokenDto> save(EncodedAuthTokenDto authToken) {
         return httpClient.sendPostRequest(
                 restPath.getWithBody(connectionProperties, AuthTokenDBControllerPaths.BASE_URI),

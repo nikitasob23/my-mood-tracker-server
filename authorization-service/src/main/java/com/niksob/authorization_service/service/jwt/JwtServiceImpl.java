@@ -1,5 +1,7 @@
 package com.niksob.authorization_service.service.jwt;
 
+import com.niksob.authorization_service.exception.jwt.InvalidJwtException;
+import com.niksob.authorization_service.exception.jwt.JwtDataReceivingException;
 import com.niksob.authorization_service.exception.jwt.JwtGenerationException;
 import com.niksob.authorization_service.mapper.jwt.params.claims.JwtDetailsMapper;
 import com.niksob.authorization_service.model.jwt.Jwt;
@@ -10,6 +12,7 @@ import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
@@ -56,12 +59,21 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public Claims getClaims(@NonNull Jwt jwt) {
-        return Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(jwt.getValue())
-                .getBody();
-
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(jwt.getValue())
+                    .getBody();
+        } catch (SignatureException e) {
+            final String message = "Jwt token is not valid";
+            log.error(message, null, jwt);
+            throw new InvalidJwtException(message, e);
+        } catch (Exception e) {
+            final String message = "Unknown jwt exception throws";
+            log.error(message, null, jwt);
+            throw new JwtDataReceivingException(message, e);
+        }
     }
 
     @Override

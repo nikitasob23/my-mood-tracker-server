@@ -23,7 +23,7 @@ public class CachedAuthTokenUpdaterDao implements AuthTokenEntityUpdaterDao {
     @Override
     @Transactional
     @CachePut(value = AuthTokenCacheNames.USER_ID_AND_DEVICE_TO_AUTH_TOKEN_CACHE_NAME,
-            key = "#authToken.userId + #authToken.device")
+            key = "#authToken.getUserId() + #authToken.getDevice()")
     public AuthTokenEntity save(AuthTokenEntity authToken) {
         log.info("Start saving user to repository", authToken);
         final AuthTokenEntity saved;
@@ -41,7 +41,7 @@ public class CachedAuthTokenUpdaterDao implements AuthTokenEntityUpdaterDao {
     @Override
     @Transactional
     @CachePut(value = AuthTokenCacheNames.USER_ID_AND_DEVICE_TO_AUTH_TOKEN_CACHE_NAME,
-            key = "#authToken.userId + #authToken.device")
+            key = "#authToken.getUserId() + #authToken.getDevice()")
     public AuthTokenEntity update(AuthTokenEntity authToken) {
         log.info("Updating auth token entity", authToken);
         final AuthTokenEntity updated;
@@ -59,7 +59,7 @@ public class CachedAuthTokenUpdaterDao implements AuthTokenEntityUpdaterDao {
     @Override
     @Transactional
     @CachePut(value = AuthTokenCacheNames.USER_ID_AND_DEVICE_TO_AUTH_TOKEN_CACHE_NAME,
-            key = "#authToken.getId() + #authToken.getDevice()")
+            key = "#authToken.getUserId() + #authToken.getDevice()")
     public AuthTokenEntity delete(AuthTokenEntity authToken) {
         log.info("Start deleting auth token from repository", authToken);
         try {

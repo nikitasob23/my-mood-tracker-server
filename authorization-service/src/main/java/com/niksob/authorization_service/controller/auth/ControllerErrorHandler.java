@@ -3,10 +3,10 @@ package com.niksob.authorization_service.controller.auth;
 import com.niksob.authorization_service.exception.auth.UnauthorizedAccessException;
 import com.niksob.authorization_service.exception.auth.signup.DuplicateSignupAttemptException;
 import com.niksob.authorization_service.exception.auth.signup.SignupException;
-import com.niksob.authorization_service.exception.auth.token.AuthTokenException;
 import com.niksob.authorization_service.exception.auth.token.expired.ExpiredAuthTokenException;
 import com.niksob.authorization_service.exception.auth.token.invalid.InvalidAuthTokenException;
 import com.niksob.authorization_service.model.login.password.WrongPasswordException;
+import com.niksob.domain.exception.resource.ResourceNotFoundException;
 import com.niksob.domain.exception.resource.ResourceSavingException;
 import com.niksob.domain.exception.resource.ResourceUpdatingException;
 import com.niksob.domain.exception.rest.controller.response.HttpClientException;
@@ -35,6 +35,8 @@ public class ControllerErrorHandler {
             httpStatus = HttpStatus.CONFLICT;
         } else if (throwable instanceof SignupException) {
             httpStatus = HttpStatus.BAD_REQUEST;
+        } else if (throwable instanceof ResourceNotFoundException) {
+            httpStatus = HttpStatus.NOT_FOUND;
         } else {
             return internalServerErrorUtil.createMonoResponse(throwable, ControllerErrorHandler.class);
         }
@@ -47,13 +49,12 @@ public class ControllerErrorHandler {
         final HttpStatus httpStatus;
         if (throwable instanceof UnauthorizedAccessException) {
             httpStatus = HttpStatus.NOT_FOUND;
-        } else if (throwable instanceof WrongPasswordException
-                || throwable instanceof ExpiredAuthTokenException
-                || throwable instanceof AuthTokenException
-                || throwable instanceof ResourceSavingException // Auth token saving or updating exception
+        } else if (throwable instanceof ResourceSavingException // Auth token saving or updating exception
                 || throwable instanceof ResourceUpdatingException) {
             httpStatus = HttpStatus.BAD_REQUEST;
-        } else if (throwable instanceof InvalidAuthTokenException) {
+        } else if (throwable instanceof WrongPasswordException
+                || throwable instanceof ExpiredAuthTokenException
+                || throwable instanceof InvalidAuthTokenException) {
             httpStatus = HttpStatus.FORBIDDEN;
         } else {
             return internalServerErrorUtil.createMonoResponse(throwable, ControllerErrorHandler.class);

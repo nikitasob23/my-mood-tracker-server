@@ -2,6 +2,8 @@ package com.niksob.authorization_service.service.auth.token.generator;
 
 import com.niksob.authorization_service.exception.auth.token.AuthTokenException;
 import com.niksob.authorization_service.exception.auth.token.expired.ExpiredAuthTokenException;
+import com.niksob.authorization_service.exception.auth.token.invalid.InvalidAuthTokenException;
+import com.niksob.authorization_service.exception.jwt.InvalidJwtException;
 import com.niksob.authorization_service.mapper.auth.token.AuthTokenMapper;
 import com.niksob.authorization_service.mapper.jwt.JwtMapper;
 import com.niksob.authorization_service.mapper.jwt.params.claims.JwtDetailsMapper;
@@ -57,7 +59,7 @@ public class AuthTokenAdapterImpl implements AuthTokenAdapter {
             final Jwt jwt = jwtMapper.fromRefreshToken(refreshToken);
             final JwtDetails jwtDetails = refreshJwtTokenService.getJwtDetails(jwt);
             return jwtDetailsMapper.toAuthTokenDetails(jwtDetails);
-        });
+        }).onErrorResume(this::createAuthTokenException);
     }
 
     private <T> Mono<T> createTokenMono(
@@ -75,10 +77,13 @@ public class AuthTokenAdapterImpl implements AuthTokenAdapter {
             final String message = "Token is expired";
             log.error(message);
             e = new ExpiredAuthTokenException(message, throwable);
+        } else if (throwable instanceof InvalidJwtException) {
+            final String message = "Not valid auth token";
+            log.error(message, throwable);
+            e = new InvalidAuthTokenException(message, throwable);
         } else {
-            final String message = "Failed to get auth token claims";
-            log.error(message);
-            e = new AuthTokenException(message, throwable);
+            log.error(throwable.getMessage());
+            e = new AuthTokenException(throwable);
         }
         return Mono.error(e);
     }
