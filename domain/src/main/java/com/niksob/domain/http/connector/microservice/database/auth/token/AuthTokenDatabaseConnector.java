@@ -1,6 +1,6 @@
-package com.niksob.domain.http.connector.auth.token;
+package com.niksob.domain.http.connector.microservice.database.auth.token;
 
-import com.niksob.domain.http.connector.auth.token.dto.AuthTokenDatabaseDtoConnector;
+import com.niksob.domain.http.connector.microservice.database.auth.token.dto.AuthTokenDatabaseDtoConnector;
 import com.niksob.domain.mapper.dto.auth.token.AuthTokenDetailsDtoMapper;
 import com.niksob.domain.mapper.dto.auth.token.encoded.EncodedAuthTokenDtoMapper;
 import com.niksob.domain.mapper.dto.auth.token.encoded.mono.EncodedAuthTokenMonoDtoMapper;

@@ -1,11 +1,11 @@
-package com.niksob.domain.http.connector;
+package com.niksob.domain.http.connector.microservice.database.user.dto;
 
-import com.niksob.domain.config.properties.DatabaseConnectionProperties;
+import com.niksob.domain.config.properties.ConnectionProperties;
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;
 import com.niksob.domain.http.client.HttpClient;
-import com.niksob.domain.http.connector.base.BaseDatabaseConnector;
-import com.niksob.domain.http.connector.error.handler.DatabaseDtoConnectorErrorHandler;
+import com.niksob.domain.http.connector.base.BaseConnector;
+import com.niksob.domain.http.connector.microservice.database.error.handler.DatabaseDtoConnectorErrorHandler;
 import com.niksob.domain.http.rest.path.RestPath;
 import com.niksob.domain.mapper.rest.user.UserGetParamsMapper;
 import com.niksob.domain.path.controller.database_service.user.UserControllerPaths;
@@ -16,14 +16,14 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 
 @Component
-public class UserDatabaseDtoConnectorImpl extends BaseDatabaseConnector implements UserDatabaseDtoConnector {
+public class UserDatabaseDtoConnectorImpl extends BaseConnector implements UserDatabaseDtoConnector {
     private final UserGetParamsMapper userGetParamsMapper;
     private final DatabaseDtoConnectorErrorHandler errorHandler;
 
     public UserDatabaseDtoConnectorImpl(
             HttpClient httpClient,
             RestPath restPath,
-            DatabaseConnectionProperties connectionProperties,
+            ConnectionProperties connectionProperties,
             UserGetParamsMapper userGetParamsMapper,
             @Qualifier("userDatabaseDtoConnectorErrorHandler")
             DatabaseDtoConnectorErrorHandler errorHandler
@@ -36,7 +36,7 @@ public class UserDatabaseDtoConnectorImpl extends BaseDatabaseConnector implemen
     @Override
     public Mono<UserInfoDto> load(UsernameDto usernameDto) {
         final Map<String, String> params = userGetParamsMapper.getHttpParams(usernameDto);
-        final String uri = restPath.getWithParams(connectionProperties, UserControllerPaths.BASE_URI, params);
+        final String uri = getWithParams(UserControllerPaths.BASE_URI, params);
         return httpClient.sendGetRequest(uri, UserInfoDto.class)
                 .onErrorResume(throwable -> errorHandler.createLoadingError(throwable, usernameDto));
     }
@@ -44,7 +44,7 @@ public class UserDatabaseDtoConnectorImpl extends BaseDatabaseConnector implemen
     @Override
     public Mono<Void> save(UserInfoDto userInfoDto) {
         return httpClient.sendPostRequest(
-                restPath.getWithBody(connectionProperties, UserControllerPaths.BASE_URI),
+                getWithBody(UserControllerPaths.BASE_URI),
                 userInfoDto, UserInfoDto.class, Void.class
         ).onErrorResume(throwable -> errorHandler.createSavingError(throwable, userInfoDto));
     }

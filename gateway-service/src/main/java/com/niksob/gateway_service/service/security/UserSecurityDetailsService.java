@@ -1,6 +1,6 @@
 package com.niksob.gateway_service.service.security;
 
-import com.niksob.domain.http.connector.UserDatabaseConnector;
+import com.niksob.domain.http.connector.microservice.database.user.UserDatabaseConnector;
 import com.niksob.domain.mapper.user.UsernameMapper;
 import com.niksob.gateway_service.mapper.user.UserSecurityDetailsMapper;
 import lombok.AllArgsConstructor;

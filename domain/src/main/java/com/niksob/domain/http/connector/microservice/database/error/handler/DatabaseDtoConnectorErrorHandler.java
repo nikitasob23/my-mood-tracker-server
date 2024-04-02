@@ -1,9 +1,9 @@
-package com.niksob.domain.http.connector.error.handler;
+package com.niksob.domain.http.connector.microservice.database.error.handler;
 
 import com.niksob.domain.exception.resource.*;
 import com.niksob.domain.exception.rest.controller.response.HttpClientException;
 import com.niksob.domain.exception.server.error.InternalServerException;
-import com.niksob.domain.http.connector.UserDatabaseDtoConnectorImpl;
+import com.niksob.domain.http.connector.microservice.database.user.dto.UserDatabaseDtoConnectorImpl;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;

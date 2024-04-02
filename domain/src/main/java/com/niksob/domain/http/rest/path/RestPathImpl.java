@@ -1,6 +1,6 @@
 package com.niksob.domain.http.rest.path;
 
-import com.niksob.domain.config.properties.DatabaseConnectionProperties;
+import com.niksob.domain.config.properties.ConnectionProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -8,7 +8,7 @@ import java.util.Map;
 @Component
 public class RestPathImpl implements RestPath {
     @Override
-    public String getWithParams(DatabaseConnectionProperties connectionProperties, String resourceUri, Map<String, String> params) {
+    public String getWithParams(ConnectionProperties connectionProperties, String resourceUri, Map<String, String> params) {
         final String uri = "%s://%s:%s%s/%s".formatted(
                 connectionProperties.getProtocol(),
                 connectionProperties.getHostname(),
@@ -28,7 +28,7 @@ public class RestPathImpl implements RestPath {
     }
 
     @Override
-    public String getWithBody(DatabaseConnectionProperties connectionProperties, String resourceUri) {
+    public String getWithBody(ConnectionProperties connectionProperties, String resourceUri) {
         return "%s://%s:%s%s/%s".formatted(
                 connectionProperties.getProtocol(),
                 connectionProperties.getHostname(),

@@ -1,6 +1,6 @@
 package com.niksob.domain.config.http.connector.error.handler;
 
-import com.niksob.domain.http.connector.error.handler.DatabaseDtoConnectorErrorHandler;
+import com.niksob.domain.http.connector.microservice.database.error.handler.DatabaseDtoConnectorErrorHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
 

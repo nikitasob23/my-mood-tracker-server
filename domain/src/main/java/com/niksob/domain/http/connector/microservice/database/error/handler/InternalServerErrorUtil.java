@@ -1,4 +1,4 @@
-package com.niksob.domain.http.connector.error.handler;
+package com.niksob.domain.http.connector.microservice.database.error.handler;
 
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import org.springframework.http.HttpStatus;

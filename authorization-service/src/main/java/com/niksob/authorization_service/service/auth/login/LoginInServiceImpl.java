@@ -4,7 +4,7 @@ import com.niksob.authorization_service.exception.auth.UnauthorizedAccessExcepti
 import com.niksob.authorization_service.model.login.password.WrongPasswordException;
 import com.niksob.authorization_service.service.password_encoder.PasswordEncoderService.PasswordEncoderService;
 import com.niksob.domain.exception.resource.ResourceNotFoundException;
-import com.niksob.domain.http.connector.UserDatabaseConnector;
+import com.niksob.domain.http.connector.microservice.database.user.UserDatabaseConnector;
 import com.niksob.domain.model.auth.login.RowLoginInDetails;
 import com.niksob.domain.model.user.Password;
 import com.niksob.domain.model.user.RowPassword;

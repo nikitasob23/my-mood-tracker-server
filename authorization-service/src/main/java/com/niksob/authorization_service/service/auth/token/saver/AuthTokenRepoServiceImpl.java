@@ -2,7 +2,7 @@ package com.niksob.authorization_service.service.auth.token.saver;
 
 import com.niksob.authorization_service.mapper.auth.token.AuthTokenMapper;
 import com.niksob.authorization_service.service.encoder.auth_token.AuthTokenEncodingService;
-import com.niksob.domain.http.connector.auth.token.AuthTokenDatabaseConnector;
+import com.niksob.domain.http.connector.microservice.database.auth.token.AuthTokenDatabaseConnector;
 import com.niksob.domain.model.auth.token.AuthToken;
 import com.niksob.domain.model.auth.token.details.AuthTokenDetails;
 import com.niksob.domain.model.auth.token.encoded.EncodedAuthToken;

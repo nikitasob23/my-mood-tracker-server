@@ -1,11 +1,11 @@
 package com.niksob.domain.http.rest.path;
 
-import com.niksob.domain.config.properties.DatabaseConnectionProperties;
+import com.niksob.domain.config.properties.ConnectionProperties;
 
 import java.util.Map;
 
 public interface RestPath {
-    String getWithParams(DatabaseConnectionProperties restProperties, String resourceUri, Map<String, String> params);
+    String getWithParams(ConnectionProperties restProperties, String resourceUri, Map<String, String> params);
 
-    String getWithBody(DatabaseConnectionProperties restProperties, String resourceUri);
+    String getWithBody(ConnectionProperties restProperties, String resourceUri);
 }

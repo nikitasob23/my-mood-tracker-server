@@ -1,5 +1,6 @@
-package com.niksob.domain.http.connector;
+package com.niksob.domain.http.connector.microservice.database.user;
 
+import com.niksob.domain.http.connector.microservice.database.user.dto.UserDatabaseDtoConnector;
 import com.niksob.domain.mapper.dto.user.UserDtoMonoMapper;
 import com.niksob.domain.mapper.dto.user.UserInfoDtoMapper;
 import com.niksob.domain.mapper.dto.user.UsernameDtoMapper;

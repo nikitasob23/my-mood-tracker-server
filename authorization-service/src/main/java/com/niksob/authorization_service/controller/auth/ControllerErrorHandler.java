@@ -10,7 +10,7 @@ import com.niksob.domain.exception.resource.ResourceNotFoundException;
 import com.niksob.domain.exception.resource.ResourceSavingException;
 import com.niksob.domain.exception.resource.ResourceUpdatingException;
 import com.niksob.domain.exception.rest.controller.response.HttpClientException;
-import com.niksob.domain.http.connector.error.handler.InternalServerErrorUtil;
+import com.niksob.domain.http.connector.microservice.database.error.handler.InternalServerErrorUtil;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.RequiredArgsConstructor;

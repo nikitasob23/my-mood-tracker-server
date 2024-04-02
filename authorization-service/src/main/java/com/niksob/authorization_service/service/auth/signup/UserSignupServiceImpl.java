@@ -9,7 +9,7 @@ import com.niksob.authorization_service.service.password_encoder.PasswordEncoder
 import com.niksob.authorization_service.values.user.DefaultUserInfo;
 import com.niksob.domain.exception.resource.ResourceAlreadyExistsException;
 import com.niksob.domain.exception.resource.ResourceSavingException;
-import com.niksob.domain.http.connector.UserDatabaseConnector;
+import com.niksob.domain.http.connector.microservice.database.user.UserDatabaseConnector;
 import com.niksob.domain.model.auth.login.SignOutDetails;
 import com.niksob.domain.model.user.UserId;
 import com.niksob.domain.model.user.UserInfo;
