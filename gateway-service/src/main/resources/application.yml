@@ -10,8 +10,8 @@ spring:
   profiles:
     active: dev
 
+  webflux:
+    base-path: ${microservice.connection.gateway.path}
 server:
   address: ${microservice.connection.gateway.hostname}
   port: ${microservice.connection.gateway.port}
-  servlet:
-    context-path: ${microservice.connection.gateway.path}

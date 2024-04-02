@@ -2,49 +2,52 @@ package com.niksob.gateway_service.config.web;
 
 import com.niksob.gateway_service.path.controller.signup.LoginControllerPaths;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebFluxSecurity
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class WebSecurityConfig {
-    private final UserDetailsService userDetailsService;
+    private final ReactiveUserDetailsService userDetailsService;
 
-//    private final AccessTokenFilter accessTokenFilter;
+    //    private final AccessTokenFilter accessTokenFilter;
+
+    @Value("${microservice.connection.gateway.path}")
+    private String basePath;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(
-                                LoginControllerPaths.BASE_URI
-                        )
-                        .permitAll()
-                        .anyRequest().authenticated()
-//                        .and()
-//                        .addFilterAfter(accessTokenFilter, UsernamePasswordAuthenticationFilter.class)
-                )
-                .logout(LogoutConfigurer::permitAll)
-                .build();
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        final String loginControllerPath = basePath + LoginControllerPaths.BASE_URI;
+        http
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers(
+                                loginControllerPath
+                        ).permitAll()
+                        .anyExchange().authenticated())
+                .logout(logout -> logout
+                        .logoutUrl("/logout") // URL для инициации выхода из системы
+                        .logoutSuccessHandler((webFilterExchange, authentication) -> {
+                            webFilterExchange.getExchange().getResponse().setStatusCode(HttpStatus.OK);
+                            return webFilterExchange.getExchange().getResponse().setComplete();
+                        }));
+        http.authenticationManager(authenticationManager());
+        return http.build();
     }
 
     @Bean
-    public AuthenticationManager configure(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-
-        authManagerBuilder.userDetailsService(userDetailsService);
-        return authManagerBuilder.build();
+    public ReactiveAuthenticationManager authenticationManager() {
+        return new UserDetailsRepositoryReactiveAuthenticationManager(userDetailsService);
     }
 }
