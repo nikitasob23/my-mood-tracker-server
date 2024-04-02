@@ -4,6 +4,7 @@ spring:
   config:
     import:
       - configserver:http://localhost:9191/logger
+      - configserver:http://localhost:9191/authorization-connection
       - configserver:http://localhost:9191/gateway-connection
 
   profiles:

@@ -3,6 +3,7 @@ package com.niksob.gateway_service.service.security;
 import com.niksob.domain.http.connector.microservice.database.user.UserDatabaseConnector;
 import com.niksob.domain.mapper.user.UsernameMapper;
 import com.niksob.gateway_service.mapper.user.UserSecurityDetailsMapper;
+import com.niksob.gateway_service.model.user.security.UserSecurityDetails;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,9 +21,10 @@ public class UserSecurityDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return Mono.fromCallable(() -> usernameMapper.toUsername(username))
+        final UserSecurityDetails userSecurityDetails = Mono.fromCallable(() -> usernameMapper.toUsername(username))
                 .flatMap(userDatabaseConnector::load)
                 .map(userSecurityDetailsMapper::toUserDetails)
                 .block();
+        return userSecurityDetails;
     }
 }

@@ -1,0 +1,8 @@
+### POST Request
+POST http://localhost:8082/api/signup
+Content-Type: application/json
+
+{
+  "username": "TEST_USERNAME",
+  "password": "TEST_PASSWORD"
+}

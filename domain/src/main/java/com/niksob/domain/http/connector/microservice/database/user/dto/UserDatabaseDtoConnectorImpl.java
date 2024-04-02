@@ -1,6 +1,6 @@
 package com.niksob.domain.http.connector.microservice.database.user.dto;
 
-import com.niksob.domain.config.properties.ConnectionProperties;
+import com.niksob.domain.config.properties.microservice.database.DatabaseConnectionProperties;
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;
 import com.niksob.domain.http.client.HttpClient;
@@ -23,7 +23,7 @@ public class UserDatabaseDtoConnectorImpl extends BaseConnector implements UserD
     public UserDatabaseDtoConnectorImpl(
             HttpClient httpClient,
             RestPath restPath,
-            ConnectionProperties connectionProperties,
+            DatabaseConnectionProperties connectionProperties,
             UserGetParamsMapper userGetParamsMapper,
             @Qualifier("userDatabaseDtoConnectorErrorHandler")
             DatabaseDtoConnectorErrorHandler errorHandler

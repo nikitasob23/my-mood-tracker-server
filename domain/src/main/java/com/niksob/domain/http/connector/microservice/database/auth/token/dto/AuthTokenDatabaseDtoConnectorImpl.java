@@ -1,6 +1,6 @@
 package com.niksob.domain.http.connector.microservice.database.auth.token.dto;
 
-import com.niksob.domain.config.properties.ConnectionProperties;
+import com.niksob.domain.config.properties.microservice.database.DatabaseConnectionProperties;
 import com.niksob.domain.dto.auth.token.details.AuthTokenDetailsDto;
 import com.niksob.domain.dto.auth.token.encoded.EncodedAuthTokenDto;
 import com.niksob.domain.dto.user.UserIdDto;
@@ -24,7 +24,7 @@ public class AuthTokenDatabaseDtoConnectorImpl extends BaseConnector implements 
     public AuthTokenDatabaseDtoConnectorImpl(
             HttpClient httpClient,
             RestPath restPath,
-            ConnectionProperties connectionProperties,
+            DatabaseConnectionProperties connectionProperties,
             AuthTokenGetParamsMapper authTokenGetParamsMapper,
             @Qualifier("authTokenDatabaseDtoConnectorErrorHandler")
             DatabaseDtoConnectorErrorHandler errorHandler

@@ -1,4 +1,4 @@
-package com.niksob.authorization_service.model.signup;
+package com.niksob.domain.model.auth.login;
 
 import com.niksob.domain.model.user.RowPassword;
 import com.niksob.domain.model.user.Username;
