@@ -11,3 +11,4 @@ spring:
             - file:///Users/nickworker/Documents/Repo/my-mood-tracker-server/domain/src/main/resources/common-config
             - file:///Users/nickworker/Documents/Repo/my-mood-tracker-server/database-service/src/main/resources/common-config
             - file:///Users/nickworker/Documents/Repo/my-mood-tracker-server/authorization-service/src/main/resources/common-config
+            - file:///Users/nickworker/Documents/Repo/my-mood-tracker-server/gateway-service/src/main/resources/common-config

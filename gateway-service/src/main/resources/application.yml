@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: gateway-service
+  config:
+    import:
+      - configserver:http://localhost:9191/logger
+      - configserver:http://localhost:9191/gateway-connection
+
+  profiles:
+    active: dev
+
+server:
+  address: ${microservice.connection.gateway.hostname}
+  port: ${microservice.connection.gateway.port}
+  servlet:
+    context-path: ${microservice.connection.gateway.path}

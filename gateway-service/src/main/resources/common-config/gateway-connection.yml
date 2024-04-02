@@ -1,0 +1,7 @@
+microservice:
+  connection:
+    gateway:
+      protocol: http
+      hostname: localhost
+      port: 8082
+      path: /api

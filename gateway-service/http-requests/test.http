@@ -1,0 +1,2 @@
+### POST Request
+POST http://localhost:8082/api/signup
