@@ -1,6 +1,6 @@
-package com.niksob.domain.http.connector.microservice.auth;
+package com.niksob.domain.http.connector.microservice.auth.login;
 
-import com.niksob.domain.http.connector.microservice.auth.dto.LoginControllerDtoConnector;
+import com.niksob.domain.http.connector.microservice.auth.login.dto.LoginControllerDtoConnector;
 import com.niksob.domain.mapper.dto.auth.login.SignupDetailsDtoMapper;
 import com.niksob.domain.model.auth.login.SignupDetails;
 import com.niksob.layer_connector.annotation.LayerConnector;

@@ -1,8 +1,8 @@
 package com.niksob.gateway_service.config.web;
 
+import com.niksob.gateway_service.path.controller.auth.token.AuthTokenControllerPaths;
 import com.niksob.gateway_service.path.controller.signup.LoginControllerPaths;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -23,17 +23,13 @@ public class WebSecurityConfig {
 
     //    private final AccessTokenFilter accessTokenFilter;
 
-    @Value("${microservice.connection.gateway.path}")
-    private String basePath;
-
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-        final String loginControllerPath = basePath + LoginControllerPaths.BASE_URI;
-        http
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+        http.csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(
-                                loginControllerPath
+                                LoginControllerPaths.BASE_URI,
+                                AuthTokenControllerPaths.BASE_URI
                         ).permitAll()
                         .anyExchange().authenticated())
                 .logout(logout -> logout

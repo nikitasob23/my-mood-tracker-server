@@ -21,7 +21,7 @@ public class AuthTokenController {
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(AuthTokenController.class);
 
-    @PostMapping(AuthTokenControllerPaths.SIGNUP)
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<AuthTokenDto> generate(@RequestBody RowLoginInDetailsDto rowLoginInDetailsDto) {
         return authTokenControllerService.generate(rowLoginInDetailsDto)

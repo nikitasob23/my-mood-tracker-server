@@ -1,6 +1,6 @@
 package com.niksob.gateway_service.service.auth.login;
 
-import com.niksob.domain.http.connector.microservice.auth.LoginControllerConnector;
+import com.niksob.domain.http.connector.microservice.auth.login.LoginControllerConnector;
 import com.niksob.domain.model.auth.login.SignupDetails;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;

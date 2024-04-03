@@ -10,4 +10,8 @@ public interface RowLoginInDetailsDtoMapper {
     @Mapping(source = "username", target = "username.value")
     @Mapping(source = "rowPassword", target = "rowPassword.value")
     RowLoginInDetails fromDto(RowLoginInDetailsDto dto);
+
+    @Mapping(source = "username.value", target = "username")
+    @Mapping(source = "rowPassword.value", target = "rowPassword")
+    RowLoginInDetailsDto toDto(RowLoginInDetails rowLoginInDetails);
 }

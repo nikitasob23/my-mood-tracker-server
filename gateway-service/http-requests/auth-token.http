@@ -1,0 +1,9 @@
+### POST Request
+POST http://localhost:8082/api/auth/token
+Content-Type: application/json
+
+{
+  "username": "TEST_USERNAME",
+  "password": "TEST_PASSWORD",
+  "device": "TEST_DEVICE"
+}

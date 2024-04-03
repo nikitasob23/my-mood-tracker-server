@@ -1,4 +1,4 @@
-package com.niksob.domain.http.connector.microservice.auth.dto;
+package com.niksob.domain.http.connector.microservice.auth.login.dto;
 
 import com.niksob.domain.config.properties.microservice.auth.AuthConnectionProperties;
 import com.niksob.domain.dto.user.signup.SignupDetailsDto;
