@@ -29,7 +29,7 @@ public class WebSecurityConfig {
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(
                                 LoginControllerPaths.BASE_URI,
-                                AuthTokenControllerPaths.BASE_URI
+                                AuthTokenControllerPaths.BASE_URI + "/**"
                         ).permitAll()
                         .anyExchange().authenticated())
                 .logout(logout -> logout

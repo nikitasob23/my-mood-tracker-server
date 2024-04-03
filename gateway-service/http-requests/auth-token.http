@@ -7,3 +7,11 @@ Content-Type: application/json
   "password": "TEST_PASSWORD",
   "device": "TEST_DEVICE"
 }
+
+### POST Request
+POST http://localhost:8082/api/auth/token/refresh
+Content-Type: application/json
+
+{
+  "refresh_token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiZXhwIjoxNzEzNDQxNTEzLCJkZXYiOiJURVNUX0RFVklDRSJ9.oztC4FX9lk2_GRn4DIyBdOErcc6zoX-JqFYq5agfuxpC4EgkNlVynUCIMv1SjbUPjcldSF59y3xOgWmXytdGSA"
+}

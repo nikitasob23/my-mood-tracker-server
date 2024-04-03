@@ -9,4 +9,7 @@ import org.mapstruct.Mapping;
 public interface RefreshTokenDtoMapper {
     @Mapping(source = "refreshToken", target = "value")
     RefreshToken fromDto(RefreshTokenDto dto);
+
+    @Mapping(source = "value", target = "refreshToken")
+    RefreshTokenDto toDto(RefreshToken refreshToken);
 }
