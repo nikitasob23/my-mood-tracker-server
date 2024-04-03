@@ -1,5 +1,7 @@
 package com.niksob.gateway_service.controller.login;
 
+import com.niksob.domain.dto.auth.login.SignOutDetailsDto;
+import com.niksob.domain.dto.user.UserIdDto;
 import com.niksob.domain.dto.user.signup.SignupDetailsDto;
 import com.niksob.gateway_service.path.controller.signup.LoginControllerPaths;
 import com.niksob.gateway_service.service.auth.login.LoginControllerService;
@@ -26,5 +28,25 @@ public class LoginController {
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.CREATED))
                 .doOnError(throwable ->
                         log.error("Controller returning failed response", null, signupDetails));
+    }
+
+    @GetMapping(LoginControllerPaths.SIGNOUT)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> signOut(@ModelAttribute SignOutDetailsDto signOutDetails) {
+        return loginControllerService.signOut(signOutDetails)
+                .doOnSuccess(u -> log.debug("User is sign out", signOutDetails))
+                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
+                .doOnError(throwable ->
+                        log.error("Controller returning failed response", null, signOutDetails));
+    }
+
+    @GetMapping(LoginControllerPaths.SIGNOUT_ALL)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> signOutAll(@RequestParam("user_id") UserIdDto userId) {
+        return loginControllerService.signOutAll(userId)
+                .doOnSuccess(u -> log.debug("User is sign out from all devices", userId))
+                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
+                .doOnError(throwable ->
+                        log.error("Controller returning failed response", null, userId));
     }
 }

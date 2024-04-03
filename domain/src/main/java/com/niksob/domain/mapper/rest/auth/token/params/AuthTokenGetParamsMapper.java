@@ -1,5 +1,6 @@
 package com.niksob.domain.mapper.rest.auth.token.params;
 
+import com.niksob.domain.dto.auth.login.SignOutDetailsDto;
 import com.niksob.domain.dto.auth.token.details.AuthTokenDetailsDto;
 import com.niksob.domain.dto.user.UserIdDto;
 import org.mapstruct.Mapper;
@@ -15,6 +16,13 @@ public interface AuthTokenGetParamsMapper {
         return Map.of(
                 USER_ID_PARAM_NAME, authTokenDetails.getUserId(),
                 DEVICE_PARAM_NAME, authTokenDetails.getDevice()
+        );
+    }
+
+    default Map<String, String> getHttpParams(SignOutDetailsDto signOutDetailsDto) {
+        return Map.of(
+                USER_ID_PARAM_NAME, signOutDetailsDto.getUserId(),
+                DEVICE_PARAM_NAME, signOutDetailsDto.getDevice()
         );
     }
 

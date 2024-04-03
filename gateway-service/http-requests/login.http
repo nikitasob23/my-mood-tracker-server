@@ -1,3 +1,9 @@
+### GET Request
+GET http://localhost:8092/api/service/auth/signout?userId=4&device=TEST_DEVICE
+
+### GET Request
+GET http://localhost:8092/api/service/auth/signout/all?user_id=4
+
 ### POST Request
 POST http://localhost:8082/api/signup
 Content-Type: application/json

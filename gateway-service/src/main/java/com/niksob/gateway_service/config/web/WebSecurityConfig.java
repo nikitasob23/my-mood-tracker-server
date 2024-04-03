@@ -28,7 +28,7 @@ public class WebSecurityConfig {
         http.csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(
-                                LoginControllerPaths.BASE_URI,
+                                LoginControllerPaths.BASE_URI + "/**",
                                 AuthTokenControllerPaths.BASE_URI + "/**"
                         ).permitAll()
                         .anyExchange().authenticated())

@@ -11,8 +11,15 @@ public interface SignOutDetailsDtoMapper {
     @Mapping(target = "userId", expression = "java(convertUserId(dto.getUserId()))")
     SignOutDetails fromDto(SignOutDetailsDto dto);
 
+    @Mapping(target = "userId", expression = "java(convertUserIdStr(signOutDetails.getUserId()))")
+    SignOutDetailsDto fromDto(SignOutDetails signOutDetails);
+
     default UserId convertUserId(String userIdStr) {
         final long idValue = Long.parseLong(userIdStr);
         return new UserId(idValue);
+    }
+
+    default String convertUserIdStr(UserId userId) {
+        return userId.getValue().toString();
     }
 }
