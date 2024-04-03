@@ -1,6 +1,6 @@
 package com.niksob.authorization_service.service.auth.login;
 
-import com.niksob.authorization_service.exception.auth.UnauthorizedAccessException;
+import com.niksob.authorization_service.exception.auth.signup.UnregisteredUserException;
 import com.niksob.authorization_service.model.login.password.WrongPasswordException;
 import com.niksob.authorization_service.service.password_encoder.PasswordEncoderService.PasswordEncoderService;
 import com.niksob.domain.exception.resource.ResourceNotFoundException;
@@ -45,7 +45,7 @@ public class LoginInServiceImpl implements LoginInService {
     private <T> Mono<T> createUserNotExistsError(Throwable throwable, Object state) {
         Throwable e;
         if (throwable instanceof ResourceNotFoundException) {
-            e = new UnauthorizedAccessException("User doesn't exist", throwable);
+            e = new UnregisteredUserException("User doesn't exist", throwable);
         } else {
             e = throwable;
         }

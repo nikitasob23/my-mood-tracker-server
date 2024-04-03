@@ -1,8 +1,8 @@
 package com.niksob.authorization_service.controller.auth.exception.handler;
 
-import com.niksob.authorization_service.exception.auth.UnauthorizedAccessException;
 import com.niksob.authorization_service.exception.auth.signup.DuplicateSignupAttemptException;
 import com.niksob.authorization_service.exception.auth.signup.SignupException;
+import com.niksob.authorization_service.exception.auth.signup.UnregisteredUserException;
 import com.niksob.authorization_service.exception.auth.token.expired.ExpiredAuthTokenException;
 import com.niksob.authorization_service.exception.auth.token.invalid.InvalidAuthTokenException;
 import com.niksob.authorization_service.model.login.password.WrongPasswordException;
@@ -65,9 +65,9 @@ public class ControllerErrorHandler {
         } else if (throwable instanceof InvalidAuthTokenException) {
             httpStatus = HttpStatus.FORBIDDEN;
             message = "Invalid token";
-        } else if (throwable instanceof UnauthorizedAccessException) {
+        } else if (throwable instanceof UnregisteredUserException) {
             httpStatus = HttpStatus.FORBIDDEN;
-            message = "Unauthorized access";
+            message = "User not registered";
         } else {
             return internalServerErrorUtil.createMonoResponse(throwable, ControllerErrorHandler.class);
         }
