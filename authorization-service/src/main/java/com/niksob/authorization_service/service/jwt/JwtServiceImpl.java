@@ -33,7 +33,7 @@ public class JwtServiceImpl implements JwtService {
     public Jwt generate(@NonNull JwtDetails jwtDetails) {
         try {
             final JwtBuilder jwtBuilder = Jwts.builder()
-                    .setSubject(jwtDetails.getUserId())
+                    .setSubject(jwtDetails.getUsername())
                     .setExpiration(expirationDateUtil.create())
                     .signWith(secretKey);
             setJwtBuilderClaims(jwtBuilder, jwtDetails);

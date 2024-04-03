@@ -31,7 +31,7 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     @Override
     public Mono<AuthToken> generate(RowLoginInDetails rowLoginInDetails) {
         return loginInService.loginInOrThrow(rowLoginInDetails)
-                .map(userId -> new AuthTokenDetails(userId, rowLoginInDetails.getDevice()))
+                .map(user -> new AuthTokenDetails(user.getUsername(), user.getId(), rowLoginInDetails.getDevice()))
                 .flatMap(authTokenAdapter::generate)
                 .flatMap(authTokenRepoService::upsert)
                 .doOnNext(this::logSuccessGeneration)

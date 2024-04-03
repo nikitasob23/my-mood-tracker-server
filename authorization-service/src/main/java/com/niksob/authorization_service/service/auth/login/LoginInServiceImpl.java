@@ -8,7 +8,6 @@ import com.niksob.domain.http.connector.microservice.database.user.UserDatabaseC
 import com.niksob.domain.model.auth.login.RowLoginInDetails;
 import com.niksob.domain.model.user.Password;
 import com.niksob.domain.model.user.RowPassword;
-import com.niksob.domain.model.user.UserId;
 import com.niksob.domain.model.user.UserInfo;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -25,11 +24,10 @@ public class LoginInServiceImpl implements LoginInService {
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(LoginInServiceImpl.class);
 
     @Override
-    public Mono<UserId> loginInOrThrow(RowLoginInDetails rowLoginInDetails) {
+    public Mono<UserInfo> loginInOrThrow(RowLoginInDetails rowLoginInDetails) {
         return userDatabaseConnector.load(rowLoginInDetails.getUsername())
                 .flatMap(user -> passwordMatches(rowLoginInDetails, user))
-                .map(UserInfo::getId)
-                .doOnNext(userId -> log.info("Successful login in", null, userId))
+                .doOnNext(user -> log.info("Successful login in", null, user))
                 .onErrorResume(throwable -> createUserNotExistsError(throwable, rowLoginInDetails));
     }
 
