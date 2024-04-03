@@ -1,6 +1,6 @@
 package com.niksob.authorization_service.controller.auth.token;
 
-import com.niksob.authorization_service.controller.auth.ControllerErrorHandler;
+import com.niksob.authorization_service.controller.auth.exception.handler.ControllerErrorHandler;
 import com.niksob.domain.dto.auth.login.RowLoginInDetailsDto;
 import com.niksob.domain.dto.auth.token.AuthTokenDto;
 import com.niksob.domain.dto.auth.token.encoded.refresh.RefreshTokenDto;

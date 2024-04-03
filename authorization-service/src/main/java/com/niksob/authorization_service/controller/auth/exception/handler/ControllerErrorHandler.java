@@ -1,4 +1,4 @@
-package com.niksob.authorization_service.controller.auth;
+package com.niksob.authorization_service.controller.auth.exception.handler;
 
 import com.niksob.authorization_service.exception.auth.UnauthorizedAccessException;
 import com.niksob.authorization_service.exception.auth.signup.DuplicateSignupAttemptException;
@@ -31,35 +31,47 @@ public class ControllerErrorHandler {
 
     public <T> Mono<T> createLoginError(Throwable throwable) {
         final HttpStatus httpStatus;
+        final String message;
         if (throwable instanceof DuplicateSignupAttemptException) {
             httpStatus = HttpStatus.CONFLICT;
+            message = "Duplicate signup attempt";
         } else if (throwable instanceof SignupException) {
             httpStatus = HttpStatus.BAD_REQUEST;
+            message = "Failure signup";
         } else if (throwable instanceof ResourceNotFoundException) {
             httpStatus = HttpStatus.NOT_FOUND;
+            message = "Resource not found";
         } else {
             return internalServerErrorUtil.createMonoResponse(throwable, ControllerErrorHandler.class);
         }
-        final Throwable errorResponse = new HttpClientException(throwable, httpStatus, contextPath);
+        final Throwable errorResponse = new HttpClientException(message, throwable, httpStatus, contextPath);
         log.error("Controller returning failed response", null, errorResponse);
         return Mono.error(errorResponse);
     }
 
     public <T> Mono<T> createAuthTokenNotGenerated(Throwable throwable) {
         final HttpStatus httpStatus;
-        if (throwable instanceof UnauthorizedAccessException) {
-            httpStatus = HttpStatus.NOT_FOUND;
-        } else if (throwable instanceof ResourceSavingException // Auth token saving or updating exception
+        final String message;
+        if (throwable instanceof ResourceSavingException // Auth token saving or updating exception
                 || throwable instanceof ResourceUpdatingException) {
             httpStatus = HttpStatus.BAD_REQUEST;
-        } else if (throwable instanceof WrongPasswordException
-                || throwable instanceof ExpiredAuthTokenException
-                || throwable instanceof InvalidAuthTokenException) {
+            message = "Incorrect request with auth token";
+        } else if (throwable instanceof WrongPasswordException) {
             httpStatus = HttpStatus.FORBIDDEN;
+            message = "Wrong password";
+        } else if (throwable instanceof ExpiredAuthTokenException) {
+            httpStatus = HttpStatus.FORBIDDEN;
+            message = "Expired token";
+        } else if (throwable instanceof InvalidAuthTokenException) {
+            httpStatus = HttpStatus.FORBIDDEN;
+            message = "Invalid token";
+        } else if (throwable instanceof UnauthorizedAccessException) {
+            httpStatus = HttpStatus.FORBIDDEN;
+            message = "Unauthorized access";
         } else {
             return internalServerErrorUtil.createMonoResponse(throwable, ControllerErrorHandler.class);
         }
-        Throwable errorResponse = new HttpClientException(throwable, httpStatus, contextPath);
+        Throwable errorResponse = new HttpClientException(message, throwable, httpStatus, contextPath);
         log.error("Controller returning failed response", null, errorResponse);
         return Mono.error(errorResponse);
     }

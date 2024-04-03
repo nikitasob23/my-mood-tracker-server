@@ -1,6 +1,6 @@
 package com.niksob.authorization_service.controller.auth.signup;
 
-import com.niksob.authorization_service.controller.auth.ControllerErrorHandler;
+import com.niksob.authorization_service.controller.auth.exception.handler.ControllerErrorHandler;
 import com.niksob.domain.dto.user.UserIdDto;
 import com.niksob.domain.dto.user.signup.SignupDetailsDto;
 import com.niksob.domain.dto.auth.login.SignOutDetailsDto;

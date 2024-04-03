@@ -25,6 +25,13 @@ public class HttpClientException extends RuntimeException {
         this.path = path;
     }
 
+    public HttpClientException(String message, Throwable cause, HttpStatus httpStatus, String path) {
+        super(message, cause);
+        this.timestamp = LocalDateTime.now();
+        this.httpStatus = httpStatus;
+        this.path = path;
+    }
+
     public HttpClientException(String message, HttpStatus httpStatus, String path) {
         super(message);
         this.timestamp = LocalDateTime.now();
