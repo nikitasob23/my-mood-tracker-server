@@ -2,7 +2,6 @@ package com.niksob.database_service.controller.user;
 
 import com.niksob.database_service.service.user.UserService;
 import com.niksob.database_service.service.user.loader.UserLoader;
-import com.niksob.domain.dto.user.UserIdDto;
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;
 import com.niksob.domain.mapper.dto.user.UserDtoMonoMapper;
@@ -18,8 +17,6 @@ import reactor.core.publisher.Mono;
         mapper = {UsernameDtoMapper.class, UserInfoDtoMapper.class, UserIdDtoMapper.class,UserDtoMonoMapper.class}
 )
 public interface UserControllerService {
-    Mono<UserInfoDto> loadAllById(UserIdDto userIdDto);
-
     Mono<UserInfoDto> loadAllByUsername(UsernameDto usernameDto);
 
     Mono<UserInfoDto> save(UserInfoDto userInfoDto);
