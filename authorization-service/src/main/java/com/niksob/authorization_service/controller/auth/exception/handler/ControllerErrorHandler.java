@@ -49,7 +49,7 @@ public class ControllerErrorHandler {
         return Mono.error(errorResponse);
     }
 
-    public <T> Mono<T> createAuthTokenNotGenerated(Throwable throwable) {
+    public <T> Mono<T> createAuthTokenException(Throwable throwable) {
         final HttpStatus httpStatus;
         final String message;
         if (throwable instanceof ResourceSavingException // Auth token saving or updating exception

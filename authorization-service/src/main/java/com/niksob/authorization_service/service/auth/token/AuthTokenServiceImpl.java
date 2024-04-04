@@ -1,11 +1,13 @@
 package com.niksob.authorization_service.service.auth.token;
 
+import com.niksob.authorization_service.exception.auth.token.AuthTokenException;
 import com.niksob.authorization_service.exception.auth.token.invalid.InvalidAuthTokenException;
 import com.niksob.authorization_service.service.auth.login.LoginInService;
 import com.niksob.authorization_service.service.auth.token.generator.AuthTokenAdapter;
 import com.niksob.authorization_service.service.auth.token.saver.AuthTokenRepoService;
 import com.niksob.authorization_service.service.encoder.auth_token.AuthTokenEncodingService;
 import com.niksob.domain.model.auth.login.RowLoginInDetails;
+import com.niksob.domain.model.auth.token.AccessToken;
 import com.niksob.domain.model.auth.token.AuthToken;
 import com.niksob.domain.model.auth.token.RefreshToken;
 import com.niksob.domain.model.auth.token.details.AuthTokenDetails;
@@ -49,6 +51,14 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     }
 
     @Override
+    public Mono<Boolean> validateAccessToken(AccessToken accessToken) {
+        return authTokenAdapter.extractAuthTokenDetails(accessToken) // if expired then throw exception
+                .flatMap(authTokenDetails -> validate(authTokenDetails, accessToken))
+                .doOnNext(b -> log.info("Successful access token validation", b))
+                .onErrorResume(throwable -> returnNonValid(throwable, accessToken));
+    }
+
+    @Override
     public Mono<Void> invalidate(AuthTokenDetails authTokenDetails) {
         return authTokenRepoService.delete(authTokenDetails)
                 .doOnSuccess(ignore -> log.info("Successful deletion of auth token", authTokenDetails))
@@ -59,7 +69,14 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     public Mono<Void> invalidateByUserId(UserId userId) {
         return authTokenRepoService.deleteByUserId(userId)
                 .doOnSuccess(ignore -> log.info("Successful deletion auth tokens for all devices", userId))
-                .doOnError(t -> log.error("Failure deletion auth tokens for all devices", null, userId));
+                .doOnError(throwable -> log.error("Failure deletion auth tokens for all devices", throwable, userId));
+    }
+
+    @Override
+    public Mono<AuthTokenDetails> extractAuthDetails(AccessToken accessToken) {
+        return authTokenAdapter.extractAuthTokenDetails(accessToken)
+                .doOnNext(authTokenDetails -> log.info("Successful auth token details extraction", authTokenDetails))
+                .doOnError(throwable -> log.error("Failure auth token details extraction", throwable, accessToken));
     }
 
     private Mono<AuthTokenDetails> validOrThrow(AuthTokenDetails authTokenDetails, RefreshToken refreshToken) {
@@ -70,10 +87,31 @@ public class AuthTokenServiceImpl implements AuthTokenService {
                 .onErrorResume(throwable -> createInvalidTokenException(throwable, authTokenDetails));
     }
 
+    private Mono<UserId> validOrThrow(AuthTokenDetails authTokenDetails, AccessToken accessToken) {
+        return authTokenRepoService.load(authTokenDetails)
+                .filter(encoded -> authTokenEncodingService.matches(accessToken, encoded.getAccess()))
+                .map(ignore -> authTokenDetails.getUserId())
+                .switchIfEmpty(createInvalidTokenException(null, authTokenDetails))
+                .onErrorResume(throwable -> createInvalidTokenException(throwable, authTokenDetails));
+    }
+
+    private Mono<Boolean> validate(AuthTokenDetails authTokenDetails, AccessToken accessToken) {
+        return authTokenRepoService.load(authTokenDetails)
+                .map(encoded -> authTokenEncodingService.matches(accessToken, encoded.getAccess()));
+    }
+
+    private Mono<Boolean> returnNonValid(Throwable e, Object state) {
+        log.error("Access token not valid", e, state);
+        if (e instanceof AuthTokenException) {
+            return Mono.error(e);
+        }
+        return Mono.just(Boolean.FALSE);
+    }
+
     private <T> Mono<T> createInvalidTokenException(Throwable throwable, Object state) {
         final String message = "Invalid authorization token";
         var e = new InvalidAuthTokenException(message, throwable);
-        log.error(message, null, state);
+        log.error(message, e, state);
         return Mono.error(e);
     }
 

@@ -24,6 +24,7 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 @Service
 @AllArgsConstructor
@@ -55,9 +56,20 @@ public class AuthTokenAdapterImpl implements AuthTokenAdapter {
 
     @Override
     public Mono<AuthTokenDetails> extractAuthTokenDetails(RefreshToken refreshToken) {
+        final Supplier<Jwt> jwtMapping = () -> jwtMapper.fromRefreshToken(refreshToken);
+        return extractAuthTokenDetails(jwtMapping, refreshJwtTokenService);
+    }
+
+    @Override
+    public Mono<AuthTokenDetails> extractAuthTokenDetails(AccessToken accessToken) {
+        final Supplier<Jwt> jwtMapping = () -> jwtMapper.fromAccessToken(accessToken);
+        return extractAuthTokenDetails(jwtMapping, accessJwtTokenService);
+    }
+
+    private Mono<AuthTokenDetails> extractAuthTokenDetails(Supplier<Jwt> jwtSupplier, JwtService jwtService) {
         return Mono.fromCallable(() -> {
-            final Jwt jwt = jwtMapper.fromRefreshToken(refreshToken);
-            final JwtDetails jwtDetails = refreshJwtTokenService.getJwtDetails(jwt);
+            final Jwt jwt = jwtSupplier.get();
+            final JwtDetails jwtDetails = jwtService.getJwtDetails(jwt);
             return jwtDetailsMapper.toAuthTokenDetails(jwtDetails);
         }).onErrorResume(this::createAuthTokenException);
     }
