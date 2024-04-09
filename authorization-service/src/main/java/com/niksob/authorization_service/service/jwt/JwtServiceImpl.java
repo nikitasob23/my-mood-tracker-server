@@ -10,6 +10,7 @@ import com.niksob.authorization_service.util.date.expiration.ExpirationDateUtil;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.SignatureException;
@@ -69,6 +70,10 @@ public class JwtServiceImpl implements JwtService {
             final String message = "Jwt token is not valid";
             log.error(message, null, jwt);
             throw new InvalidJwtException(message, e);
+        } catch (ExpiredJwtException e) {
+            final String message = "Jwt expired";
+            log.error(message, null, jwt);
+            throw e;
         } catch (Exception e) {
             final String message = "Unknown jwt exception throws";
             log.error(message, null, jwt);

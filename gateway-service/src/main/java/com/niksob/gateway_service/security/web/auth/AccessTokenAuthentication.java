@@ -1,5 +1,6 @@
 package com.niksob.gateway_service.security.web.auth;
 
+import com.niksob.domain.model.auth.token.AccessToken;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -12,10 +13,9 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class JwtAuthentication implements Authentication {
-
-    private boolean authenticated;
-
+public class AccessTokenAuthentication implements Authentication {
+    private boolean authenticated = false;
+    private final AccessToken accessToken;
     private final UserDetails userDetails;
 
     @Override
@@ -25,17 +25,17 @@ public class JwtAuthentication implements Authentication {
 
     @Override
     public Object getCredentials() {
-        return null;
+        return accessToken;
     }
 
     @Override
     public Object getDetails() {
-        return null;
+        return userDetails;
     }
 
     @Override
     public Object getPrincipal() {
-        return userDetails;
+        return userDetails.getUsername();
     }
 
     @Override

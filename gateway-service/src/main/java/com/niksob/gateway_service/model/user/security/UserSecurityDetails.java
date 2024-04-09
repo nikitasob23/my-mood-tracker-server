@@ -20,10 +20,10 @@ public class UserSecurityDetails implements UserDetails {
     private String nickname;
     private String encodedPassword;
     //    private Set<SecurityRole> authorities;
-    private boolean nonExpired;
-    private boolean nonLocked;
-    private boolean credentialsNonExpired;
-    private boolean enable;
+    private boolean nonExpired = true;
+    private boolean nonLocked = true;
+    private boolean credentialsNonExpired = true;
+    private boolean enable = true;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
