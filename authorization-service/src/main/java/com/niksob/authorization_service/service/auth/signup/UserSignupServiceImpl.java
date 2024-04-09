@@ -38,7 +38,7 @@ public class UserSignupServiceImpl implements UserSignupService {
                         signupDetails.getUsername(),
                         DefaultUserInfo.createNickname(signupDetails.getUsername()),
                         passwordEncoderService.encode(signupDetails.getRowPassword()))
-                ).flatMap(userDatabaseConnector::save)
+                ).flatMap(userDatabaseConnector::save).then()
                 .doOnSuccess(ignore -> log.info("Successful signup of user", null, signupDetails))
                 .onErrorResume(throwable -> createSignupError(throwable, signupDetails));
     }
@@ -58,7 +58,7 @@ public class UserSignupServiceImpl implements UserSignupService {
                 .doOnError(throwable -> log.error("Failure sign out of user", null, userId));
     }
 
-    private Mono<Void> createSignupError(Throwable throwable, Object state) {
+    private <T> Mono<T> createSignupError(Throwable throwable, Object state) {
         Throwable e;
         if (throwable instanceof ResourceAlreadyExistsException) {
             e = new DuplicateSignupAttemptException("Duplicate signup attempt", throwable);

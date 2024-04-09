@@ -1,0 +1,29 @@
+### GET Request
+GET http://localhost:8082/api/user?username=TEST_USERNAME
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEyNjA3OTE2LCJkZXYiOiJURVNUX0RFVklDRSIsInVzZXJJZCI6IjUifQ.heqEjmzrHrdBgiq9-ap06faZhPoAtpdhZ5a_0EN7buUPWZuzJg2nRarRKfEaNT0Uj2nV1TAGkrcBD9swc7_rdg
+
+### POST Request
+POST http://localhost:8081/api/user
+Content-Type: application/json
+
+{
+  "username": "TEST_USERNAME",
+  "nickname": "TEST_NICKNAME",
+  "password": "TEST_PASSWORD"
+}
+
+### PUT Request
+PUT http://localhost:8082/api/user
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEyNjA3OTE2LCJkZXYiOiJURVNUX0RFVklDRSIsInVzZXJJZCI6IjUifQ.heqEjmzrHrdBgiq9-ap06faZhPoAtpdhZ5a_0EN7buUPWZuzJg2nRarRKfEaNT0Uj2nV1TAGkrcBD9swc7_rdg
+
+{
+  "id": 5,
+  "username": "TEST_USERNAME",
+  "nickname": "TEST_NICKNAME",
+  "password": "0000"
+}
+
+### DELETE Request
+DELETE http://localhost:8082/api/user?username=TEST_USERNAME
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEyNjA3OTE2LCJkZXYiOiJURVNUX0RFVklDRSIsInVzZXJJZCI6IjUifQ.heqEjmzrHrdBgiq9-ap06faZhPoAtpdhZ5a_0EN7buUPWZuzJg2nRarRKfEaNT0Uj2nV1TAGkrcBD9swc7_rdg

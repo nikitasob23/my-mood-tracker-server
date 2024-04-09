@@ -14,5 +14,9 @@ import reactor.core.publisher.Mono;
 public interface UserDatabaseConnector {
     Mono<UserInfo> load(Username username);
 
-    Mono<Void> save(UserInfo userInfo);
+    Mono<UserInfo> save(UserInfo userInfo);
+
+    Mono<Void> update(UserInfo userInfo);
+
+    Mono<Void> delete(Username username);
 }

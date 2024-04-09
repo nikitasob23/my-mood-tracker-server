@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthTokenDetailsDto {
+    private String username;
     private String userId;
     private String device;
 }

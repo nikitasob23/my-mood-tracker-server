@@ -42,10 +42,26 @@ public class UserDatabaseDtoConnectorImpl extends BaseConnector implements UserD
     }
 
     @Override
-    public Mono<Void> save(UserInfoDto userInfoDto) {
+    public Mono<UserInfoDto> save(UserInfoDto userInfoDto) {
         return httpClient.sendPostRequest(
                 getWithBody(UserControllerPaths.BASE_URI),
-                userInfoDto, UserInfoDto.class, Void.class
+                userInfoDto, UserInfoDto.class, UserInfoDto.class
         ).onErrorResume(throwable -> errorHandler.createSavingError(throwable, userInfoDto));
+    }
+
+    @Override
+    public Mono<Void> update(UserInfoDto userInfoDto) {
+        return httpClient.sendPutRequest(
+                getWithBody(UserControllerPaths.BASE_URI),
+                userInfoDto, UserInfoDto.class, Void.class
+        ).onErrorResume(throwable -> errorHandler.createUpdatingError(throwable, userInfoDto));
+    }
+
+    @Override
+    public Mono<Void> delete(UsernameDto usernameDto) {
+        final Map<String, String> params = userGetParamsMapper.getHttpParams(usernameDto);
+        final String uri = getWithParams(UserControllerPaths.BASE_URI, params);
+        return httpClient.sendDeleteRequest(uri, Void.class)
+                .onErrorResume(throwable -> errorHandler.createUpdatingError(throwable, usernameDto));
     }
 }

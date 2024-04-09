@@ -29,12 +29,11 @@ public class RestPathImpl implements RestPath {
 
     @Override
     public String getWithBody(ConnectionProperties connectionProperties, String resourceUri) {
-        return "%s://%s:%s%s/%s".formatted(
-                connectionProperties.getProtocol(),
-                connectionProperties.getHostname(),
-                connectionProperties.getPort(),
-                connectionProperties.getPath(),
-                resourceUri
-        );
+        return new StringBuilder(connectionProperties.getProtocol())
+                .append("://").append(connectionProperties.getHostname())
+                .append(":").append(connectionProperties.getPort())
+                .append(connectionProperties.getPath())
+                .append(resourceUri)
+                .toString();
     }
 }
