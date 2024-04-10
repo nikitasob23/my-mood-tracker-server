@@ -1,6 +1,7 @@
 package com.niksob.database_service.service.mood.entry;
 
 import com.niksob.database_service.dao.mood.MoodEntryWithTagsDao;
+import com.niksob.database_service.service.user.existence.UserExistenceService;
 import com.niksob.database_service.util.async.MonoAsyncUtil;
 import com.niksob.domain.model.mood.entry.UserEntryDateRange;
 import com.niksob.domain.model.mood.entry.MoodEntry;
@@ -8,21 +9,23 @@ import com.niksob.domain.model.mood.entry.MoodEntryId;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@Component
+import java.util.Set;
+
 @AllArgsConstructor
 public class MoodEntryServiceImpl implements MoodEntryService {
     private final MoodEntryWithTagsDao moodEntryWithTagsDao;
+    private final UserExistenceService userExistenceService;
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(MoodEntryServiceImpl.class);
 
     @Override
     public Flux<MoodEntry> loadByDateRange(UserEntryDateRange userEntryDateRange) {
-        return MonoAsyncUtil.create(() -> moodEntryWithTagsDao.loadByDateRange(userEntryDateRange))
+        return userExistenceService.existsOrThrow(userEntryDateRange.getUserId())
+                .flatMap(exists -> loadMoodEntriesAsync(userEntryDateRange))
                 .doOnNext(moodEntries -> log.debug("Get mood entries from DAO", moodEntries))
                 .flatMapMany(Flux::fromIterable)
                 .doOnError(throwable -> log.error("Mood entries load error", throwable, userEntryDateRange));
@@ -49,5 +52,9 @@ public class MoodEntryServiceImpl implements MoodEntryService {
     public Mono<Void> deleteById(MoodEntryId id) {
         return MonoAsyncUtil.create(() -> moodEntryWithTagsDao.deleteById(id))
                 .doOnSuccess(ignore -> log.debug("Delete mood entry from DAO", id));
+    }
+
+    private Mono<Set<MoodEntry>> loadMoodEntriesAsync(UserEntryDateRange userEntryDateRange) {
+        return MonoAsyncUtil.create(() -> moodEntryWithTagsDao.loadByDateRange(userEntryDateRange));
     }
 }

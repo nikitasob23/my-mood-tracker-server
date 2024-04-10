@@ -26,7 +26,7 @@ public class MoodTagServiceImpl extends MoodTagLoaderImpl implements MoodTagServ
 
     @Override
     public Mono<MoodTag> save(MoodTag moodTag) {
-        return checkUserExistence(moodTag.getUserId())
+        return userExistenceService.existsOrThrow(moodTag.getUserId())
                 .flatMap(user -> MonoAsyncUtil.create(() -> moodTagDao.save(moodTag))
                         .doOnNext(ignore -> log.debug("Save mood tag to DAO", moodTag))
                         .doOnError(throwable -> log.error("Mood tag save error", throwable, moodTag)));
@@ -34,7 +34,7 @@ public class MoodTagServiceImpl extends MoodTagLoaderImpl implements MoodTagServ
 
     @Override
     public Mono<Void> update(MoodTag moodTag) {
-        return checkUserExistence(moodTag.getUserId())
+        return userExistenceService.existsOrThrow(moodTag.getUserId())
                 .flatMap(user -> MonoAsyncUtil.create(() -> moodTagDao.update(moodTag))
                         .then()
                         .doOnSuccess(ignore -> log.debug("Update mood tag to DAO", moodTag)));
@@ -43,7 +43,7 @@ public class MoodTagServiceImpl extends MoodTagLoaderImpl implements MoodTagServ
     @Override
     public Mono<Set<MoodTag>> mergeAll(Set<MoodTag> moodTags) {
         final UserId userId = getSingleUserId(moodTags);
-        return checkUserExistence(userId)
+        return userExistenceService.existsOrThrow(userId)
                 .flatMap(user -> MonoAsyncUtil.create(() -> moodTagDao.mergeAll(moodTags))
                         .doOnNext(ignore -> log.debug("Merge mood tag to DAO", moodTags))
                         .doOnError(throwable -> log.error("Mood tag merge error", throwable, moodTags)));
@@ -51,7 +51,7 @@ public class MoodTagServiceImpl extends MoodTagLoaderImpl implements MoodTagServ
 
     @Override
     public Mono<Void> deleteById(MoodTag moodTag) {
-        return checkUserExistence(moodTag.getUserId())
+        return userExistenceService.existsOrThrow(moodTag.getUserId())
                 .flatMap(user -> MonoAsyncUtil.create(() -> moodTagDao.deleteById(moodTag))
                         .doOnSuccess(ignore -> log.debug("Delete mood tag from DAO", moodTag)));
     }

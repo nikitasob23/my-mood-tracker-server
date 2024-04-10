@@ -6,6 +6,7 @@ import com.niksob.database_service.service.mood.tag.loader.MoodTagLoader;
 import com.niksob.database_service.service.user.loader.UserLoaderImpl;
 import com.niksob.database_service.util.async.MonoAsyncUtil;
 import com.niksob.database_service.util.date.DefUserDateRangeUtil;
+import com.niksob.domain.exception.resource.ResourceNotFoundException;
 import com.niksob.domain.model.user.UserId;
 import com.niksob.domain.model.user.Username;
 import com.niksob.logger.object_state.ObjectStateLogger;
@@ -37,5 +38,13 @@ public class UserExistenceServiceImpl extends UserLoaderImpl implements UserExis
     public Mono<Boolean> existsById(UserId id) {
         return MonoAsyncUtil.create(() -> userDao.existsById(id))
                 .doOnError(throwable -> log.error("Failed getting user existence by id", throwable, id));
+    }
+
+    @Override
+    public Mono<Boolean> existsOrThrow(UserId userId) {
+        return existsById(userId)
+                .flatMap(existence -> existence ?
+                        Mono.just(existence) : Mono.error(new ResourceNotFoundException("User not found", null, userId))
+                ).doOnError(throwable -> log.error("Mood tag user owner is not found", throwable, userId));
     }
 }

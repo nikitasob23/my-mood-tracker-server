@@ -8,4 +8,6 @@ public interface UserExistenceService {
     Mono<Boolean> existsByUsername(Username username);
 
     Mono<Boolean> existsById(UserId id);
+
+    Mono<Boolean> existsOrThrow(UserId userId);
 }
