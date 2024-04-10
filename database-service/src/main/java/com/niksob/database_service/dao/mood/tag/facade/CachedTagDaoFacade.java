@@ -44,4 +44,9 @@ public class CachedTagDaoFacade implements TagEntityDaoFacade {
     public void deleteById(MoodTagEntity tag) {
         updaterDao.deleteById(tag);
     }
+
+    @Override
+    public void deleteAllByUserId(Long userId) {
+        updaterDao.deleteAllByUserId(userId);
+    }
 }

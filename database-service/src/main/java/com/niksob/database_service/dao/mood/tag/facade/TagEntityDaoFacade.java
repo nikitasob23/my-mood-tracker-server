@@ -14,4 +14,6 @@ public interface TagEntityDaoFacade {
     Set<MoodTagEntity> mergeAll(Set<MoodTagEntity> tags);
 
     void deleteById(MoodTagEntity tag);
+
+    void deleteAllByUserId(Long userId);
 }

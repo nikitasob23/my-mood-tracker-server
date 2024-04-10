@@ -9,4 +9,6 @@ import java.util.Set;
 @Repository
 public interface MoodTagRepository extends JpaRepository<MoodTagEntity, Long> {
     Set<MoodTagEntity> getByUserId(Long userId);
+
+    void deleteAllByUserId(Long userId);
 }

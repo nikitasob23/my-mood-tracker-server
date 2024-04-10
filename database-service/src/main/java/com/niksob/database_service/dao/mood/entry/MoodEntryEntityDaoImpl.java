@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 import java.util.Set;
 
-@Component
+@Component("moodEntryEntityDao")
 @AllArgsConstructor
 public class MoodEntryEntityDaoImpl implements MoodEntryEntityDao {
     private final MoodEntryEntityRepository moodEntryRepository;
@@ -79,6 +79,19 @@ public class MoodEntryEntityDaoImpl implements MoodEntryEntityDao {
         } catch (Exception e) {
             log.error("Failed deleting mood entry entity by id from repository", null, moodEntryId);
             throw new ResourceDeletionException("The mood entry entity was not deleted", e, moodEntryId);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllByUserId(Long userId) {
+        log.debug("Start deleting all mood entry entities by user id from repository", userId);
+        try {
+            moodEntryRepository.deleteAllByUserId(userId);
+            log.debug("All mood entry entities deleted by user id from repository", userId);
+        } catch (Exception e) {
+            log.error("Failed deleting all mood entry entities by user id from repository", null, userId);
+            throw new ResourceDeletionException("All mood entry entities was not deleted by user id", e, userId);
         }
     }
 

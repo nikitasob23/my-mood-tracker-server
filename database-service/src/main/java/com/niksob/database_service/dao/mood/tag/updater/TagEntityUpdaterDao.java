@@ -13,4 +13,6 @@ public interface TagEntityUpdaterDao {
     UserMoodTagEntities mergeAll(Set<MoodTagEntity> moodTags);
 
     UserMoodTagEntities deleteById(MoodTagEntity moodTag);
+
+    UserMoodTagEntities deleteAllByUserId(Long userId);
 }

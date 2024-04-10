@@ -37,13 +37,13 @@ public class UserEntity implements Serializable {
     @JsonBackReference
     private Set<MoodEntryEntity> moodEntries;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     @JsonBackReference
     private Set<MoodTagEntity> moodTags;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "id", insertable = false, updatable = false)
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     @JsonBackReference
     private AuthTokenEntity authToken;
 }

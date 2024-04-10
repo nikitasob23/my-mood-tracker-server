@@ -1,5 +1,8 @@
 package com.niksob.database_service.dao.user.facade;
 
+import com.niksob.database_service.dao.auth.token.facade.AuthTokenEntityFacadeDao;
+import com.niksob.database_service.dao.mood.entry.MoodEntryEntityDao;
+import com.niksob.database_service.dao.mood.tag.facade.TagEntityDaoFacade;
 import com.niksob.database_service.dao.user.existence.UserEntityExistenceDao;
 import com.niksob.database_service.dao.user.loader.UserEntityLoaderDao;
 import com.niksob.database_service.dao.user.updater.UserEntityUpdaterDao;
@@ -8,6 +11,7 @@ import com.niksob.database_service.handler.exception.DaoExceptionHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @AllArgsConstructor
@@ -15,6 +19,10 @@ public class CachedUserEntityDaoFacade implements UserEntityDaoFacade {
     private final UserEntityLoaderDao loaderDao;
     private final UserEntityExistenceDao existenceDao;
     private final UserEntityUpdaterDao updaterDao;
+
+    private final TagEntityDaoFacade tagEntityDaoFacade;
+    private final MoodEntryEntityDao moodEntryEntityDao;
+    private final AuthTokenEntityFacadeDao authTokenEntityFacadeDao;
 
     @Qualifier("userDaoExceptionHandler")
     private final DaoExceptionHandler exceptionHandler;
@@ -64,11 +72,15 @@ public class CachedUserEntityDaoFacade implements UserEntityDaoFacade {
     }
 
     @Override
+    @Transactional
     public void delete(String username) {
-        if (!existsByUsername(username)) {
+        final UserEntity user = loaderDao.loadByUsername(username);
+        if (user == null) {
             throw exceptionHandler.createResourceNotFoundException(username);
         }
-        final UserEntity user = loaderDao.loadByUsername(username);
+        moodEntryEntityDao.deleteAllByUserId(user.getId());
+        tagEntityDaoFacade.deleteAllByUserId(user.getId());
+        authTokenEntityFacadeDao.deleteByUserId(user.getId());
         updaterDao.delete(user);
     }
 }

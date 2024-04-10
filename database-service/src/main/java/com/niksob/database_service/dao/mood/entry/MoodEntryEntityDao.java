@@ -14,4 +14,5 @@ public interface MoodEntryEntityDao {
 
     void deleteById(Long moodEntryId);
 
+    void deleteAllByUserId(Long userId);
 }

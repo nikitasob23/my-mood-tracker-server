@@ -9,7 +9,6 @@ import com.niksob.domain.exception.resource.*;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,7 +101,7 @@ public class CachedTagUpdaterDao implements TagEntityUpdaterDao {
 
     @Override
     @Transactional
-    @CacheEvict(value = MoodTagCacheNames.MOOD_TAG_BY_USER_ID_CACHE_NAME, key = "#result.userId")
+    @CachePut(value = MoodTagCacheNames.MOOD_TAG_BY_USER_ID_CACHE_NAME, key = "#result.userId")
     public UserMoodTagEntities deleteById(MoodTagEntity moodTag) {
         log.info("Start deleting mood tag entity by moodTag from repository", moodTag);
         final UserMoodTagEntities storedTags = loaderDao.loadByUserId(moodTag.getUserId());
@@ -120,6 +119,22 @@ public class CachedTagUpdaterDao implements TagEntityUpdaterDao {
         storedTags.remove(moodTag);
         log.info("Mood tag entity deleted from cache", moodTag);
         return storedTags;
+    }
+
+    @Override
+    @Transactional
+    @CachePut(value = MoodTagCacheNames.MOOD_TAG_BY_USER_ID_CACHE_NAME, key = "#userId")
+    public UserMoodTagEntities deleteAllByUserId(Long userId) {
+        log.info("Start deleting all mood tag entities by user id from repository", userId);
+        try {
+            moodTagRepository.deleteAllByUserId(userId);
+            log.info("All mood tag entities deleted by user id from repository", userId);
+        } catch (Exception e) {
+            log.error("Failed deleting all mood tag entities by user id from repository", null, userId);
+            throw new ResourceDeletionException("All mood tag entities was not deleted by user id", e, userId);
+        }
+        log.info("All mood tag entities deleted by user id from cache", userId);
+        return null;
     }
 
     private boolean nonPresentInRepoById(MoodTagEntity moodTag, UserMoodTagEntities storedTags) {
