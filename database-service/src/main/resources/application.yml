@@ -43,4 +43,4 @@ server:
 service:
   loading:
     mood-entry:
-      def-date-interval-days: 30
+      def-date-interval-days: 15

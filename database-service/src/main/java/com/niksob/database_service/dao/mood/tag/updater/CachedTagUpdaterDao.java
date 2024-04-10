@@ -82,6 +82,7 @@ public class CachedTagUpdaterDao implements TagEntityUpdaterDao {
 
     @Override
     @Transactional
+    @CachePut(value = MoodTagCacheNames.MOOD_TAG_BY_USER_ID_CACHE_NAME, key = "#result.userId")
     public UserMoodTagEntities mergeAll(Set<MoodTagEntity> moodTags) {
         log.info("Start merging mood tag entities", moodTags);
         final Long singleUserId = extractSingleUserId(moodTags);

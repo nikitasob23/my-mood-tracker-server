@@ -8,7 +8,7 @@ Content-Type: application/json
 {
   "degree": 1,
   "user_id": 4,
-  "date_time": "2024-01-19T16:24:37",
+  "date_time": "2024-04-10T23:07:38",
   "mood_tags": [
     {
       "id": 6,

@@ -32,17 +32,17 @@ public class UserEntity implements Serializable {
     @Column(name = "encoded_password", nullable = false)
     private String encodedPassword;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     @JsonBackReference
     private Set<MoodEntryEntity> moodEntries;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     @JsonBackReference
     private Set<MoodTagEntity> moodTags;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     @JsonBackReference
     private AuthTokenEntity authToken;

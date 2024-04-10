@@ -12,7 +12,7 @@ public class DefUserDateRangeUtil {
     private final Integer defDateRangeDays;
 
     public DefUserDateRangeUtil(
-            @Value("${service.loading.mood-entry.def-date-interval-days:30}") Integer defDateRangeDays
+            @Value("${service.loading.mood-entry.def-date-interval-days}") Integer defDateRangeDays
     ) {
         this.defDateRangeDays = defDateRangeDays;
     }

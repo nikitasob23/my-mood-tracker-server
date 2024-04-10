@@ -2,9 +2,9 @@ INSERT INTO usrs(id, username, nickname, encoded_password) VALUES (1, 'clark@gma
 INSERT INTO usrs(id, username, nickname, encoded_password) VALUES (2, 'dave@gmail.com', 'dave', 'PASSWORD_2');
 INSERT INTO usrs(id, username, nickname, encoded_password) VALUES (3, 'ava@yandex.ru', 'ava', 'PASSWORD_3');
 
-INSERT INTO mood_entries(id, date_time, degree, user_id) VALUES (1, '2024-01-18 21:10:24.346878', 4, 1);
-INSERT INTO mood_entries(id, date_time, degree, user_id) VALUES (2, '2024-01-20 10:11:56.447351', 3, 1);
-INSERT INTO mood_entries(id, date_time, degree, user_id) VALUES (3, '2024-02-01 14:56:23.016792', 3, 2);
+INSERT INTO mood_entries(id, date_time, degree, user_id) VALUES (1, '2024-04-09 21:10:24', 4, 1);
+INSERT INTO mood_entries(id, date_time, degree, user_id) VALUES (2, '2024-04-09 10:11:56', 3, 1);
+INSERT INTO mood_entries(id, date_time, degree, user_id) VALUES (3, '2024-04-10 11:04:07', 3, 2);
 
 INSERT INTO mood_tags(id, name, degree, user_id) VALUES (1, 'friends', 4, 1);
 INSERT INTO mood_tags(id, name, degree, user_id) VALUES (2, 'work', 3, 1);
