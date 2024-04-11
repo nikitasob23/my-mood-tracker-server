@@ -13,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Set;
-
 @AllArgsConstructor
 public class MoodEntryServiceImpl implements MoodEntryService {
     private final MoodEntryWithTagsDao moodEntryWithTagsDao;
@@ -25,8 +23,9 @@ public class MoodEntryServiceImpl implements MoodEntryService {
     @Override
     public Flux<MoodEntry> loadByDateRange(UserEntryDateRange userEntryDateRange) {
         return userExistenceService.existsOrThrow(userEntryDateRange.getUserId())
-                .flatMap(exists -> loadMoodEntriesAsync(userEntryDateRange))
-                .doOnNext(moodEntries -> log.debug("Get mood entries from DAO", moodEntries))
+                .flatMap(userExists ->
+                        MonoAsyncUtil.create(() -> moodEntryWithTagsDao.loadByDateRange(userEntryDateRange))
+                ).doOnNext(moodEntries -> log.debug("Get mood entries from DAO", moodEntries))
                 .flatMapMany(Flux::fromIterable)
                 .doOnError(throwable -> log.error("Mood entries load error", throwable, userEntryDateRange));
     }
@@ -34,7 +33,8 @@ public class MoodEntryServiceImpl implements MoodEntryService {
     @Override
     @Transactional
     public Mono<MoodEntry> save(MoodEntry moodEntry) {
-        return MonoAsyncUtil.create(() -> moodEntryWithTagsDao.saveEntryWithTags(moodEntry))
+        return userExistenceService.existsOrThrow(moodEntry.getUserId())
+                .flatMap(userExists -> MonoAsyncUtil.create(() -> moodEntryWithTagsDao.saveEntryWithTags(moodEntry)))
                 .doOnNext(ignore -> log.debug("Save mood entry to DAO", moodEntry))
                 .doOnError(throwable -> log.error("Mood entry save error", throwable, moodEntry));
     }
@@ -42,7 +42,8 @@ public class MoodEntryServiceImpl implements MoodEntryService {
     @Override
     @Transactional
     public Mono<Void> update(MoodEntry moodEntry) {
-        return MonoAsyncUtil.create(() -> moodEntryWithTagsDao.updateEntryWithTags(moodEntry))
+        return userExistenceService.existsOrThrow(moodEntry.getUserId())
+                .flatMap(userExists -> MonoAsyncUtil.create(() -> moodEntryWithTagsDao.updateEntryWithTags(moodEntry)))
                 .then()
                 .doOnSuccess(ignore -> log.debug("Update mood entry to DAO", moodEntry))
                 .doOnError(throwable -> log.error("Mood entry update error", throwable, moodEntry));
@@ -52,9 +53,5 @@ public class MoodEntryServiceImpl implements MoodEntryService {
     public Mono<Void> deleteById(MoodEntryId id) {
         return MonoAsyncUtil.create(() -> moodEntryWithTagsDao.deleteById(id))
                 .doOnSuccess(ignore -> log.debug("Delete mood entry from DAO", id));
-    }
-
-    private Mono<Set<MoodEntry>> loadMoodEntriesAsync(UserEntryDateRange userEntryDateRange) {
-        return MonoAsyncUtil.create(() -> moodEntryWithTagsDao.loadByDateRange(userEntryDateRange));
     }
 }
