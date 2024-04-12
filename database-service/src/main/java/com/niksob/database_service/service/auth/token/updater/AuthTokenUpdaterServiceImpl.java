@@ -2,6 +2,7 @@ package com.niksob.database_service.service.auth.token.updater;
 
 import com.niksob.database_service.dao.auth.token.AuthTokenDao;
 import com.niksob.database_service.service.auth.token.loader.AuthTokenLoaderServiceImpl;
+import com.niksob.database_service.service.user.existence.UserExistenceService;
 import com.niksob.database_service.util.async.MonoAsyncUtil;
 import com.niksob.domain.model.auth.token.details.AuthTokenDetails;
 import com.niksob.domain.model.auth.token.encoded.EncodedAuthToken;
@@ -14,18 +15,23 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class AuthTokenUpdaterServiceImpl extends AuthTokenLoaderServiceImpl implements AuthTokenUpdaterService {
+    private final UserExistenceService userExistenceService;
     private final EncodedAuthTokenMapper authTokenMapper;
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(AuthTokenUpdaterServiceImpl.class);
 
-    public AuthTokenUpdaterServiceImpl(AuthTokenDao authTokenDao, EncodedAuthTokenMapper authTokenMapper) {
+    public AuthTokenUpdaterServiceImpl(
+            AuthTokenDao authTokenDao, UserExistenceService userExistenceService, EncodedAuthTokenMapper authTokenMapper
+    ) {
         super(authTokenDao);
+        this.userExistenceService = userExistenceService;
         this.authTokenMapper = authTokenMapper;
     }
 
     @Override
     public Mono<EncodedAuthToken> save(EncodedAuthToken authToken) {
-        return MonoAsyncUtil.create(() -> authTokenDao.save(authToken))
+        return userExistenceService.existsOrThrow(authToken.getUserId())
+                .flatMap(userExists -> MonoAsyncUtil.create(() -> authTokenDao.save(authToken)))
                 .doOnSuccess(ignore -> log.info("Auth token is saved", null, authToken))
                 .doOnError(throwable -> log.error("Auth token saving error", throwable, authTokenDao));
     }

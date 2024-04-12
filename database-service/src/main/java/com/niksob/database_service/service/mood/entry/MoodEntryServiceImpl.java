@@ -46,7 +46,7 @@ public class MoodEntryServiceImpl implements MoodEntryService {
                 .flatMap(userExists -> MonoAsyncUtil.create(() -> moodEntryWithTagsDao.updateEntryWithTags(moodEntry)))
                 .then()
                 .doOnSuccess(ignore -> log.debug("Update mood entry to DAO", moodEntry))
-                .doOnError(throwable -> log.error("Mood entry update error", throwable, moodEntry));
+                .doOnError(throwable -> log.error("Mood entry update error", throwable , moodEntry));
     }
 
     @Override
