@@ -4,7 +4,6 @@ import com.niksob.database_service.dao.auth.token.values.AuthTokenCacheNames;
 import com.niksob.database_service.entity.auth.token.AuthTokenEntity;
 import com.niksob.database_service.handler.exception.DaoExceptionHandler;
 import com.niksob.database_service.repository.auth.token.AuthTokenRepository;
-import com.niksob.database_service.model.auth.token.details.AuthTokenEntityDetails;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
@@ -25,22 +24,7 @@ public class CachedAuthTokenEntityLoaderDao implements AuthTokenEntityLoaderDao 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(CachedAuthTokenEntityLoaderDao.class);
 
     @Override
-    @Cacheable(value = AuthTokenCacheNames.USER_ID_AND_DEVICE_TO_AUTH_TOKEN_CACHE_NAME,
-            key = "#authTokenEntityDetails.userId + #authTokenEntityDetails.device")
-    public AuthTokenEntity load(AuthTokenEntityDetails authTokenEntityDetails) {
-        log.info("Start loading auth token entity by details from repository", authTokenEntityDetails);
-        final AuthTokenEntity authToken;
-        try {
-            authToken = authTokenRepository.getByDetails(authTokenEntityDetails);
-        } catch (Exception e) {
-            throw exceptionHandler.createResourceNotFoundException(authTokenEntityDetails, e);
-        }
-        log.info("Auth token entity loaded from repository", Objects.requireNonNullElse(authToken, ""));
-        log.info("Cached auth token entity", Objects.requireNonNullElse(authToken, ""));
-        return authToken;
-    }
-
-    @Override
+    @Cacheable(value = AuthTokenCacheNames.USER_ID_AND_DEVICE_TO_AUTH_TOKEN_CACHE_NAME, key = "#userId")
     public Set<AuthTokenEntity> loadAllByUserId(Long userId) {
         log.info("Start loading all user's auth tokens from repository", userId);
         final Set<AuthTokenEntity> authTokens;

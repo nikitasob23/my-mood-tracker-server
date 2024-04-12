@@ -6,9 +6,7 @@ import com.niksob.database_service.entity.mood.entry.MoodEntryEntity;
 import com.niksob.database_service.entity.mood.tag.MoodTagEntity;
 import com.niksob.database_service.entity.auth.token.AuthTokenEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -16,6 +14,8 @@ import java.util.Set;
 @Entity
 @Table(name = "usrs", uniqueConstraints = @UniqueConstraint(name = "uk_usrs_username", columnNames = "username"))
 @Data
+@ToString(exclude = {"moodEntries", "moodTags", "authTokens"})
+@EqualsAndHashCode(exclude = {"moodEntries", "moodTags", "authTokens"})
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserEntity implements Serializable {
@@ -42,8 +42,8 @@ public class UserEntity implements Serializable {
     @JsonBackReference
     private Set<MoodTagEntity> moodTags;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     @JsonBackReference
-    private AuthTokenEntity authToken;
+    private Set<AuthTokenEntity> authTokens;
 }

@@ -2,12 +2,14 @@ package com.niksob.database_service.dao.auth.token.updater;
 
 import com.niksob.database_service.entity.auth.token.AuthTokenEntity;
 
+import java.util.Set;
+
 public interface AuthTokenEntityUpdaterDao {
-    AuthTokenEntity save(AuthTokenEntity authToken);
+    Set<AuthTokenEntity> save(AuthTokenEntity authToken);
 
-    AuthTokenEntity update(AuthTokenEntity authToken);
+    Set<AuthTokenEntity> update(AuthTokenEntity authToken);
 
-    AuthTokenEntity delete(AuthTokenEntity authToken);
+    Set<AuthTokenEntity> delete(AuthTokenEntity authToken);
 
-    void deleteByUserId(Long userId);
+    Set<AuthTokenEntity> deleteByUserId(Long userId);
 }

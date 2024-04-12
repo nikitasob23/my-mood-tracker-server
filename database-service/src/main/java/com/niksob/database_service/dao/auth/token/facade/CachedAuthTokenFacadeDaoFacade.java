@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
+import static com.niksob.database_service.util.token.auth.filter.AuthTokenEntityFilter.filterByDevice;
+
 @AllArgsConstructor
 public class CachedAuthTokenFacadeDaoFacade implements AuthTokenEntityFacadeDao {
     private final AuthTokenEntityLoaderDao loaderDao;
@@ -42,11 +44,11 @@ public class CachedAuthTokenFacadeDaoFacade implements AuthTokenEntityFacadeDao 
 
     @Override
     public AuthTokenEntity load(AuthTokenEntityDetails authTokenDetails) {
-        final AuthTokenEntity authToken = loaderDao.load(authTokenDetails);
-        if (authToken == null) {
+        final Set<AuthTokenEntity> userAuthTokenStorage = loaderDao.loadAllByUserId(authTokenDetails.getUserId());
+        if (userAuthTokenStorage == null || userAuthTokenStorage.isEmpty()) {
             throw exceptionHandler.createResourceNotFoundException(authTokenDetails);
         }
-        return authToken;
+        return filterByDevice(userAuthTokenStorage, authTokenDetails.getDevice());
     }
 
     @Override
@@ -55,7 +57,8 @@ public class CachedAuthTokenFacadeDaoFacade implements AuthTokenEntityFacadeDao 
         if (exists(authToken)) {
             throw exceptionHandler.createResourceAlreadyExistsException(authToken);
         }
-        return updaterDao.save(authToken);
+        final Set<AuthTokenEntity> userAuthTokenStorage = updaterDao.save(authToken);
+        return filterByDevice(userAuthTokenStorage, authToken.getDevice());
     }
 
     @Override
@@ -64,7 +67,8 @@ public class CachedAuthTokenFacadeDaoFacade implements AuthTokenEntityFacadeDao 
         if (!exists(authToken)) {
             throw exceptionHandler.createResourceNotFoundException(authToken.getId());
         }
-        return updaterDao.update(authToken);
+        final Set<AuthTokenEntity> userAuthTokenStorage = updaterDao.update(authToken);
+        return filterByDevice(userAuthTokenStorage, authToken.getDevice());
     }
 
     @Override
