@@ -13,7 +13,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AllUserInfoDto {
+public class FullUserInfoDto {
     private Long id;
     private String username;
     private String nickname;

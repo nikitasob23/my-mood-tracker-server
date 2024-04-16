@@ -12,5 +12,5 @@ public interface UserLoader {
 
     Mono<UserInfo> loadByUsername(Username username);
 
-    Mono<UserInfo> loadAllByUsername(Username username);
+    Mono<UserInfo> loadFullByUsername(Username username);
 }

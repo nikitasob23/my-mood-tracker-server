@@ -50,7 +50,7 @@ public class UserLoaderImpl implements UserLoader {
     }
 
     @Override
-    public Mono<UserInfo> loadAllByUsername(Username username) {
+    public Mono<UserInfo> loadFullByUsername(Username username) {
         return loadUser(() -> userDao.loadByUsername(username), true, username);
     }
 

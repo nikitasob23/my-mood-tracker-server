@@ -1,7 +1,8 @@
 package com.niksob.database_service.controller.user;
 
 import com.niksob.database_service.util.controller.ResourceControllerErrorUtil;
-import com.niksob.domain.dto.user.AllUserInfoDto;
+import com.niksob.domain.dto.user.FullUserInfoDto;
+import com.niksob.domain.dto.user.SecurityUserDetailsDto;
 import com.niksob.domain.path.controller.database_service.user.UserControllerPaths;
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;
@@ -25,9 +26,17 @@ public class UserController {
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserController.class);
 
     @GetMapping
-    public Mono<AllUserInfoDto> load(@RequestParam("username") UsernameDto usernameDto) {
-        return userControllerService.loadAllByUsername(usernameDto)
+    public Mono<SecurityUserDetailsDto> load(@RequestParam("username") UsernameDto usernameDto) {
+        return userControllerService.loadByUsername(usernameDto)
                 .doOnSuccess(ignore -> log.debug("Successful user loading", usernameDto))
+                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
+                .onErrorResume(controllerErrorUtil::createLoadingErrorMono);
+    }
+
+    @GetMapping(UserControllerPaths.FULL_USER)
+    public Mono<FullUserInfoDto> loadFull(@RequestParam("username") UsernameDto usernameDto) {
+        return userControllerService.loadFullByUsername(usernameDto)
+                .doOnSuccess(ignore -> log.debug("Successful full user loading", usernameDto))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
                 .onErrorResume(controllerErrorUtil::createLoadingErrorMono);
     }

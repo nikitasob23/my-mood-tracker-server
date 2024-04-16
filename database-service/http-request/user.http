@@ -1,6 +1,9 @@
 ### GET Request
 GET http://localhost:8081/api/service/database/user?username=TEST_USERNAME
 
+### GET Request
+GET http://localhost:8081/api/service/database/user/full?username=TEST_USERNAME
+
 ### POST Request
 POST http://localhost:8081/api/service/database/user
 Content-Type: application/json
