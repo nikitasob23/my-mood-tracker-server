@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 public class DatabaseDtoConnectorErrorHandlerConfig {
     private static final String USER_ENTITY_NAME = "User info";
     private static final String AUTH_TOKEN_ENTITY_NAME = "Auth token";
+    private static final String MOOD_ENTRY_ENTITY_NAME = "Mood entry";
+
     @Bean("userDatabaseDtoConnectorErrorHandler")
     public DatabaseDtoConnectorErrorHandler getUserDatabaseDtoConnectorErrorHandler() {
         return new DatabaseDtoConnectorErrorHandler(USER_ENTITY_NAME);
@@ -16,5 +18,10 @@ public class DatabaseDtoConnectorErrorHandlerConfig {
     @Bean("authTokenDatabaseDtoConnectorErrorHandler")
     public DatabaseDtoConnectorErrorHandler getAuthTokenDatabaseDtoConnectorErrorHandler() {
         return new DatabaseDtoConnectorErrorHandler(AUTH_TOKEN_ENTITY_NAME);
+    }
+
+    @Bean("moodEntryDatabaseDtoConnectorErrorHandler")
+    public DatabaseDtoConnectorErrorHandler getMoodEntryDatabaseDtoConnectorErrorHandler() {
+        return new DatabaseDtoConnectorErrorHandler(MOOD_ENTRY_ENTITY_NAME);
     }
 }

@@ -1,7 +1,7 @@
-package com.niksob.database_service.config.controller.mood.entry;
+package com.niksob.gateway_service.config.controller.mood.entry;
 
 import com.niksob.domain.http.controller.handler.mood.entry.ResourceControllerErrorUtil;
-import com.niksob.domain.path.controller.database_service.mood.entry.MoodEntryControllerPaths;
+import com.niksob.gateway_service.path.controller.mood.entry.MoodEntryControllerPaths;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MoodEntryControllerUtilConfig {
 
-    @Value("${server.servlet.context-path}")
+    @Value("${spring.webflux.base-path}")
     private String contextPath;
 
     private final ObjectStateLogger logger = ObjectStateLoggerFactory.getLogger(ResourceControllerErrorUtil.class);

@@ -1,4 +1,4 @@
-package com.niksob.gateway_service.controller.login;
+package com.niksob.gateway_service.controller.auth.login;
 
 import com.niksob.domain.dto.auth.login.SignOutDetailsDto;
 import com.niksob.domain.dto.user.UserIdDto;

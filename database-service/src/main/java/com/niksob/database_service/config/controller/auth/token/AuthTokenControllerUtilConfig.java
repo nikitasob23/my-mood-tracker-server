@@ -1,7 +1,7 @@
 package com.niksob.database_service.config.controller.auth.token;
 
 import com.niksob.database_service.controller.user.UserController;
-import com.niksob.database_service.util.controller.ResourceControllerErrorUtil;
+import com.niksob.domain.http.controller.handler.mood.entry.ResourceControllerErrorUtil;
 import com.niksob.domain.path.controller.database_service.auth.token.AuthTokenDBControllerPaths;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;

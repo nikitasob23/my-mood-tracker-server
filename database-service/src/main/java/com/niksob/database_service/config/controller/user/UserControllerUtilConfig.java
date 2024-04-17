@@ -1,7 +1,7 @@
 package com.niksob.database_service.config.controller.user;
 
 import com.niksob.database_service.controller.user.UserController;
-import com.niksob.database_service.util.controller.ResourceControllerErrorUtil;
+import com.niksob.domain.http.controller.handler.mood.entry.ResourceControllerErrorUtil;
 import com.niksob.domain.path.controller.database_service.user.UserControllerPaths;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -19,7 +19,7 @@ public class UserControllerUtilConfig {
 
     @Bean("userControllerUtil")
     public ResourceControllerErrorUtil getUserControllerUtil() {
-        final String staticPath = "%s/%s".formatted(contextPath, UserControllerPaths.BASE_URI);
+        final String staticPath = contextPath + UserControllerPaths.BASE_URI;
         return new ResourceControllerErrorUtil(null, staticPath, logger);
     }
 }

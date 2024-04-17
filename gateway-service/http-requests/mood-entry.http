@@ -1,0 +1,56 @@
+### GET Request
+GET http://localhost:8082/api/mood_entry?user_id=4&start_date=2024-04-01&end_date=2024-04-18
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzMzkyNjE0LCJ1c2VySWQiOiI0IiwiZGV2IjoiVEVTVF9ERVZJQ0UifQ.4uOXUtY9qv9bhOf36hsJMIBACfX5i6Y5iSuzgrQF-X7EkpUfptfoUpx0x1IjpdhZM1jHDkVPRPZbmZDACwStqQ
+
+### POST Request
+POST http://localhost:8082/api/mood_entry
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzMzkyNjE0LCJ1c2VySWQiOiI0IiwiZGV2IjoiVEVTVF9ERVZJQ0UifQ.4uOXUtY9qv9bhOf36hsJMIBACfX5i6Y5iSuzgrQF-X7EkpUfptfoUpx0x1IjpdhZM1jHDkVPRPZbmZDACwStqQ
+
+{
+  "degree": 1,
+  "user_id": 4,
+  "date_time": "2024-04-10T23:07:38",
+  "mood_tags": [
+    {
+      "name": "sleep",
+      "degree": 0,
+      "userId": 4
+    }
+  ]
+}
+
+### PUT Request
+PUT http://localhost:8082/api/mood_entry
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzMzkyNjE0LCJ1c2VySWQiOiI0IiwiZGV2IjoiVEVTVF9ERVZJQ0UifQ.4uOXUtY9qv9bhOf36hsJMIBACfX5i6Y5iSuzgrQF-X7EkpUfptfoUpx0x1IjpdhZM1jHDkVPRPZbmZDACwStqQ
+
+{
+  "id": 4,
+  "degree": 3,
+  "user_id": 4,
+  "date_time": "2024-04-10T23:59:02",
+  "mood_tags": [
+    {
+      "name": "impro",
+      "degree": 3,
+      "userId": 4
+    },
+    {
+      "id": 6,
+      "name": "sleep",
+      "degree": 1,
+      "userId": 4
+    },
+    {
+      "name": "friends",
+      "degree": 4,
+      "userId": 4
+    }
+  ]
+}
+
+
+### DELETE Request
+DELETE http://localhost:8082/api/mood_entry?id=4
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzMzkyNjE0LCJ1c2VySWQiOiI0IiwiZGV2IjoiVEVTVF9ERVZJQ0UifQ.4uOXUtY9qv9bhOf36hsJMIBACfX5i6Y5iSuzgrQF-X7EkpUfptfoUpx0x1IjpdhZM1jHDkVPRPZbmZDACwStqQ

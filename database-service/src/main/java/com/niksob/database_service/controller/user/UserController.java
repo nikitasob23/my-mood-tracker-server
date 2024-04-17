@@ -1,8 +1,8 @@
 package com.niksob.database_service.controller.user;
 
-import com.niksob.database_service.util.controller.ResourceControllerErrorUtil;
 import com.niksob.domain.dto.user.FullUserInfoDto;
 import com.niksob.domain.dto.user.SecurityUserDetailsDto;
+import com.niksob.domain.http.controller.handler.mood.entry.ResourceControllerErrorUtil;
 import com.niksob.domain.path.controller.database_service.user.UserControllerPaths;
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;

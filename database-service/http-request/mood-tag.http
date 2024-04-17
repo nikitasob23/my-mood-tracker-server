@@ -18,7 +18,7 @@ Content-Type: application/json
 {
   "id": 6,
   "name": "home",
-  "degree": 4,
+  "degree": 0,
   "userId": 4
 }
 

@@ -16,7 +16,7 @@ server:
 auth:
   token:
     expiration-in-minutes:
-      access: 5
+      access: 30
       refresh: 21600
     secret-key:
       access: "qBTmv4oX6FR2GwjezDJ4t6fsIUIUxhXqlktXjldkcyXgs8nPVEwMfo29VDRRepYDVV5IkIxBMzr7OEHXEHd37w=="

@@ -1,10 +1,10 @@
-package com.niksob.database_service.controller.mood.entry;
+package com.niksob.gateway_service.controller.mood.entry;
 
-import com.niksob.domain.http.controller.handler.mood.entry.ResourceControllerErrorUtil;
-import com.niksob.domain.dto.mood.entry.UserEntryDateRangeDto;
 import com.niksob.domain.dto.mood.entry.MoodEntryDto;
 import com.niksob.domain.dto.mood.entry.MoodEntryIdDto;
-import com.niksob.domain.path.controller.database_service.mood.entry.MoodEntryControllerPaths;
+import com.niksob.domain.dto.mood.entry.UserEntryDateRangeDto;
+import com.niksob.domain.http.controller.handler.mood.entry.ResourceControllerErrorUtil;
+import com.niksob.gateway_service.path.controller.mood.entry.MoodEntryControllerPaths;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +28,11 @@ public class MoodEntryController {
 
     @GetMapping
     public Flux<MoodEntryDto> loadByDateRange(
-            @RequestParam("user_id") String userId,
+            @RequestParam("user_id") Long userId,
             @RequestParam("start_date") LocalDate startDate,
             @RequestParam("end_date") LocalDate endDate
     ) {
-        final UserEntryDateRangeDto userEntryDateRangeDto =
-                new UserEntryDateRangeDto(Long.parseLong(userId), startDate, endDate);
+        final UserEntryDateRangeDto userEntryDateRangeDto = new UserEntryDateRangeDto(userId, startDate, endDate);
         return moodEntryControllerService.loadByDateRange(userEntryDateRangeDto)
                 .doOnNext(ignore -> log.debug("Successful mood entries loading", userEntryDateRangeDto))
                 .doOnNext(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
@@ -68,4 +67,3 @@ public class MoodEntryController {
                 .onErrorResume(controllerUtil::createDeleteError);
     }
 }
-

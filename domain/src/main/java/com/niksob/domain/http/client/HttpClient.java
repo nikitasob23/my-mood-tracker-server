@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -24,6 +25,16 @@ public class HttpClient {
     public <T> Mono<T> sendGetRequest(String uri, Class<T> returnClass) {
         final WebClient client = webBuilder.baseUrl(uri).build();
         return sendRequest(client.get(), uri, returnClass);
+    }
+
+    public <T> Flux<T> sendGetRequestAndReturnFlux(String uri, Class<T> returnClass) {
+        final WebClient client = webBuilder.baseUrl(uri).build();
+        return client.get()
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, response -> createHttpClientError(response, uri))
+                .bodyToFlux(returnClass)
+                .doOnNext(o -> log.info("Http client RECEIVE an answer", null, uri));
     }
 
     public <T> Mono<T> sendDeleteRequest(String uri, Class<T> returnClass) {

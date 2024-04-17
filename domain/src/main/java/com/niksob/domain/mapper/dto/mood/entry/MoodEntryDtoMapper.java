@@ -17,12 +17,24 @@ public interface MoodEntryDtoMapper {
         return new MoodEntryId(id);
     }
 
+    default MoodEntryIdDto toEntryIdDto(MoodEntryId id) {
+        return new MoodEntryIdDto(id.getValue().toString());
+    }
+
     default Flux<MoodEntryDto> toFluxDto(Flux<MoodEntry> flux) {
         return flux.map(this::toDto);
     }
 
+    default Flux<MoodEntry> fromFluxDto(Flux<MoodEntryDto> flux) {
+        return flux.map(this::fromDto);
+    }
+
     default Mono<MoodEntryDto> toMonoDto(Mono<MoodEntry> mono) {
         return mono.map(this::toDto);
+    }
+
+    default Mono<MoodEntry> fromMonoDto(Mono<MoodEntryDto> mono) {
+        return mono.map(this::fromDto);
     }
 
     @Mapping(source = "id.value", target = "id")

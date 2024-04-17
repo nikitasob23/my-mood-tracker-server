@@ -1,4 +1,4 @@
-package com.niksob.database_service.util.controller;
+package com.niksob.domain.http.controller.handler.mood.entry;
 
 import com.niksob.domain.exception.resource.*;
 import com.niksob.domain.exception.rest.controller.response.HttpClientException;
