@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -52,8 +53,8 @@ public class AccessTokenAuthenticationManager implements ReactiveAuthenticationM
     private <T> Mono<T> createAuthenticationMonoError(
             Throwable throwable, AuthenticationToken authenticationToken
     ) {
-        final String message = "Failure authentication by access token";
-        var e = new HttpClientException(message, HttpStatus.FORBIDDEN, authenticationToken.getPath());
+        final String message = "Failure authentication by access token, path: " + authenticationToken.getPath();
+        var e = new ResponseStatusException(HttpStatus.FORBIDDEN, message);
         log.error(message, throwable, authenticationToken);
         return Mono.error(e);
     }
