@@ -1,42 +1,42 @@
 package com.niksob.database_service.model.mood.tag.user;
 
 import com.niksob.database_service.entity.mood.tag.MoodTagEntity;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
-@AllArgsConstructor
 public class UserMoodTagEntities implements Serializable {
     private final Long userId;
-    private final Set<MoodTagEntity> tags;
+    private final Map<Long, MoodTagEntity> tags;
 
-    public void add(MoodTagEntity tag) {
-        tags.add(tag);
+    public UserMoodTagEntities(Long userId, Set<MoodTagEntity> tags) {
+        this.userId = userId;
+        this.tags = tags.stream().collect(Collectors.toMap(MoodTagEntity::getId, tag -> tag));
+    }
+
+    public Set<MoodTagEntity> getTags() {
+        return new HashSet<>(tags.values());
+    }
+
+    public void put(MoodTagEntity tag) {
+        tags.put(tag.getId(), tag);
     }
 
     public void remove(MoodTagEntity tag) {
-        tags.remove(tag);
+        tags.remove(tag.getId());
     }
 
-    public void update(MoodTagEntity oldTag, MoodTagEntity newTag) {
-        remove(oldTag);
-        add(newTag);
-    }
-
-    public void addAll(Collection<MoodTagEntity> tags) {
-        this.tags.addAll(tags);
+    public void putAll(Collection<MoodTagEntity> tags) {
+        tags.forEach(this::put);
     }
 
     public void removeAll(Collection<MoodTagEntity> tags) {
-        this.tags.removeAll(tags);
-    }
-
-    public void updateAll(Collection<MoodTagEntity> oldTags, Collection<MoodTagEntity> newTags) {
-        removeAll(oldTags);
-        addAll(newTags);
+        tags.forEach(this::remove);
     }
 }

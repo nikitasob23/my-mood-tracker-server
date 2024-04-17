@@ -46,7 +46,7 @@ public class CachedTagUpdaterDao implements TagEntityUpdaterDao {
             log.error("Failed saving mood tag to repository", e, moodTag);
             throw new ResourceSavingException("Mood tag has not saved", moodTag.getName(), e);
         }
-        storedUserTags.add(saved);
+        storedUserTags.put(saved);
         log.info("Mood tag entity saved to the cache", null, storedUserTags);
         return storedUserTags;
     }
@@ -62,12 +62,7 @@ public class CachedTagUpdaterDao implements TagEntityUpdaterDao {
             throw createResourceNotFoundException(tag);
         }
         final MoodTagEntity updated;
-        final MoodTagEntity loadedTag;
         try {
-            loadedTag = loaderDao.loadByUserId(tag.getUserId())
-                    .getTags().stream()
-                    .filter(loaded -> loaded.getId().equals(tag.getId()))
-                    .findFirst().orElse(null);
             updated = moodTagRepository.save(tag);
             log.info("Mood tag entity updated", updated);
         } catch (Exception e) {
@@ -75,7 +70,7 @@ public class CachedTagUpdaterDao implements TagEntityUpdaterDao {
             throw new ResourceUpdatingException("Mood tag entity has not updated", e, tag.getId());
         }
 
-        storedTags.update(loadedTag, updated);
+        storedTags.put(updated);
         log.info("Mood tag entity cache updated", storedTags);
         return storedTags;
     }
@@ -96,7 +91,8 @@ public class CachedTagUpdaterDao implements TagEntityUpdaterDao {
             log.error("Failed merging mood tag entities in repository", null, moodTags);
             throw new ResourceUpdatingException("Mood tag entity has not updated", e, moodTags);
         }
-        storedTags.updateAll(moodTags, mergedList);
+
+        storedTags.putAll(mergedList);
         return storedTags;
     }
 
