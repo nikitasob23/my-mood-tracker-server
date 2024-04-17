@@ -54,4 +54,16 @@ public class UserInfo {
         this.moodEntries = moodEntries;
         this.moodTags = moodTags;
     }
+
+    public UserInfo(
+            UserInfo userInfo,
+            Set<MoodEntry> moodEntries
+    ) {
+        this.id = userInfo.getId();
+        this.username = userInfo.getUsername();
+        this.nickname = userInfo.getNickname();
+        this.password = userInfo.getPassword();
+        this.moodEntries = moodEntries;
+        this.moodTags = userInfo.getMoodTags();
+    }
 }

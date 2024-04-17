@@ -17,6 +17,12 @@ public interface MoodEntriesDetailsDtoMapper {
     @Mapping(target = "moodTagIds", expression = "java(toMoodTagIds(moodEntries))")
     MoodEntriesDetailsDto toDetailsDto(MoodEntry moodEntries);
 
+    @Mapping(source = "entryDetails.id", target = "id.value")
+    @Mapping(source = "entryDetails.userId", target = "userId.value")
+    @Mapping(source = "entryDetails.degree", target = "degree.value")
+    @Mapping(source = "moodTagSet", target = "moodTags")
+    MoodEntry fromDetailsDto(MoodEntriesDetailsDto entryDetails, Set<MoodTag> moodTagSet);
+
     default Set<String> toMoodTagIds(MoodEntry moodEntries) {
         return moodEntries.getMoodTags().stream()
                 .map(tag -> tag.getId().getValue().toString())

@@ -1,6 +1,8 @@
 package com.niksob.domain.http.connector.microservice.database.user.dto;
 
 import com.niksob.domain.config.properties.microservice.database.DatabaseConnectionProperties;
+import com.niksob.domain.dto.user.FullUserInfoDto;
+import com.niksob.domain.dto.user.SecurityUserDetailsDto;
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;
 import com.niksob.domain.http.client.HttpClient;
@@ -34,10 +36,18 @@ public class UserDatabaseDtoConnectorImpl extends BaseConnector implements UserD
     }
 
     @Override
-    public Mono<UserInfoDto> load(UsernameDto usernameDto) {
+    public Mono<SecurityUserDetailsDto> load(UsernameDto usernameDto) {
         final Map<String, String> params = userGetParamsMapper.getHttpParams(usernameDto);
         final String uri = getWithParams(UserControllerPaths.BASE_URI, params);
-        return httpClient.sendGetRequest(uri, UserInfoDto.class)
+        return httpClient.sendGetRequest(uri, SecurityUserDetailsDto.class)
+                .onErrorResume(throwable -> errorHandler.createLoadingError(throwable, usernameDto));
+    }
+
+    @Override
+    public Mono<FullUserInfoDto> loadFull(UsernameDto usernameDto) {
+        final Map<String, String> params = userGetParamsMapper.getHttpParams(usernameDto);
+        final String uri = getWithParams(UserControllerPaths.BASE_URI + UserControllerPaths.FULL_USER, params);
+        return httpClient.sendGetRequest(uri, FullUserInfoDto.class)
                 .onErrorResume(throwable -> errorHandler.createLoadingError(throwable, usernameDto));
     }
 

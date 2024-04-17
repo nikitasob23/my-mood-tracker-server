@@ -5,7 +5,9 @@ import com.niksob.domain.model.user.Username;
 import reactor.core.publisher.Mono;
 
 public interface UserService {
-    Mono<UserInfo> loadAllByUsername(Username username);
+    Mono<UserInfo> loadByUsername(Username username);
+
+    Mono<UserInfo> loadFullByUsername(Username username);
 
     Mono<UserInfo> save(UserInfo userInfo);
 

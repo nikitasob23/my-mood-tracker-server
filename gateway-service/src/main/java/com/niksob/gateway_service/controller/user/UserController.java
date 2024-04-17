@@ -1,5 +1,7 @@
 package com.niksob.gateway_service.controller.user;
 
+import com.niksob.domain.dto.user.FullUserInfoDto;
+import com.niksob.domain.dto.user.SecurityUserDetailsDto;
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;
 import com.niksob.gateway_service.path.controller.user.UserControllerPaths;
@@ -20,20 +22,19 @@ public class UserController {
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserController.class);
 
     @GetMapping
-    public Mono<UserInfoDto> load(@RequestParam("username") UsernameDto usernameDto) {
-        return userControllerService.loadAllByUsername(usernameDto)
+    public Mono<SecurityUserDetailsDto> load(@RequestParam("username") UsernameDto usernameDto) {
+        return userControllerService.loadByUsername(usernameDto)
                 .doOnSuccess(ignore -> log.debug("Successful user loading", usernameDto))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
                 .doOnError(user -> log.error("Failure user loading", null, usernameDto));
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Mono<UserInfoDto> save(@RequestBody UserInfoDto userInfoDto) {
-        return userControllerService.save(userInfoDto)
-                .doOnNext(u -> log.debug("Successful user saving", u.getUsername()))
-                .doOnNext(ignore -> log.debug("Controller returning success status", HttpStatus.CREATED))
-                .doOnError(user -> log.error("Failure user saving", null, userInfoDto));
+    @GetMapping(UserControllerPaths.FULL_USER)
+    public Mono<FullUserInfoDto> loadFull(@RequestParam("username") UsernameDto usernameDto) {
+        return userControllerService.loadFullByUsername(usernameDto)
+                .doOnSuccess(ignore -> log.debug("Successful full user loading", usernameDto))
+                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
+                .doOnError(user -> log.error("Failure full user loading", null, usernameDto));
     }
 
     @PutMapping

@@ -10,7 +10,7 @@ import com.niksob.domain.mapper.dto.user.SecurityUserDetailsDtoMapper;
 import com.niksob.domain.mapper.dto.user.UserDtoMonoMapper;
 import com.niksob.domain.mapper.dto.user.UserInfoDtoMapper;
 import com.niksob.domain.mapper.dto.user.UsernameDtoMapper;
-import com.niksob.domain.mapper.dto.user.all.FullUserInfoDtoMapper;
+import com.niksob.domain.mapper.dto.user.full.FullUserInfoDtoMapper;
 import com.niksob.domain.mapper.dto.user.id.UserIdDtoMapper;
 import com.niksob.layer_connector.annotation.LayerConnector;
 import reactor.core.publisher.Mono;

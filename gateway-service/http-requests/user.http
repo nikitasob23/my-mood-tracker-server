@@ -2,15 +2,9 @@
 GET http://localhost:8082/api/user?username=TEST_USERNAME
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEyNjA3OTE2LCJkZXYiOiJURVNUX0RFVklDRSIsInVzZXJJZCI6IjUifQ.heqEjmzrHrdBgiq9-ap06faZhPoAtpdhZ5a_0EN7buUPWZuzJg2nRarRKfEaNT0Uj2nV1TAGkrcBD9swc7_rdg
 
-### POST Request
-POST http://localhost:8081/api/user
-Content-Type: application/json
-
-{
-  "username": "TEST_USERNAME",
-  "nickname": "TEST_NICKNAME",
-  "password": "TEST_PASSWORD"
-}
+### GET Request
+GET http://localhost:8082/api/user/full?username=TEST_USERNAME
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzMzc2NjYwLCJ1c2VySWQiOiI0IiwiZGV2IjoiVEVTVF9ERVZJQ0UifQ.c0eOWbLBC3gzYUNvtLKT5WiqRD3OPMw8SMV_XG7rS0CzDS8ko3fYDZdZvxTkYKt597rlQBbATKi9ImX-cHNelg
 
 ### PUT Request
 PUT http://localhost:8082/api/user
@@ -18,7 +12,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEyNjA3OTE2LCJkZXYiOiJURVNUX0RFVklDRSIsInVzZXJJZCI6IjUifQ.heqEjmzrHrdBgiq9-ap06faZhPoAtpdhZ5a_0EN7buUPWZuzJg2nRarRKfEaNT0Uj2nV1TAGkrcBD9swc7_rdg
 
 {
-  "id": 5,
+  "id": 4,
   "username": "TEST_USERNAME",
   "nickname": "TEST_NICKNAME",
   "password": "0000"

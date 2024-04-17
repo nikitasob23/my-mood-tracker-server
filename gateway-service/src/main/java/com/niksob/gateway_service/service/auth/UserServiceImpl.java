@@ -17,10 +17,17 @@ public class UserServiceImpl implements UserService {
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
-    public Mono<UserInfo> loadAllByUsername(Username username) {
+    public Mono<UserInfo> loadByUsername(Username username) {
         return userDatabaseConnector.load(username)
                 .doOnNext(ignore -> log.info("Successful user loading", null, username))
                 .doOnError(throwable -> log.error("Failure user loading", throwable, username));
+    }
+
+    @Override
+    public Mono<UserInfo> loadFullByUsername(Username username) {
+        return userDatabaseConnector.loadFull(username)
+                .doOnNext(ignore -> log.info("Successful full user loading", null, username))
+                .doOnError(throwable -> log.error("Failure full user loading", throwable, username));
     }
 
     @Override
