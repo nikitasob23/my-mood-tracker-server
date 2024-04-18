@@ -122,13 +122,13 @@ public class LayerConnectorMethodCodeGeneratorImpl implements LayerConnectorMeth
         boolean returnTypeMappingIsNotPossible = interfaceReturnTypeMappingRequired && returnTypeMapperNotFound;
 
         if (paramMappingIsNotPossible) {
-            final String typeNameToConvert = methodDetails.getInterfaceSignature().getParamType();
-            final String typeNameFromConvert = methodDetails.getSourceMethod().getParamType();
+            final String typeNameToConvert = methodDetails.getSourceMethod().getParamType();
+            final String typeNameFromConvert = methodDetails.getInterfaceSignature().getParamType();
             throwMappingNotPossibleException(typeNameToConvert, typeNameFromConvert, interfaceName,
                     MethodSignatureValues.PARAM_TYPE);
         } else if (returnTypeMappingIsNotPossible) {
-            final String typeNameToConvert = methodDetails.getInterfaceSignature().getReturnType();
-            final String typeNameFromConvert = methodDetails.getSourceMethod().getReturnType();
+            final String typeNameToConvert = methodDetails.getSourceMethod().getReturnType();
+            final String typeNameFromConvert = methodDetails.getInterfaceSignature().getReturnType();
             throwMappingNotPossibleException(typeNameToConvert, typeNameFromConvert, interfaceName,
                     MethodSignatureValues.RETURN_TYPE);
         }
