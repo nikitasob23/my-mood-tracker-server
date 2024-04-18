@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: mail-sender
+  config:
+    import:
+      - configserver:http://localhost:9191/mail-sender-connection
+      - configserver:http://localhost:9191/gateway-connection
+
+  mail:
+    debug: true
+    host: smtp.yandex.ru
+    username: moodtracker@yandex.ru
+    password: bcavnzftmwawgroq
+    port: 465
+    protocol: smtps
+
+server:
+  address: ${microservice.connection.mail-sender.hostname}
+  port: ${microservice.connection.mail-sender.port}
+  servlet:
+    context-path: ${microservice.connection.mail-sender.path}
