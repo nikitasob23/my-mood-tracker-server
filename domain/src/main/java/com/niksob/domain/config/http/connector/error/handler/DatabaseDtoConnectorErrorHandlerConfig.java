@@ -9,6 +9,7 @@ public class DatabaseDtoConnectorErrorHandlerConfig {
     private static final String USER_ENTITY_NAME = "User info";
     private static final String AUTH_TOKEN_ENTITY_NAME = "Auth token";
     private static final String MOOD_ENTRY_ENTITY_NAME = "Mood entry";
+    private static final String MOOD_TAG_ENTITY_NAME = "Mood tag";
 
     @Bean("userDatabaseDtoConnectorErrorHandler")
     public DatabaseDtoConnectorErrorHandler getUserDatabaseDtoConnectorErrorHandler() {
@@ -23,5 +24,10 @@ public class DatabaseDtoConnectorErrorHandlerConfig {
     @Bean("moodEntryDatabaseDtoConnectorErrorHandler")
     public DatabaseDtoConnectorErrorHandler getMoodEntryDatabaseDtoConnectorErrorHandler() {
         return new DatabaseDtoConnectorErrorHandler(MOOD_ENTRY_ENTITY_NAME);
+    }
+
+    @Bean("moodTagDatabaseDtoConnectorErrorHandler")
+    public DatabaseDtoConnectorErrorHandler getMoodTagDatabaseDtoConnectorErrorHandler() {
+        return new DatabaseDtoConnectorErrorHandler(MOOD_TAG_ENTITY_NAME);
     }
 }

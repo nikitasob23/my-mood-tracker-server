@@ -23,10 +23,4 @@ Content-Type: application/json
 }
 
 ### DELETE Request
-DELETE http://localhost:8081/api/service/database/mood_tag
-Content-Type: application/json
-
-{
-  "id": 6,
-  "userId": 4
-}
+DELETE http://localhost:8081/api/service/database/mood_tag?id=6&user_id=4

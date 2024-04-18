@@ -53,10 +53,9 @@ public class UserDatabaseDtoConnectorImpl extends BaseConnector implements UserD
 
     @Override
     public Mono<UserInfoDto> save(UserInfoDto userInfoDto) {
-        return httpClient.sendPostRequest(
-                getWithBody(UserControllerPaths.BASE_URI),
-                userInfoDto, UserInfoDto.class, UserInfoDto.class
-        ).onErrorResume(throwable -> errorHandler.createSavingError(throwable, userInfoDto));
+        final String uri = getWithBody(UserControllerPaths.BASE_URI);
+        return httpClient.sendPostRequest(uri, userInfoDto, UserInfoDto.class, UserInfoDto.class)
+                .onErrorResume(throwable -> errorHandler.createSavingError(throwable, userInfoDto));
     }
 
     @Override

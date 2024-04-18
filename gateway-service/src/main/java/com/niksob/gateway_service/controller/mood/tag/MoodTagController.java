@@ -1,9 +1,9 @@
-package com.niksob.database_service.controller.mood.tag;
+package com.niksob.gateway_service.controller.mood.tag;
 
-import com.niksob.domain.http.controller.handler.mood.entry.ResourceControllerErrorUtil;
 import com.niksob.domain.dto.mood.tag.MoodTagDto;
 import com.niksob.domain.dto.user.UserIdDto;
-import com.niksob.domain.path.controller.database_service.mood.tag.MoodTagControllerPaths;
+import com.niksob.domain.http.controller.handler.mood.entry.ResourceControllerErrorUtil;
+import com.niksob.gateway_service.path.controller.mood.tag.MoodTagControllerPaths;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.RequiredArgsConstructor;
@@ -52,8 +52,8 @@ public class MoodTagController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> deleteById(@RequestParam("id") String id, @RequestParam("user_id") String userId) {
-        final MoodTagDto moodTag = new MoodTagDto(Long.parseLong(id), Long.parseLong(userId));
+    public Mono<Void> deleteById(@RequestParam("id") Long id, @RequestParam("user_id") Long userId) {
+        final MoodTagDto moodTag = new MoodTagDto(id, userId);
         return moodTagControllerService.deleteById(moodTag)
                 .doOnSuccess(ignore -> log.debug("Successful mood tag deletion", moodTag))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))

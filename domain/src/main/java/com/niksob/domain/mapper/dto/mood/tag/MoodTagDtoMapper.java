@@ -17,6 +17,10 @@ public interface MoodTagDtoMapper {
         return new UserId(id);
     }
 
+    default UserIdDto toUserIdDto(UserId userId) {
+        return new UserIdDto(userId.getValue().toString());
+    }
+
     default Set<MoodTag> fromDtoSet(Set<MoodTagDto> dto) {
         return dto == null ? null : dto.stream()
                 .map(this::fromDto)

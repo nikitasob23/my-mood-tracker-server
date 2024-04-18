@@ -1,17 +1,23 @@
 ### GET Request
 GET http://localhost:8082/api/mood_entry?user_id=4&start_date=2024-04-01&end_date=2024-04-18
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzMzkyNjE0LCJ1c2VySWQiOiI0IiwiZGV2IjoiVEVTVF9ERVZJQ0UifQ.4uOXUtY9qv9bhOf36hsJMIBACfX5i6Y5iSuzgrQF-X7EkpUfptfoUpx0x1IjpdhZM1jHDkVPRPZbmZDACwStqQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzNDUxNjkxLCJkZXYiOiJURVNUX0RFVklDRSIsInVzZXJJZCI6IjQifQ.2UtYFuejrUEw8V0aMwS-kz9aLCPd6moZE_4sf0qzePA3kuMEXqTmXYb-DUknDwCHgukww2XAuw42_FemjKA1wQ
 
 ### POST Request
 POST http://localhost:8082/api/mood_entry
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzMzkyNjE0LCJ1c2VySWQiOiI0IiwiZGV2IjoiVEVTVF9ERVZJQ0UifQ.4uOXUtY9qv9bhOf36hsJMIBACfX5i6Y5iSuzgrQF-X7EkpUfptfoUpx0x1IjpdhZM1jHDkVPRPZbmZDACwStqQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzNDUxNjkxLCJkZXYiOiJURVNUX0RFVklDRSIsInVzZXJJZCI6IjQifQ.2UtYFuejrUEw8V0aMwS-kz9aLCPd6moZE_4sf0qzePA3kuMEXqTmXYb-DUknDwCHgukww2XAuw42_FemjKA1wQ
 
 {
   "degree": 1,
   "user_id": 4,
   "date_time": "2024-04-10T23:07:38",
   "mood_tags": [
+    {
+      "id": 6,
+      "name": "home",
+      "degree": 3,
+      "userId": 4
+    },
     {
       "name": "sleep",
       "degree": 0,
@@ -23,7 +29,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwI
 ### PUT Request
 PUT http://localhost:8082/api/mood_entry
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzMzkyNjE0LCJ1c2VySWQiOiI0IiwiZGV2IjoiVEVTVF9ERVZJQ0UifQ.4uOXUtY9qv9bhOf36hsJMIBACfX5i6Y5iSuzgrQF-X7EkpUfptfoUpx0x1IjpdhZM1jHDkVPRPZbmZDACwStqQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzNDUxNjkxLCJkZXYiOiJURVNUX0RFVklDRSIsInVzZXJJZCI6IjQifQ.2UtYFuejrUEw8V0aMwS-kz9aLCPd6moZE_4sf0qzePA3kuMEXqTmXYb-DUknDwCHgukww2XAuw42_FemjKA1wQ
 
 {
   "id": 4,
@@ -37,7 +43,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwI
       "userId": 4
     },
     {
-      "id": 6,
+      "id": 7,
       "name": "sleep",
       "degree": 1,
       "userId": 4
@@ -53,4 +59,4 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwI
 
 ### DELETE Request
 DELETE http://localhost:8082/api/mood_entry?id=4
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzMzkyNjE0LCJ1c2VySWQiOiI0IiwiZGV2IjoiVEVTVF9ERVZJQ0UifQ.4uOXUtY9qv9bhOf36hsJMIBACfX5i6Y5iSuzgrQF-X7EkpUfptfoUpx0x1IjpdhZM1jHDkVPRPZbmZDACwStqQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzNDUxNjkxLCJkZXYiOiJURVNUX0RFVklDRSIsInVzZXJJZCI6IjQifQ.2UtYFuejrUEw8V0aMwS-kz9aLCPd6moZE_4sf0qzePA3kuMEXqTmXYb-DUknDwCHgukww2XAuw42_FemjKA1wQ

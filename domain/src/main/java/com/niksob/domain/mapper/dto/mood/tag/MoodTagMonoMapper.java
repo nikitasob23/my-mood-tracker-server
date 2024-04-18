@@ -16,7 +16,15 @@ public class MoodTagMonoMapper {
         return mono.map(moodTagDtoMapper::toDto);
     }
 
-    public Flux<MoodTagDto> toMonoVoid(Flux<MoodTag> flux) {
+    public Mono<MoodTag> fromDtoMono(Mono<MoodTagDto> mono) {
+        return mono.map(moodTagDtoMapper::fromDto);
+    }
+
+    public Flux<MoodTagDto> toFluxVoid(Flux<MoodTag> flux) {
         return flux.map(moodTagDtoMapper::toDto);
+    }
+
+    public Flux<MoodTag> fromFluxVoid(Flux<MoodTagDto> flux) {
+        return flux.map(moodTagDtoMapper::fromDto);
     }
 }

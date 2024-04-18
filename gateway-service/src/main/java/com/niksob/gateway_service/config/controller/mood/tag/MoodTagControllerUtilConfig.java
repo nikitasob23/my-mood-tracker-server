@@ -1,7 +1,7 @@
-package com.niksob.gateway_service.config.controller.mood.entry;
+package com.niksob.gateway_service.config.controller.mood.tag;
 
 import com.niksob.domain.http.controller.handler.mood.entry.ResourceControllerErrorUtil;
-import com.niksob.gateway_service.path.controller.mood.entry.MoodEntryControllerPaths;
+import com.niksob.gateway_service.path.controller.mood.tag.MoodTagControllerPaths;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,16 +9,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class MoodEntryControllerUtilConfig {
+public class MoodTagControllerUtilConfig {
 
     @Value("${spring.webflux.base-path}")
     private String contextPath;
 
     private final ObjectStateLogger logger = ObjectStateLoggerFactory.getLogger(ResourceControllerErrorUtil.class);
 
-    @Bean("moodEntryControllerUtil")
-    public ResourceControllerErrorUtil getMoodEntryControllerUtil() {
-        final String staticPath = contextPath + MoodEntryControllerPaths.BASE_URI;
-        return new ResourceControllerErrorUtil("Mood entry", staticPath, logger);
+    @Bean("moodTagControllerUtil")
+    public ResourceControllerErrorUtil getMoodTagControllerUtil() {
+        final String staticPath = contextPath + MoodTagControllerPaths.BASE_URI;
+        return new ResourceControllerErrorUtil("Mood tag", staticPath, logger);
     }
 }

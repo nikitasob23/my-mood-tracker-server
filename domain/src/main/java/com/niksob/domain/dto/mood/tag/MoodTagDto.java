@@ -12,4 +12,9 @@ public class MoodTagDto {
     private String name;
     private int degree;
     private Long userId;
+
+    public MoodTagDto(Long id, Long userId) {
+        this.id = id;
+        this.userId = userId;
+    }
 }

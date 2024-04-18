@@ -1,23 +1,30 @@
 ### GET Request
-GET http://localhost:8082/api/user?username=TEST_USERNAME
+GET http://localhost:8082/api/mood_tag?user_id=4
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzNDUxNjkxLCJkZXYiOiJURVNUX0RFVklDRSIsInVzZXJJZCI6IjQifQ.2UtYFuejrUEw8V0aMwS-kz9aLCPd6moZE_4sf0qzePA3kuMEXqTmXYb-DUknDwCHgukww2XAuw42_FemjKA1wQ
 
-### GET Request
-GET http://localhost:8082/api/user/full?username=TEST_USERNAME
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzNDUxNjkxLCJkZXYiOiJURVNUX0RFVklDRSIsInVzZXJJZCI6IjQifQ.2UtYFuejrUEw8V0aMwS-kz9aLCPd6moZE_4sf0qzePA3kuMEXqTmXYb-DUknDwCHgukww2XAuw42_FemjKA1wQ
-
-### PUT Request
-PUT http://localhost:8082/api/user
+### POST Request
+POST http://localhost:8082/api/mood_tag
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzNDUxNjkxLCJkZXYiOiJURVNUX0RFVklDRSIsInVzZXJJZCI6IjQifQ.2UtYFuejrUEw8V0aMwS-kz9aLCPd6moZE_4sf0qzePA3kuMEXqTmXYb-DUknDwCHgukww2XAuw42_FemjKA1wQ
 
 {
-  "id": 4,
-  "username": "TEST_USERNAME",
-  "nickname": "TEST_NICKNAME",
-  "password": "0000"
+  "name": "home",
+  "degree": 3,
+  "userId": 4
+}
+
+### PUT Request
+PUT http://localhost:8082/api/mood_tag
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzNDUxNjkxLCJkZXYiOiJURVNUX0RFVklDRSIsInVzZXJJZCI6IjQifQ.2UtYFuejrUEw8V0aMwS-kz9aLCPd6moZE_4sf0qzePA3kuMEXqTmXYb-DUknDwCHgukww2XAuw42_FemjKA1wQ
+
+{
+  "id": 6,
+  "name": "home",
+  "degree": 0,
+  "userId": 4
 }
 
 ### DELETE Request
-DELETE http://localhost:8082/api/user?username=TEST_USERNAME
+DELETE http://localhost:8082/api/mood_tag?id=6&user_id=4
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzNDUxNjkxLCJkZXYiOiJURVNUX0RFVklDRSIsInVzZXJJZCI6IjQifQ.2UtYFuejrUEw8V0aMwS-kz9aLCPd6moZE_4sf0qzePA3kuMEXqTmXYb-DUknDwCHgukww2XAuw42_FemjKA1wQ

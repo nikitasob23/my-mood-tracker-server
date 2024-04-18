@@ -46,13 +46,8 @@ public class MoodEntryDatabaseDtoConnectorImpl extends BaseConnector implements 
         final String uri = getWithParams(MoodEntryControllerPaths.BASE_URI, params);
         return httpClient.sendGetRequestAndReturnFlux(uri, MoodEntryDto.class)
                 .doOnNext(moodEntryDto -> log.info("Mood entry load to the connector", null, moodEntryDto))
-                .switchIfEmpty(lodAndCreateEmptyMono(userEntryDateRange))
+                .switchIfEmpty(loadAndCreateEmptyMono(userEntryDateRange))
                 .onErrorResume(throwable -> errorHandler.createLoadingError(throwable, userEntryDateRange));
-    }
-
-    private Publisher<? extends MoodEntryDto> lodAndCreateEmptyMono(UserEntryDateRangeDto userEntryDateRangeDto) {
-        log.error("Mood entry's list is empty", null, userEntryDateRangeDto);
-        return Mono.empty();
     }
 
     @Override
@@ -77,5 +72,10 @@ public class MoodEntryDatabaseDtoConnectorImpl extends BaseConnector implements 
         final String uri = getWithParams(MoodEntryControllerPaths.BASE_URI, params);
         return httpClient.sendDeleteRequest(uri, Void.class)
                 .onErrorResume(throwable -> errorHandler.createUpdatingError(throwable, id));
+    }
+
+    private Publisher<? extends MoodEntryDto> loadAndCreateEmptyMono(UserEntryDateRangeDto userEntryDateRangeDto) {
+        log.error("Mood entry's list is empty", null, userEntryDateRangeDto);
+        return Mono.empty();
     }
 }
