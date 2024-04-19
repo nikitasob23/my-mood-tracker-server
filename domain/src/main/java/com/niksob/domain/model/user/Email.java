@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Nickname {
+public class Email {
     private final String value;
 }

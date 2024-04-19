@@ -8,8 +8,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface UserSecurityDetailsMapper {
     @Mapping(source = "id.value", target = "id")
+    @Mapping(source = "email.value", target = "email")
     @Mapping(source = "username.value", target = "username")
-    @Mapping(source = "nickname.value", target = "nickname")
     @Mapping(source = "password.value", target = "encodedPassword")
     UserSecurityDetails toUserDetails(UserInfo userInfo);
 }

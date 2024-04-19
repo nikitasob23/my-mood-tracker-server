@@ -24,7 +24,7 @@ public class LoginController {
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Void> signup(@RequestBody SignupDetailsDto signupDetails) {
         return loginControllerService.signup(signupDetails)
-                .doOnSuccess(u -> log.debug("User is signup", signupDetails.getUsername()))
+                .doOnSuccess(u -> log.debug("User is signup", signupDetails.getEmail()))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.CREATED))
                 .doOnError(throwable ->
                         log.error("Controller returning failed response", null, signupDetails));

@@ -15,8 +15,8 @@ import java.util.Set;
 @NoArgsConstructor
 public class FullUserInfoDto {
     private Long id;
+    private String email;
     private String username;
-    private String nickname;
     private String password;
     @JsonProperty("mood_entries")
     private Set<MoodEntriesDetailsDto> moodEntries = new HashSet<>();

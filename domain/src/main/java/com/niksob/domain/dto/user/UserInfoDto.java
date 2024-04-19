@@ -15,17 +15,17 @@ import java.util.Set;
 @NoArgsConstructor
 public class UserInfoDto {
     private Long id;
+    private String email;
     private String username;
-    private String nickname;
     private String password;
     @JsonProperty("mood_entries")
     private Set<MoodEntryDto> moodEntries = new HashSet<>();
     @JsonProperty("mood_tags")
     private Set<MoodTagDto> moodTags = new HashSet<>();
 
-    public UserInfoDto(String username, String nickname, String password) {
+    public UserInfoDto(String email, String username, String password) {
+        this.email = email;
         this.username = username;
-        this.nickname = nickname;
         this.password = password;
     }
 }

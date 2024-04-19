@@ -23,14 +23,14 @@ public abstract class FullUserInfoDtoMapper {
     private MoodTagDtoMapper moodTagDtoMapper;
 
     @Mapping(source = "id.value", target = "id")
+    @Mapping(source = "email.value", target = "email")
     @Mapping(source = "username.value", target = "username")
-    @Mapping(source = "nickname.value", target = "nickname")
     @Mapping(source = "password.value", target = "password")
     public abstract FullUserInfoDto toDto(UserInfo userInfo);
 
     @Mapping(source = "fullUserInfoDto.id", target = "id.value")
+    @Mapping(source = "fullUserInfoDto.email", target = "email.value")
     @Mapping(source = "fullUserInfoDto.username", target = "username.value")
-    @Mapping(source = "fullUserInfoDto.nickname", target = "nickname.value")
     @Mapping(source = "fullUserInfoDto.password", target = "password.value")
     @Mapping(source = "entrySet", target = "moodEntries")
     public abstract UserInfo getUserInfo(Set<MoodEntry> entrySet, FullUserInfoDto fullUserInfoDto);

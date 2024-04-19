@@ -1,23 +1,23 @@
 ### GET Request
-GET http://localhost:8082/api/user?username=TEST_USERNAME
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzNDUxNjkxLCJkZXYiOiJURVNUX0RFVklDRSIsInVzZXJJZCI6IjQifQ.2UtYFuejrUEw8V0aMwS-kz9aLCPd6moZE_4sf0qzePA3kuMEXqTmXYb-DUknDwCHgukww2XAuw42_FemjKA1wQ
+GET http://localhost:8082/api/user?username=nikitos0023@gmail.com
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb20iLCJleHAiOjE3MTM1MjU4NjgsInVzZXJJZCI6IjQiLCJkZXYiOiJURVNUX0RFVklDRSJ9.N09drnTiUzPuQOcPzeh4vVzHxrEd5h8-HBmmSL57sA7H16Fz34eaQITGuHbMHmljhGs9opjjXklUAxW613fABw
 
 ### GET Request
-GET http://localhost:8082/api/user/full?username=TEST_USERNAME
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzNDUxNjkxLCJkZXYiOiJURVNUX0RFVklDRSIsInVzZXJJZCI6IjQifQ.2UtYFuejrUEw8V0aMwS-kz9aLCPd6moZE_4sf0qzePA3kuMEXqTmXYb-DUknDwCHgukww2XAuw42_FemjKA1wQ
+GET http://localhost:8082/api/user/full?username=nikitos0023@gmail.com
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb20iLCJleHAiOjE3MTM1MjU4NjgsInVzZXJJZCI6IjQiLCJkZXYiOiJURVNUX0RFVklDRSJ9.N09drnTiUzPuQOcPzeh4vVzHxrEd5h8-HBmmSL57sA7H16Fz34eaQITGuHbMHmljhGs9opjjXklUAxW613fABw
 
 ### PUT Request
 PUT http://localhost:8082/api/user
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzNDUxNjkxLCJkZXYiOiJURVNUX0RFVklDRSIsInVzZXJJZCI6IjQifQ.2UtYFuejrUEw8V0aMwS-kz9aLCPd6moZE_4sf0qzePA3kuMEXqTmXYb-DUknDwCHgukww2XAuw42_FemjKA1wQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb20iLCJleHAiOjE3MTM1MjU4NjgsInVzZXJJZCI6IjQiLCJkZXYiOiJURVNUX0RFVklDRSJ9.N09drnTiUzPuQOcPzeh4vVzHxrEd5h8-HBmmSL57sA7H16Fz34eaQITGuHbMHmljhGs9opjjXklUAxW613fABw
 
 {
   "id": 4,
-  "username": "TEST_USERNAME",
+  "username": "nikitos0023@gmail.com",
   "nickname": "TEST_NICKNAME",
   "password": "0000"
 }
 
 ### DELETE Request
-DELETE http://localhost:8082/api/user?username=TEST_USERNAME
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJURVNUX1VTRVJOQU1FIiwiZXhwIjoxNzEzNDUxNjkxLCJkZXYiOiJURVNUX0RFVklDRSIsInVzZXJJZCI6IjQifQ.2UtYFuejrUEw8V0aMwS-kz9aLCPd6moZE_4sf0qzePA3kuMEXqTmXYb-DUknDwCHgukww2XAuw42_FemjKA1wQ
+DELETE http://localhost:8082/api/user?username=nikitos0023@gmail.com
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb20iLCJleHAiOjE3MTM1MjU4NjgsInVzZXJJZCI6IjQiLCJkZXYiOiJURVNUX0RFVklDRSJ9.N09drnTiUzPuQOcPzeh4vVzHxrEd5h8-HBmmSL57sA7H16Fz34eaQITGuHbMHmljhGs9opjjXklUAxW613fABw

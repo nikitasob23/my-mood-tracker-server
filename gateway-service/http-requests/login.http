@@ -9,6 +9,6 @@ POST http://localhost:8082/api/signup
 Content-Type: application/json
 
 {
-  "username": "TEST_USERNAME",
+  "email": "nikitos0023@gmail.com",
   "password": "TEST_PASSWORD"
 }

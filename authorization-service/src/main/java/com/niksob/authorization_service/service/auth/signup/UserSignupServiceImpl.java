@@ -35,8 +35,8 @@ public class UserSignupServiceImpl implements UserSignupService {
     public Mono<Void> signup(SignupDetails signupDetails) {
         return Mono.just(signupDetails)
                 .map(details -> new UserInfo(
-                        signupDetails.getUsername(),
-                        DefaultUserInfo.createNickname(signupDetails.getUsername()),
+                        signupDetails.getEmail(),
+                        DefaultUserInfo.createUsernameIfEmpty(signupDetails),
                         passwordEncoderService.encode(signupDetails.getRowPassword()))
                 ).flatMap(userDatabaseConnector::save).then()
                 .doOnSuccess(ignore -> log.info("Successful signup of user", null, signupDetails))

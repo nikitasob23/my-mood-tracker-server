@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class SignupDetailsDto {
+    private String email;
     private String username;
     @JsonProperty("password")
     private String rowPassword;

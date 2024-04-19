@@ -10,16 +10,16 @@ import java.util.Set;
 @Data
 public class UserInfo {
     private final UserId id;
+    private final Email email;
     private final Username username;
-    private final Nickname nickname;
     private final Password password;
     private final Set<MoodEntry> moodEntries;
     private final Set<MoodTag> moodTags;
 
-    public UserInfo(Username username, Nickname nickname, Password password) {
+    public UserInfo(Email email, Username username, Password password) {
         this.id = null;
+        this.email = email;
         this.username = username;
-        this.nickname = nickname;
         this.password = password;
         this.moodEntries = null;
         this.moodTags = null;
@@ -28,15 +28,15 @@ public class UserInfo {
     @Default
     public UserInfo(
             UserId id,
+            Email email,
             Username username,
-            Nickname nickname,
             Password password,
             Set<MoodEntry> moodEntries,
             Set<MoodTag> moodTags
     ) {
         this.id = id;
+        this.email = email;
         this.username = username;
-        this.nickname = nickname;
         this.password = password;
         this.moodEntries = moodEntries;
         this.moodTags = moodTags;
@@ -48,8 +48,8 @@ public class UserInfo {
             Set<MoodTag> moodTags
     ) {
         this.id = userInfo.getId();
+        this.email = userInfo.getEmail();
         this.username = userInfo.getUsername();
-        this.nickname = userInfo.getNickname();
         this.password = userInfo.getPassword();
         this.moodEntries = moodEntries;
         this.moodTags = moodTags;
@@ -60,8 +60,8 @@ public class UserInfo {
             Set<MoodEntry> moodEntries
     ) {
         this.id = userInfo.getId();
+        this.email = userInfo.getEmail();
         this.username = userInfo.getUsername();
-        this.nickname = userInfo.getNickname();
         this.password = userInfo.getPassword();
         this.moodEntries = moodEntries;
         this.moodTags = userInfo.getMoodTags();
