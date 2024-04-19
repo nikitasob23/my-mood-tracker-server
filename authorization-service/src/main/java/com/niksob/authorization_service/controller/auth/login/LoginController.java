@@ -1,4 +1,4 @@
-package com.niksob.authorization_service.controller.auth.signup;
+package com.niksob.authorization_service.controller.auth.login;
 
 import com.niksob.authorization_service.controller.auth.exception.handler.ControllerErrorHandler;
 import com.niksob.domain.dto.user.UserIdDto;
@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequiredArgsConstructor
 public class LoginController {
-    private final LoginControllerService signupService;
+    private final LoginControllerService loginControllerService;
     private final ControllerErrorHandler errorHandler;
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(LoginControllerPaths.class);
@@ -23,7 +23,7 @@ public class LoginController {
     @PostMapping(LoginControllerPaths.SIGNUP)
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Void> signup(@RequestBody SignupDetailsDto signupDetailsDto) {
-        return signupService.signup(signupDetailsDto)
+        return loginControllerService.signup(signupDetailsDto)
                 .doOnSuccess(u -> log.debug("User is signup", signupDetailsDto.getEmail()))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.CREATED))
                 .onErrorResume(errorHandler::createLoginError);
@@ -32,7 +32,7 @@ public class LoginController {
     @GetMapping(LoginControllerPaths.SIGNOUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> signOut(@ModelAttribute SignOutDetailsDto signOutDetails) {
-        return signupService.signOut(signOutDetails)
+        return loginControllerService.signOut(signOutDetails)
                 .doOnSuccess(u -> log.debug("User is sign out", signOutDetails))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
                 .onErrorResume(errorHandler::createLoginError);
@@ -41,7 +41,7 @@ public class LoginController {
     @GetMapping(LoginControllerPaths.SIGNOUT_ALL)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> signOutAll(@RequestParam("user_id") UserIdDto userId) {
-        return signupService.signOutAll(userId)
+        return loginControllerService.signOutAll(userId)
                 .doOnSuccess(ignore -> log.debug("User is sign out from all devices", userId))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
                 .onErrorResume(errorHandler::createLoginError);

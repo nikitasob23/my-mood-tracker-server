@@ -1,4 +1,4 @@
-package com.niksob.authorization_service.controller.auth.signup;
+package com.niksob.authorization_service.controller.auth.login;
 
 import com.niksob.domain.mapper.dto.auth.login.SignupDetailsDtoMapper;
 import com.niksob.authorization_service.service.auth.signup.UserSignupService;
