@@ -6,6 +6,7 @@ import com.niksob.authorization_service.exception.auth.signup.UnregisteredUserEx
 import com.niksob.authorization_service.exception.auth.token.expired.ExpiredAuthTokenException;
 import com.niksob.authorization_service.exception.auth.token.invalid.InvalidAuthTokenException;
 import com.niksob.authorization_service.model.login.password.WrongPasswordException;
+import com.niksob.domain.exception.auth.signup.active_code.InvalidActiveCodeException;
 import com.niksob.domain.exception.resource.ResourceNotFoundException;
 import com.niksob.domain.exception.resource.ResourceSavingException;
 import com.niksob.domain.exception.resource.ResourceUpdatingException;
@@ -34,7 +35,11 @@ public class ControllerErrorHandler {
         final String message;
         if (throwable instanceof DuplicateSignupAttemptException) {
             httpStatus = HttpStatus.CONFLICT;
+
             message = "Duplicate signup attempt";
+        } else if (throwable instanceof InvalidActiveCodeException) {
+            httpStatus = HttpStatus.CONFLICT;
+            message = "Invalid signup activation code";
         } else if (throwable instanceof SignupException) {
             httpStatus = HttpStatus.BAD_REQUEST;
             message = "Failure signup";

@@ -24,7 +24,15 @@ public class LoginController {
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Void> signup(@RequestBody SignupDetailsDto signupDetailsDto) {
         return loginControllerService.signup(signupDetailsDto)
-                .doOnSuccess(u -> log.debug("User is signup", signupDetailsDto.getEmail()))
+                .doOnSuccess(u -> log.debug("User is prepare to signup", signupDetailsDto.getEmail()))
+                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.CREATED))
+                .onErrorResume(errorHandler::createLoginError);
+    }
+
+    @PostMapping(LoginControllerPaths.ACTIVE_CODE + "/{code}")
+    public Mono<Void> signupByActiveCode(@PathVariable String code) {
+        return loginControllerService.signupByActiveCode(code)
+                .doOnSuccess(u -> log.debug("User is signup", code))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.CREATED))
                 .onErrorResume(errorHandler::createLoginError);
     }
