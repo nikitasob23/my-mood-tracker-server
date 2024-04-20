@@ -1,4 +1,4 @@
-package com.niksob.database_service.config.cache;
+package com.niksob.authorization_service.config.cache;
 
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
