@@ -6,6 +6,7 @@ import com.niksob.domain.mapper.dto.user.UserDtoMonoMapper;
 import com.niksob.domain.mapper.dto.user.UserInfoDtoMapper;
 import com.niksob.domain.mapper.dto.user.UsernameDtoMapper;
 import com.niksob.domain.mapper.dto.user.full.FullUserInfoDtoMapper;
+import com.niksob.domain.model.user.SecurityUserDetails;
 import com.niksob.domain.model.user.UserInfo;
 import com.niksob.domain.model.user.Username;
 import com.niksob.layer_connector.annotation.LayerConnector;
@@ -19,7 +20,7 @@ import reactor.core.publisher.Mono;
         SecurityUserDetailsDtoMapper.class
 })
 public interface UserDatabaseConnector {
-    Mono<UserInfo> load(Username username);
+    Mono<SecurityUserDetails> load(Username username);
 
     Mono<UserInfo> loadFull(Username username);
 
