@@ -28,6 +28,11 @@ public class CachedUserEntityDaoFacade implements UserEntityDaoFacade {
     private final DaoExceptionHandler exceptionHandler;
 
     @Override
+    public boolean existsByEmail(String email) {
+        return existenceDao.existsByEmail(email);
+    }
+
+    @Override
     public boolean existsByUsername(String username) {
         return existenceDao.existsByUsername(username);
     }

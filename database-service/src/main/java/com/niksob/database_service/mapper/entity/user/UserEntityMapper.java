@@ -24,5 +24,7 @@ public interface UserEntityMapper {
     @Mapping(source = "email", target = "email.value")
     @Mapping(source = "username", target = "username.value")
     @Mapping(source = "encodedPassword", target = "password.value")
+    @Mapping(target = "moodEntries", ignore = true)
+    @Mapping(target = "moodTags", ignore = true)
     UserInfo fromEntity(UserEntity userEntity);
 }

@@ -6,4 +6,6 @@ public interface UserEntityLoaderDao {
     UserEntity loadById(Long id);
 
     UserEntity loadByUsername(String username);
+
+    UserEntity loadByEmail(String email);
 }

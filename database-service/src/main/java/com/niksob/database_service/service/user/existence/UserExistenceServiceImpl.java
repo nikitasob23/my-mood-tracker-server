@@ -7,6 +7,7 @@ import com.niksob.database_service.service.user.loader.UserLoaderImpl;
 import com.niksob.database_service.util.async.MonoAsyncUtil;
 import com.niksob.database_service.util.date.DefUserDateRangeUtil;
 import com.niksob.domain.exception.resource.ResourceNotFoundException;
+import com.niksob.domain.model.user.Email;
 import com.niksob.domain.model.user.UserId;
 import com.niksob.domain.model.user.Username;
 import com.niksob.logger.object_state.ObjectStateLogger;
@@ -25,6 +26,13 @@ public class UserExistenceServiceImpl extends UserLoaderImpl implements UserExis
             DefUserDateRangeUtil defUserDateRangeUtil
     ) {
         super(userDao, moodEntryService, moodTagLoader, defUserDateRangeUtil);
+    }
+
+    @Override
+    public Mono<Boolean> existsByEmail(Email email) {
+        return MonoAsyncUtil.create(() -> userDao.existsByEmail(email))
+                .doOnNext(existence -> log.info("The user exists", null, email))
+                .doOnError(throwable -> log.error("Failed getting user existence by email", throwable, email));
     }
 
     @Override
