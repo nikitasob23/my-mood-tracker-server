@@ -1,15 +1,14 @@
 package com.niksob.domain.http.connector.microservice.database.user.dto;
 
-import com.niksob.domain.dto.user.FullUserInfoDto;
-import com.niksob.domain.dto.user.SecurityUserDetailsDto;
-import com.niksob.domain.dto.user.UserInfoDto;
-import com.niksob.domain.dto.user.UsernameDto;
+import com.niksob.domain.dto.user.*;
 import reactor.core.publisher.Mono;
 
 public interface UserDatabaseDtoConnector {
     Mono<SecurityUserDetailsDto> load(UsernameDto usernameDto);
 
     Mono<FullUserInfoDto> loadFull(UsernameDto usernameDto);
+
+    Mono<Boolean> existsByEmail(EmailDto email);
 
     Mono<UserInfoDto> save(UserInfoDto userInfoDto);
 
