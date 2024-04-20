@@ -2,9 +2,10 @@ package com.niksob.authorization_service.repository.user.actiovation;
 
 import com.niksob.authorization_service.model.login.user.activation.ActivationUserDetails;
 import com.niksob.domain.model.auth.login.active_code.ActiveCode;
+import com.niksob.domain.model.user.SecurityUserDetails;
 
 public interface TempActivationUserRepo {
-    ActivationUserDetails load(ActiveCode activeCode);
+    SecurityUserDetails load(ActiveCode activeCode);
 
-    ActivationUserDetails save(ActivationUserDetails activationUserDetails);
+    SecurityUserDetails save(ActivationUserDetails activationUserDetails);
 }
