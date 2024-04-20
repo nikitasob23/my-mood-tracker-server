@@ -11,6 +11,7 @@ import com.niksob.domain.exception.resource.ResourceNotFoundException;
 import com.niksob.domain.exception.resource.ResourceSavingException;
 import com.niksob.domain.exception.resource.ResourceUpdatingException;
 import com.niksob.domain.exception.rest.controller.response.HttpClientException;
+import com.niksob.domain.exception.user.email.InvalidEmailException;
 import com.niksob.domain.http.connector.microservice.database.error.handler.InternalServerErrorUtil;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -35,8 +36,10 @@ public class ControllerErrorHandler {
         final String message;
         if (throwable instanceof DuplicateSignupAttemptException) {
             httpStatus = HttpStatus.CONFLICT;
-
             message = "Duplicate signup attempt";
+        } else if (throwable instanceof InvalidEmailException) {
+            httpStatus = HttpStatus.BAD_REQUEST;
+            message = "Invalid email";
         } else if (throwable instanceof InvalidActiveCodeException) {
             httpStatus = HttpStatus.CONFLICT;
             message = "Invalid signup activation code";

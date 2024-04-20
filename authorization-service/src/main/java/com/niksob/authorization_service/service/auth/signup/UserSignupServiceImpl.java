@@ -8,6 +8,7 @@ import com.niksob.authorization_service.service.auth.email.EmailValidationServic
 import com.niksob.authorization_service.service.user.UserService;
 import com.niksob.authorization_service.values.user.DefaultUserInfo;
 import com.niksob.domain.exception.user.email.InvalidEmail;
+import com.niksob.domain.exception.user.email.InvalidEmailException;
 import com.niksob.domain.mapper.dto.user.SecurityUserDetailsDtoMapper;
 import com.niksob.domain.model.auth.login.active_code.ActiveCode;
 import com.niksob.authorization_service.repository.user.actiovation.TempActivationUserRepo;
@@ -115,7 +116,7 @@ public class UserSignupServiceImpl implements UserSignupService {
 
     private Mono<SignupDetails> createIncorrectEmailMonoError(Object state) {
         final String message = "Incorrect email";
-        var e = new InvalidEmail(message);
+        var e = new InvalidEmailException(message);
         log.error(message, e, state);
         return Mono.error(e);
     }
