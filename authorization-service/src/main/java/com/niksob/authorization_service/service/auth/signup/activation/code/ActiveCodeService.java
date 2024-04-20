@@ -5,6 +5,4 @@ import com.niksob.domain.model.user.Email;
 
 public interface ActiveCodeService {
     ActiveCode generate(Email email);
-
-    boolean matches(Email email, ActiveCode activeCode);
 }
