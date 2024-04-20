@@ -29,7 +29,7 @@ public class LoginController {
                 .onErrorResume(errorHandler::createLoginError);
     }
 
-    @PostMapping(LoginControllerPaths.ACTIVE_CODE + "/{code}")
+    @GetMapping(LoginControllerPaths.ACTIVE_CODE)
     public Mono<Void> signupByActiveCode(@PathVariable String code) {
         return loginControllerService.signupByActiveCode(code)
                 .doOnSuccess(u -> log.debug("User is signup", code))

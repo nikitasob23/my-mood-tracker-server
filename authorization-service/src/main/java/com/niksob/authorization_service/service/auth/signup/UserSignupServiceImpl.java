@@ -7,8 +7,8 @@ import com.niksob.domain.model.user.activation.ActivationUserDetails;
 import com.niksob.authorization_service.service.auth.email.EmailValidationService;
 import com.niksob.authorization_service.service.user.UserService;
 import com.niksob.authorization_service.values.user.DefaultUserInfo;
-import com.niksob.domain.exception.user.email.InvalidEmail;
 import com.niksob.domain.exception.user.email.InvalidEmailException;
+import com.niksob.domain.http.connector.microservice.mail_sender.MailSenderConnector;
 import com.niksob.domain.mapper.dto.user.SecurityUserDetailsDtoMapper;
 import com.niksob.domain.model.auth.login.active_code.ActiveCode;
 import com.niksob.authorization_service.repository.user.actiovation.TempActivationUserRepo;
@@ -37,6 +37,8 @@ public class UserSignupServiceImpl implements UserSignupService {
     private final PasswordEncoderService passwordEncoderService;
     private final EmailValidationService emailValidationService;
 
+    private final MailSenderConnector mailSenderConnector;
+
     private final TempActivationUserRepo tempActivationUserRepo;
 
     private final SecurityUserDetailsDtoMapper userDetailsDtoMapper;
@@ -58,7 +60,8 @@ public class UserSignupServiceImpl implements UserSignupService {
                 ))
 
                 .map(exists -> createActivationUserDetails(signupDetails))
-                .doOnNext(tempActivationUserRepo::save).then()
+                .doOnNext(tempActivationUserRepo::save)
+                .flatMap(mailSenderConnector::sendActiveCodeMessage)
 
                 .doOnSuccess(ignore -> log.info("Successful preparing to signup", null, signupDetails))
                 .onErrorResume(throwable -> createSignupError(throwable, signupDetails));

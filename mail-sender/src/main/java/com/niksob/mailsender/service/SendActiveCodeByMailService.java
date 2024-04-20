@@ -8,12 +8,9 @@ import com.niksob.mailsender.service.base.ExecutableService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailMessage;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-
-import java.util.stream.Stream;
 
 import static com.niksob.mailsender.values.mail.message.MailMessage.MESSAGE;
 
@@ -43,14 +40,16 @@ public class SendActiveCodeByMailService implements ExecutableService<ActiveCode
 
     @Override
     public Void execute(ActiveCodeSendingInfo activeCodeSendingInfo) {
-        final String uri = new StringBuilder(protocol)
+        final String messageWithUri = new StringBuilder(MESSAGE)
+                .append(protocol)
                 .append("://").append(hostname)
                 .append(":").append(port)
                 .append(basePath)
+                .append(ActiveCodeMailSenderControllerPaths.BASE_URI)
+                .append("/").append(activeCodeSendingInfo.getActiveCode().data())
                 .toString();
-        final String message = MESSAGE + uri + ActiveCodeMailSenderControllerPaths.BASE_URI;
 
-        sendActiveCodeTo(activeCodeSendingInfo.getRecipientEmail().value(), message);
+        sendActiveCodeTo(activeCodeSendingInfo.getRecipientEmail().value(), messageWithUri);
         return null;
     }
 
