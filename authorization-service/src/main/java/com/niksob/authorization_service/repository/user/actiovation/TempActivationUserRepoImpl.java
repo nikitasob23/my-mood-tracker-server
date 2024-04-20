@@ -1,6 +1,6 @@
 package com.niksob.authorization_service.repository.user.actiovation;
 
-import com.niksob.authorization_service.model.login.user.activation.ActivationUserDetails;
+import com.niksob.domain.model.user.activation.ActivationUserDetails;
 import com.niksob.domain.model.auth.login.active_code.ActiveCode;
 import com.niksob.domain.model.user.SecurityUserDetails;
 import com.niksob.logger.object_state.ObjectStateLogger;

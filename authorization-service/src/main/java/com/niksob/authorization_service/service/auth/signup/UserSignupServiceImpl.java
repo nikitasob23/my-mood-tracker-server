@@ -3,7 +3,7 @@ package com.niksob.authorization_service.service.auth.signup;
 import com.niksob.authorization_service.exception.auth.signup.DuplicateSignupAttemptException;
 import com.niksob.authorization_service.exception.auth.signup.SignupException;
 import com.niksob.authorization_service.mapper.auth.login.SignOutDetailsMapper;
-import com.niksob.authorization_service.model.login.user.activation.ActivationUserDetails;
+import com.niksob.domain.model.user.activation.ActivationUserDetails;
 import com.niksob.authorization_service.service.auth.email.EmailValidationService;
 import com.niksob.authorization_service.service.user.UserService;
 import com.niksob.authorization_service.values.user.DefaultUserInfo;

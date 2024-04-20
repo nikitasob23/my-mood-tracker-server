@@ -1,4 +1,4 @@
-package com.niksob.authorization_service.model.login.user.activation;
+package com.niksob.domain.model.user.activation;
 
 import com.niksob.domain.model.auth.login.active_code.ActiveCode;
 import com.niksob.domain.model.user.SecurityUserDetails;
