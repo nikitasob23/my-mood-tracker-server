@@ -1,8 +1,8 @@
 package com.niksob.mailsender.service;
 
+import com.niksob.domain.path.controller.gateway_service.AuthControllerPaths;
 import com.niksob.mailsender.model.mail.active_code.ActiveCodeSendingInfo;
 import com.niksob.mailsender.model.mail.active_code.message.ActiveCodeMailSubject;
-import com.niksob.mailsender.model.mail.active_code.message.ActiveCodeMessageTemplate;
 import com.niksob.mailsender.service.base.ExecutableService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.util.stream.Stream;
+import static com.niksob.mailsender.values.mail.message.MailMessage.MESSAGE;
 
 @Service
 @RequiredArgsConstructor
@@ -20,38 +20,42 @@ public class SendActiveCodeByMailService implements ExecutableService<ActiveCode
     @NonNull
     private final JavaMailSender mailSender;
 
-    private final ActiveCodeMessageTemplate activeCodeMessageTemplate;
-
     private final ActiveCodeMailSubject activeCodeMailSubject;
 
-    @Value("${server.address}")
-    private String hostname;
-
-    @Value("${server.port}")
+    @Value("${microservice.connection.gateway.protocol}")
     private String protocol;
+    @Value("${microservice.connection.gateway.hostname}")
+    private String hostname;
+    @Value("${microservice.connection.gateway.port}")
+    private String port;
+    @Value("${microservice.connection.gateway.path}")
+    private String basePath;
+
 
     @Value("${spring.mail.username}")
     private String username;
 
     @Override
     public Void execute(ActiveCodeSendingInfo activeCodeSendingInfo) {
-        String message = String.format(
-                activeCodeMessageTemplate.data(),
-                activeCodeSendingInfo.getSenderUsername().getValue(),
-                protocol,
-                hostname,
-                activeCodeSendingInfo.getActiveCode().data()
-        );
-        sendActiveCodeTo(activeCodeSendingInfo.getRecipientEmail().value(), message);
+        final String messageWithUri = new StringBuilder(MESSAGE)
+                .append(protocol)
+                .append("://").append(hostname)
+                .append(":").append(port)
+                .append(basePath)
+                .append(AuthControllerPaths.BASE_URI + AuthControllerPaths.ACTIVE_CODE)
+                .append("/").append(activeCodeSendingInfo.getActiveCode().data())
+                .toString();
+
+        sendActiveCodeTo(activeCodeSendingInfo.getRecipientEmail().value(), messageWithUri);
         return null;
     }
 
     private void sendActiveCodeTo(String emailTo, String message) {
-        Stream.generate(SimpleMailMessage::new).limit(1)
-                .peek(m -> m.setFrom(username))
-                .peek(m -> m.setTo(emailTo))
-                .peek(m -> m.setSubject(activeCodeMailSubject.data()))
-                .peek(m -> m.setText(message))
-                .forEach(mailSender::send);
+        final SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom(username);
+        mailMessage.setTo(emailTo);
+        mailMessage.setSubject(activeCodeMailSubject.data());
+        mailMessage.setText(message);
+        mailSender.send(mailMessage);
     }
 }

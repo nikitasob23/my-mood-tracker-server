@@ -12,7 +12,10 @@ import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-@Table(name = "usrs", uniqueConstraints = @UniqueConstraint(name = "uk_usrs_username", columnNames = "username"))
+@Table(name = "usrs", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_usrs_email", columnNames = "email"),
+        @UniqueConstraint(name = "uk_usrs_username", columnNames = "username")
+})
 @Data
 @ToString(exclude = {"moodEntries", "moodTags", "authTokens"})
 @EqualsAndHashCode(exclude = {"moodEntries", "moodTags", "authTokens"})
@@ -23,10 +26,10 @@ public class UserEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String email;
+
     @Column(nullable = false)
     private String username;
-
-    private String nickname;
 
     @JsonIgnore
     @Column(name = "encoded_password", nullable = false)

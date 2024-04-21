@@ -16,8 +16,8 @@ import java.util.Set;
 @Accessors(chain = true)
 public class UserSecurityDetails implements UserDetails {
     private Long id;
+    private String email;
     private String username;
-    private String nickname;
     private String encodedPassword;
     //    private Set<SecurityRole> authorities;
     private boolean nonExpired = true;

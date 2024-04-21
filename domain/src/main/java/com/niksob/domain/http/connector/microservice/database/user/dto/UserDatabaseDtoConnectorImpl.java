@@ -1,10 +1,7 @@
 package com.niksob.domain.http.connector.microservice.database.user.dto;
 
 import com.niksob.domain.config.properties.microservice.database.DatabaseConnectionProperties;
-import com.niksob.domain.dto.user.FullUserInfoDto;
-import com.niksob.domain.dto.user.SecurityUserDetailsDto;
-import com.niksob.domain.dto.user.UserInfoDto;
-import com.niksob.domain.dto.user.UsernameDto;
+import com.niksob.domain.dto.user.*;
 import com.niksob.domain.http.client.HttpClient;
 import com.niksob.domain.http.connector.base.BaseConnector;
 import com.niksob.domain.http.connector.microservice.database.error.handler.DatabaseDtoConnectorErrorHandler;
@@ -36,10 +33,10 @@ public class UserDatabaseDtoConnectorImpl extends BaseConnector implements UserD
     }
 
     @Override
-    public Mono<SecurityUserDetailsDto> load(UsernameDto usernameDto) {
+    public Mono<UserDto> load(UsernameDto usernameDto) {
         final Map<String, String> params = userGetParamsMapper.getHttpParams(usernameDto);
         final String uri = getWithParams(UserControllerPaths.BASE_URI, params);
-        return httpClient.sendGetRequest(uri, SecurityUserDetailsDto.class)
+        return httpClient.sendGetRequest(uri, UserDto.class)
                 .onErrorResume(throwable -> errorHandler.createLoadingError(throwable, usernameDto));
     }
 
@@ -49,6 +46,13 @@ public class UserDatabaseDtoConnectorImpl extends BaseConnector implements UserD
         final String uri = getWithParams(UserControllerPaths.BASE_URI + UserControllerPaths.FULL_USER, params);
         return httpClient.sendGetRequest(uri, FullUserInfoDto.class)
                 .onErrorResume(throwable -> errorHandler.createLoadingError(throwable, usernameDto));
+    }
+
+    @Override
+    public Mono<Boolean> existsByEmail(EmailDto email) {
+        final String uri = getWithBody(UserControllerPaths.BASE_URI + UserControllerPaths.EMAIL);
+        return httpClient.sendPostRequest(uri, email, EmailDto.class, Boolean.class)
+                .onErrorResume(throwable -> errorHandler.createLoadingError(throwable, email));
     }
 
     @Override

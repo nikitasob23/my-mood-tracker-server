@@ -3,6 +3,8 @@ package com.niksob.database_service.dao.user.facade;
 import com.niksob.database_service.entity.user.UserEntity;
 
 public interface UserEntityDaoFacade {
+    boolean existsByEmail(String email);
+
     boolean existsByUsername(String username);
 
     boolean existsById(Long id);

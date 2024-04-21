@@ -6,6 +6,13 @@ spring:
       - configserver:http://localhost:9191/logger
       - configserver:http://localhost:9191/database-connection
       - configserver:http://localhost:9191/authorization-connection
+      - configserver:http://localhost:9191/mail-sender-connection
+
+  data:
+    redis:
+      host: localhost
+      port: 9004
+      password: my_redis_password
 
 server:
   address: ${microservice.connection.authorization.hostname}

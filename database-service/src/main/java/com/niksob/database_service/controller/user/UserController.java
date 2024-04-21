@@ -1,11 +1,8 @@
 package com.niksob.database_service.controller.user;
 
-import com.niksob.domain.dto.user.FullUserInfoDto;
-import com.niksob.domain.dto.user.SecurityUserDetailsDto;
+import com.niksob.domain.dto.user.*;
 import com.niksob.domain.http.controller.handler.mood.entry.ResourceControllerErrorUtil;
 import com.niksob.domain.path.controller.database_service.user.UserControllerPaths;
-import com.niksob.domain.dto.user.UserInfoDto;
-import com.niksob.domain.dto.user.UsernameDto;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,8 +22,16 @@ public class UserController {
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserController.class);
 
+    @PostMapping(UserControllerPaths.EMAIL)
+    public Mono<Boolean> existsByEmail(@RequestBody EmailDto email) {
+        return userControllerService.existsByEmail(email)
+                .doOnSuccess(ignore -> log.debug("Successful check user existence by email", email))
+                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
+                .onErrorResume(controllerErrorUtil::createLoadingErrorMono);
+    }
+
     @GetMapping
-    public Mono<SecurityUserDetailsDto> load(@RequestParam("username") UsernameDto usernameDto) {
+    public Mono<UserDto> load(@RequestParam("username") UsernameDto usernameDto) {
         return userControllerService.loadByUsername(usernameDto)
                 .doOnSuccess(ignore -> log.debug("Successful user loading", usernameDto))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))

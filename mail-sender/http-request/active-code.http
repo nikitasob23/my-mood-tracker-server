@@ -1,0 +1,9 @@
+### POST Request
+POST http://localhost:8095/api/service/mail_sender/active_code
+Content-Type: application/json
+
+{
+  "sender_username": "Nikita",
+  "recipient_email": "nikitos0023@gmail.com",
+  "active_code":  "TEST_ACTIVE_CODE"
+}

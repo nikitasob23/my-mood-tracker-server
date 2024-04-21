@@ -10,6 +10,11 @@ public class UserEntityExistenceDaoImpl implements UserEntityExistenceDao {
     private final UserEntityLoaderDao loaderDao;
 
     @Override
+    public boolean existsByEmail(String email) {
+        return loaderDao.loadByEmail(email) != null;
+    }
+
+    @Override
     public boolean existsByUsername(String username) {
         return loaderDao.loadByUsername(username) != null;
     }

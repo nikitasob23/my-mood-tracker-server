@@ -61,4 +61,25 @@ public class CachedUserEntityLoaderDao implements UserEntityLoaderDao {
         log.info("Cached user entity", Objects.requireNonNullElse(user, ""));
         return user;
     }
+
+    @Override
+    @Caching(cacheable = {
+            @Cacheable(value = UserCacheNames.USER_BY_USERNAME_CACHE_NAME, key = "#result.getUsername()",
+                    condition = "#result != null && result.getUsername() != null"),
+            @Cacheable(value = UserCacheNames.USER_BY_ID_CACHE_NAME, key = "#result.getId()",
+                    condition = "#result != null && #result.getId() != null")
+    })
+    public UserEntity loadByEmail(String email) {
+        log.info("Start loading user entity by email from repository", email);
+
+        final UserEntity user;
+        try {
+            user = userRepository.getByEmail(email);
+        } catch (Exception e) {
+            throw exceptionHandler.createResourceNotFoundException(email, e);
+        }
+        log.info("User entity loaded from repository", Objects.requireNonNullElse(user, ""));
+        log.info("Cached user entity", Objects.requireNonNullElse(user, ""));
+        return user;
+    }
 }

@@ -3,7 +3,7 @@ POST http://localhost:8082/api/auth/token
 Content-Type: application/json
 
 {
-  "username": "TEST_USERNAME",
+  "username": "nikitos0023@gmail.com",
   "password": "TEST_PASSWORD",
   "device": "TEST_DEVICE"
 }
@@ -13,5 +13,5 @@ POST http://localhost:8082/api/auth/token/refresh
 Content-Type: application/json
 
 {
-  "refresh_token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiZXhwIjoxNzEzNDQxNTEzLCJkZXYiOiJURVNUX0RFVklDRSJ9.oztC4FX9lk2_GRn4DIyBdOErcc6zoX-JqFYq5agfuxpC4EgkNlVynUCIMv1SjbUPjcldSF59y3xOgWmXytdGSA"
+  "refresh_token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb20iLCJleHAiOjE3MTQ4MjAwNTgsInVzZXJJZCI6IjQiLCJkZXYiOiJURVNUX0RFVklDRSJ9.uAfOffXue_FBtpdgZD6SeMCtwPYK5hnpkcM3CB5r6FOiQlItBfMh8ZaErIWXq7neYkWUP5AswI8rwBnnoiLobQ"
 }

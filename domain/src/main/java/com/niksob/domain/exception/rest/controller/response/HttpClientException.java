@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 @Getter
 public class HttpClientException extends RuntimeException {
 
-    private final LocalDateTime timestamp;
+    private final String timestamp;
     private final HttpStatus httpStatus;
     private final String path;
 
-    public HttpClientException(LocalDateTime timestamp, HttpStatus httpStatus, String path) {
+    public HttpClientException(HttpStatus httpStatus, String timestamp, String path) {
         this.timestamp = timestamp;
         this.httpStatus = httpStatus;
         this.path = path;
@@ -20,26 +20,26 @@ public class HttpClientException extends RuntimeException {
 
     public HttpClientException(Throwable cause, HttpStatus httpStatus, String path) {
         super(cause.getMessage(), cause);
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = LocalDateTime.now().toString();
         this.httpStatus = httpStatus;
         this.path = path;
     }
 
     public HttpClientException(String message, Throwable cause, HttpStatus httpStatus, String path) {
         super(message, cause);
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = LocalDateTime.now().toString();
         this.httpStatus = httpStatus;
         this.path = path;
     }
 
     public HttpClientException(String message, HttpStatus httpStatus, String path) {
         super(message);
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = LocalDateTime.now().toString();
         this.httpStatus = httpStatus;
         this.path = path;
     }
 
-    public HttpClientException(HttpStatus httpStatus, String message, LocalDateTime timestamp, String path) {
+    public HttpClientException(HttpStatus httpStatus, String message, String timestamp, String path) {
         super(message);
         this.timestamp = timestamp;
         this.httpStatus = httpStatus;
@@ -49,7 +49,7 @@ public class HttpClientException extends RuntimeException {
     public HttpClientException(
             String message,
             Throwable cause,
-            LocalDateTime timestamp,
+            String timestamp,
             HttpStatus httpStatus,
             String path
     ) {
@@ -59,7 +59,7 @@ public class HttpClientException extends RuntimeException {
         this.path = path;
     }
 
-    public HttpClientException(Throwable cause, LocalDateTime timestamp, HttpStatus httpStatus, String path) {
+    public HttpClientException(Throwable cause, String timestamp, HttpStatus httpStatus, String path) {
         super(cause);
         this.timestamp = timestamp;
         this.httpStatus = httpStatus;
@@ -69,7 +69,7 @@ public class HttpClientException extends RuntimeException {
     public HttpClientException(
             String message,
             HttpStatus httpStatus,
-            LocalDateTime timestamp,
+            String timestamp,
             String path,
             Throwable cause,
             boolean enableSuppression,

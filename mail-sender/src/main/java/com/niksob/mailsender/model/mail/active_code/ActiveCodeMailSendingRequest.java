@@ -1,14 +1,19 @@
 package com.niksob.mailsender.model.mail.active_code;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ActiveCodeMailSendingRequest {
-    @NonNull
+    @JsonProperty("sender_username")
     private String senderUsername;
-    @NonNull
+    @JsonProperty("recipient_email")
     private String recipientEmail;
-    @NonNull
+    @JsonProperty("active_code")
     private String activeCode;
 }

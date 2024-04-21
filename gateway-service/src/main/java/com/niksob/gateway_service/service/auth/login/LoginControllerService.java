@@ -5,15 +5,18 @@ import com.niksob.domain.dto.user.UserIdDto;
 import com.niksob.domain.dto.user.signup.SignupDetailsDto;
 import com.niksob.domain.mapper.dto.auth.login.SignOutDetailsDtoMapper;
 import com.niksob.domain.mapper.dto.auth.login.SignupDetailsDtoMapper;
+import com.niksob.domain.mapper.dto.auth.login.active_code.ActiveCodeDtoMapper;
 import com.niksob.domain.mapper.dto.user.id.UserIdDtoMapper;
 import com.niksob.layer_connector.annotation.LayerConnector;
 import reactor.core.publisher.Mono;
 
 @LayerConnector(source = LoginService.class, mapper = {
-        SignupDetailsDtoMapper.class, SignOutDetailsDtoMapper.class, UserIdDtoMapper.class
+        SignupDetailsDtoMapper.class, SignOutDetailsDtoMapper.class, UserIdDtoMapper.class, ActiveCodeDtoMapper.class
 })
 public interface LoginControllerService {
     Mono<Void> signup(SignupDetailsDto signupDetailsDto);
+
+    Mono<Void> signupByActiveCode(String activeCode);
 
     Mono<Void> signOut(SignOutDetailsDto signOutDetails);
 

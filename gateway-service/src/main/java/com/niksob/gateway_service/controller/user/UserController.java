@@ -1,7 +1,7 @@
 package com.niksob.gateway_service.controller.user;
 
 import com.niksob.domain.dto.user.FullUserInfoDto;
-import com.niksob.domain.dto.user.SecurityUserDetailsDto;
+import com.niksob.domain.dto.user.UserDto;
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;
 import com.niksob.gateway_service.path.controller.user.UserControllerPaths;
@@ -22,7 +22,7 @@ public class UserController {
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserController.class);
 
     @GetMapping
-    public Mono<SecurityUserDetailsDto> load(@RequestParam("username") UsernameDto usernameDto) {
+    public Mono<UserDto> load(@RequestParam("username") UsernameDto usernameDto) {
         return userControllerService.loadByUsername(usernameDto)
                 .doOnSuccess(ignore -> log.debug("Successful user loading", usernameDto))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))

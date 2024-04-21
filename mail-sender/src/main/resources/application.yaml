@@ -4,12 +4,13 @@ spring:
   config:
     import:
       - configserver:http://localhost:9191/mail-sender-connection
+      - configserver:http://localhost:9191/gateway-connection
 
   mail:
-    debug: false
+    debug: true
     host: smtp.yandex.ru
     username: moodtracker@yandex.ru
-    password: fox5aq-dekJe1-gahkiw
+    password: bcavnzftmwawgroq
     port: 465
     protocol: smtps
 

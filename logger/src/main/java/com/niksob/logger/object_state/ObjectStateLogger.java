@@ -11,6 +11,8 @@ public interface ObjectStateLogger {
 
     void debug(String s, Throwable throwable, Object... objects);
 
+    void info(String s);
+
     void info(String s, Object o);
 
     void info(String s, Throwable throwable, Object o);

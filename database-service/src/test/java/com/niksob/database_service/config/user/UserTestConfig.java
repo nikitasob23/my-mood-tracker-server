@@ -2,7 +2,6 @@ package com.niksob.database_service.config.user;
 
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;
-import com.niksob.domain.model.user.Nickname;
 import com.niksob.domain.model.user.Password;
 import com.niksob.domain.model.user.UserInfo;
 import com.niksob.domain.model.user.Username;

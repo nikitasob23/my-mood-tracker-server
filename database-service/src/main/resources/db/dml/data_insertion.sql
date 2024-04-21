@@ -1,6 +1,6 @@
-INSERT INTO usrs(id, username, nickname, encoded_password) VALUES (1, 'clark@gmail.com', 'clark', 'PASSWORD_1');
-INSERT INTO usrs(id, username, nickname, encoded_password) VALUES (2, 'dave@gmail.com', 'dave', 'PASSWORD_2');
-INSERT INTO usrs(id, username, nickname, encoded_password) VALUES (3, 'ava@yandex.ru', 'ava', 'PASSWORD_3');
+INSERT INTO usrs(id, email, username, encoded_password) VALUES (1, 'clark@gmail.com', 'clark', 'PASSWORD_1');
+INSERT INTO usrs(id, email, username, encoded_password) VALUES (2, 'dave@gmail.com', 'dave', 'PASSWORD_2');
+INSERT INTO usrs(id, email, username, encoded_password) VALUES (3, 'ava@yandex.ru', 'ava', 'PASSWORD_3');
 
 INSERT INTO mood_entries(id, date_time, degree, user_id) VALUES (1, '2024-04-09 21:10:24', 4, 1);
 INSERT INTO mood_entries(id, date_time, degree, user_id) VALUES (2, '2024-04-09 10:11:56', 3, 1);

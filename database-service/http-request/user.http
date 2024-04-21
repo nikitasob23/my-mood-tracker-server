@@ -1,3 +1,11 @@
+### User exists request
+POST http://localhost:8081/api/service/database/user/email
+Content-Type: application/json
+
+{
+  "email": "clark@gmail.com"
+}
+
 ### GET Request
 GET http://localhost:8081/api/service/database/user?username=TEST_USERNAME
 

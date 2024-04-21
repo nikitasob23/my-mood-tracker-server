@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.AllArgsConstructor;
 
-import java.util.stream.Stream;
-
 @RestController
 @RequestMapping(ActiveCodeMailSenderControllerPaths.BASE_URI)
 @AllArgsConstructor
@@ -21,12 +19,10 @@ public class ActiveCodeMailSenderController {
     private ExecutableService<ActiveCodeSendingInfo, Void> sendMailToUserService;
 
     @PostMapping
-    public ResponseEntity<?> sendActiveCode(@RequestBody ActiveCodeMailSendingRequest activeCodeMailSendingRequest) {
-
+    public ResponseEntity<?> sendActiveCode(@RequestBody ActiveCodeMailSendingRequest activeCodeRequest) {
         try {
-            Stream.of(activeCodeMailSendingRequest)
-                    .map(mailSendingInfoConverter::convert)
-                    .forEach(sendMailToUserService::execute);
+            final ActiveCodeSendingInfo activeCodeSendingInfo = mailSendingInfoConverter.convert(activeCodeRequest);
+            sendMailToUserService.execute(activeCodeSendingInfo);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
