@@ -1,6 +1,6 @@
 package com.niksob.domain.path.controller.authorization_service;
 
-public class LoginControllerPaths {
+public class AuthControllerPaths {
     public static final String SIGNUP = "/signup";
     public static final String ACTIVE_CODE = SIGNUP + "/activate";
     public static final String SIGNOUT = "/signout";
