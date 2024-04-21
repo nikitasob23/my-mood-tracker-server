@@ -1,5 +1,6 @@
 package com.niksob.authorization_service.controller.auth.login;
 
+import com.niksob.domain.dto.auth.login.active_code.ActiveCodeDto;
 import com.niksob.domain.mapper.dto.auth.login.SignupDetailsDtoMapper;
 import com.niksob.authorization_service.service.auth.signup.UserSignupService;
 import com.niksob.domain.dto.user.UserIdDto;
@@ -21,7 +22,7 @@ import reactor.core.publisher.Mono;
 public interface LoginControllerService {
     Mono<Void> signup(SignupDetailsDto userSignupDetails);
 
-    Mono<Void> signupByActiveCode(String activeCode);
+    Mono<Void> signupByActiveCode(ActiveCodeDto activeCode);
 
     Mono<Void> signOut(SignOutDetailsDto signOutDetails);
 

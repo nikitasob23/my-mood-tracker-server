@@ -3,6 +3,7 @@ package com.niksob.gateway_service.service.auth.login;
 import com.niksob.domain.http.connector.microservice.auth.login.LoginControllerConnector;
 import com.niksob.domain.model.auth.login.SignOutDetails;
 import com.niksob.domain.model.auth.login.SignupDetails;
+import com.niksob.domain.model.auth.login.active_code.ActiveCode;
 import com.niksob.domain.model.user.UserId;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -22,6 +23,13 @@ public class LoginServiceImpl implements LoginService {
         return loginControllerConnector.signup(signupDetails)
                 .doOnSuccess(ignore -> log.info("Successful signup of user", null, signupDetails))
                 .doOnError(throwable -> log.error("Failure signup", throwable, signupDetails));
+    }
+
+    @Override
+    public Mono<Void> signupByActiveCode(ActiveCode activeCode) {
+        return loginControllerConnector.signupByActiveCode(activeCode)
+                .doOnSuccess(ignore -> log.info("Successful signup of user", null, ""))
+                .doOnError(throwable -> log.error("Failure signup", throwable, ""));
     }
 
     @Override

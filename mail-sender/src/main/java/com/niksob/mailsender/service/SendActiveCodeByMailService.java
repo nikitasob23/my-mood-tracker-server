@@ -1,6 +1,6 @@
 package com.niksob.mailsender.service;
 
-import com.niksob.domain.path.controller.mail_sender.ActiveCodeMailSenderControllerPaths;
+import com.niksob.domain.path.controller.gateway_service.AuthControllerPaths;
 import com.niksob.mailsender.model.mail.active_code.ActiveCodeSendingInfo;
 import com.niksob.mailsender.model.mail.active_code.message.ActiveCodeMailSubject;
 import com.niksob.mailsender.model.mail.active_code.message.ActiveCodeMessageTemplate;
@@ -20,8 +20,6 @@ public class SendActiveCodeByMailService implements ExecutableService<ActiveCode
 
     @NonNull
     private final JavaMailSender mailSender;
-
-    private final ActiveCodeMessageTemplate activeCodeMessageTemplate;
 
     private final ActiveCodeMailSubject activeCodeMailSubject;
 
@@ -45,7 +43,7 @@ public class SendActiveCodeByMailService implements ExecutableService<ActiveCode
                 .append("://").append(hostname)
                 .append(":").append(port)
                 .append(basePath)
-                .append(ActiveCodeMailSenderControllerPaths.BASE_URI)
+                .append(AuthControllerPaths.BASE_URI + AuthControllerPaths.ACTIVE_CODE)
                 .append("/").append(activeCodeSendingInfo.getActiveCode().data())
                 .toString();
 

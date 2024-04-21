@@ -12,3 +12,15 @@ Content-Type: application/json
   "email": "nikitos0023@gmail.com",
   "password": "TEST_PASSWORD"
 }
+
+### Signup request
+POST http://localhost:8082/api/signup
+Content-Type: application/json
+
+{
+  "email": "TEST_EMAIL",
+  "password": "TEST_PASSWORD"
+}
+
+### Signup confirmation
+GET http://localhost:8082/api/signup/activate/e4484aa0-4e1e-4b80-8ebd-84e9e8086855

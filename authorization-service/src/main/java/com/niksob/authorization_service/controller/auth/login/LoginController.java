@@ -1,6 +1,7 @@
 package com.niksob.authorization_service.controller.auth.login;
 
 import com.niksob.authorization_service.controller.auth.exception.handler.ControllerErrorHandler;
+import com.niksob.domain.dto.auth.login.active_code.ActiveCodeDto;
 import com.niksob.domain.dto.user.UserIdDto;
 import com.niksob.domain.dto.user.signup.SignupDetailsDto;
 import com.niksob.domain.dto.auth.login.SignOutDetailsDto;
@@ -24,16 +25,16 @@ public class LoginController {
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Void> signup(@RequestBody SignupDetailsDto signupDetailsDto) {
         return loginControllerService.signup(signupDetailsDto)
-                .doOnSuccess(u -> log.debug("User is prepare to signup", signupDetailsDto.getEmail()))
-                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.CREATED))
+                .doOnSuccess(u -> log.info("User is prepare to signup", signupDetailsDto.getEmail()))
+                .doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.CREATED))
                 .onErrorResume(errorHandler::createLoginError);
     }
 
     @GetMapping(LoginControllerPaths.ACTIVE_CODE)
-    public Mono<Void> signupByActiveCode(@PathVariable String code) {
-        return loginControllerService.signupByActiveCode(code)
-                .doOnSuccess(u -> log.debug("User is signup", code))
-                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.CREATED))
+    public Mono<Void> signupByActiveCode(@RequestParam("active_code")ActiveCodeDto activeCode) {
+        return loginControllerService.signupByActiveCode(activeCode)
+                .doOnSuccess(u -> log.info("User is signup by active code"))
+                .doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.CREATED))
                 .onErrorResume(errorHandler::createLoginError);
     }
 
@@ -41,8 +42,8 @@ public class LoginController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> signOut(@ModelAttribute SignOutDetailsDto signOutDetails) {
         return loginControllerService.signOut(signOutDetails)
-                .doOnSuccess(u -> log.debug("User is sign out", signOutDetails))
-                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
+                .doOnSuccess(u -> log.info("User is sign out", signOutDetails))
+                .doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.NO_CONTENT))
                 .onErrorResume(errorHandler::createLoginError);
     }
 
@@ -50,8 +51,8 @@ public class LoginController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> signOutAll(@RequestParam("user_id") UserIdDto userId) {
         return loginControllerService.signOutAll(userId)
-                .doOnSuccess(ignore -> log.debug("User is sign out from all devices", userId))
-                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
+                .doOnSuccess(ignore -> log.info("User is sign out from all devices", userId))
+                .doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.NO_CONTENT))
                 .onErrorResume(errorHandler::createLoginError);
     }
 }

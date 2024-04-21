@@ -2,6 +2,7 @@ package com.niksob.domain.http.connector.microservice.auth.login.dto;
 
 import com.niksob.domain.config.properties.microservice.auth.AuthConnectionProperties;
 import com.niksob.domain.dto.auth.login.SignOutDetailsDto;
+import com.niksob.domain.dto.auth.login.active_code.ActiveCodeDto;
 import com.niksob.domain.dto.user.UserIdDto;
 import com.niksob.domain.dto.user.signup.SignupDetailsDto;
 import com.niksob.domain.http.client.HttpClient;
@@ -37,6 +38,13 @@ public class LoginControllerDtoConnectorImpl extends BaseConnector implements Lo
         return httpClient.sendPostRequest(uri, signupDetails, SignupDetailsDto.class, Void.class)
                 .doOnError(throwable ->
                         log.error("Login connector received failure response after signup", null, signupDetails));
+    }
+
+    @Override
+    public Mono<Void> signupByActiveCode(ActiveCodeDto activeCode) {
+        final Map<String, String> params = authTokenGetParamsMapper.getHttpParams(activeCode);
+        final String uri = getWithParams(LoginControllerPaths.ACTIVE_CODE, params);
+        return httpClient.sendGetRequest(uri, Void.class);
     }
 
     @Override

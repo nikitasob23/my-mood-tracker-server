@@ -1,5 +1,6 @@
 package com.niksob.gateway_service.mapper.user;
 
+import com.niksob.domain.model.user.SecurityUserDetails;
 import com.niksob.domain.model.user.UserInfo;
 import com.niksob.gateway_service.model.user.security.UserSecurityDetails;
 import lombok.AllArgsConstructor;
@@ -12,6 +13,10 @@ public class UserSecurityDetailsMonoMapper {
     private final UserSecurityDetailsMapper userSecurityDetailsMapper;
 
     public Mono<UserSecurityDetails> toMonoUserDetails(Mono<UserInfo> mono) {
-        return mono.map(userSecurityDetailsMapper::toUserDetails);
+        return mono.map(userSecurityDetailsMapper::fromUserInfo);
+    }
+
+    public Mono<UserSecurityDetails> toSecurityUserDetailsMono(Mono<SecurityUserDetails> mono) {
+        return mono.map(userSecurityDetailsMapper::toSecurityUserDetails);
     }
 }
