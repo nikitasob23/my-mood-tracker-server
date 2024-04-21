@@ -1,20 +1,11 @@
 ### GET Request
-GET http://localhost:8092/api/service/auth/signout?userId=4&device=TEST_DEVICE
+GET http://localhost:8092/api/auth/signout?userId=4&device=TEST_DEVICE
 
 ### GET Request
-GET http://localhost:8092/api/service/auth/signout/all?user_id=4
-
-### POST Request
-POST http://localhost:8082/api/signup
-Content-Type: application/json
-
-{
-  "email": "nikitos0023@gmail.com",
-  "password": "TEST_PASSWORD"
-}
+GET http://localhost:8092/api/auth/signout/all?user_id=4
 
 ### Signup request
-POST http://localhost:8082/api/signup
+POST http://localhost:8082/api/auth/signup
 Content-Type: application/json
 
 {
@@ -23,4 +14,4 @@ Content-Type: application/json
 }
 
 ### Signup confirmation
-GET http://localhost:8082/api/signup/activate/e4484aa0-4e1e-4b80-8ebd-84e9e8086855
+GET http://localhost:8082/api/auth/signup/activate/e4484aa0-4e1e-4b80-8ebd-84e9e8086855

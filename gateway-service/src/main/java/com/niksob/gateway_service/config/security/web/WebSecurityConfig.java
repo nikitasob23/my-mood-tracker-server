@@ -2,6 +2,7 @@ package com.niksob.gateway_service.config.security.web;
 
 import com.niksob.gateway_service.config.security.context.NullSecurityContextRepository;
 import com.niksob.domain.path.controller.gateway_service.AuthControllerPaths;
+import com.niksob.gateway_service.path.controller.auth.token.AuthTokenControllerPaths;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +30,10 @@ public class WebSecurityConfig {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         http.csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers(AuthControllerPaths.BASE_URI + "/**").permitAll()
+                        .pathMatchers(
+                                AuthControllerPaths.BASE_URI + AuthControllerPaths.SIGNUP + "/**",
+                                AuthTokenControllerPaths.BASE_URI + "/**"
+                        ).permitAll()
                         .anyExchange().authenticated())
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)

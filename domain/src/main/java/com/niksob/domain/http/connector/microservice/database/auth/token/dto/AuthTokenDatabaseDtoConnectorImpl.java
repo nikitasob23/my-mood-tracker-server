@@ -9,6 +9,7 @@ import com.niksob.domain.http.connector.base.BaseConnector;
 import com.niksob.domain.http.connector.microservice.database.error.handler.DatabaseDtoConnectorErrorHandler;
 import com.niksob.domain.http.rest.path.RestPath;
 import com.niksob.domain.mapper.rest.auth.token.params.AuthTokenGetParamsMapper;
+import com.niksob.domain.mapper.rest.user.UserGetParamsMapper;
 import com.niksob.domain.path.controller.database_service.auth.token.AuthTokenDBControllerPaths;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 @Component
 public class AuthTokenDatabaseDtoConnectorImpl extends BaseConnector implements AuthTokenDatabaseDtoConnector {
+    private final UserGetParamsMapper userGetParamsMapper;
     private final AuthTokenGetParamsMapper authTokenGetParamsMapper;
     private final DatabaseDtoConnectorErrorHandler errorHandler;
 
@@ -25,11 +27,13 @@ public class AuthTokenDatabaseDtoConnectorImpl extends BaseConnector implements 
             HttpClient httpClient,
             RestPath restPath,
             DatabaseConnectionProperties connectionProperties,
+            UserGetParamsMapper userGetParamsMapper,
             AuthTokenGetParamsMapper authTokenGetParamsMapper,
             @Qualifier("authTokenDatabaseDtoConnectorErrorHandler")
             DatabaseDtoConnectorErrorHandler errorHandler
     ) {
         super(httpClient, restPath, connectionProperties);
+        this.userGetParamsMapper = userGetParamsMapper;
         this.authTokenGetParamsMapper = authTokenGetParamsMapper;
         this.errorHandler = errorHandler;
     }
@@ -77,7 +81,7 @@ public class AuthTokenDatabaseDtoConnectorImpl extends BaseConnector implements 
 
     @Override
     public Mono<Void> deleteByUserId(UserIdDto userId) {
-        final Map<String, String> params = authTokenGetParamsMapper.getHttpParams(userId);
+        final Map<String, String> params = userGetParamsMapper.getHttpParams(userId);
         final String resourceUri = AuthTokenDBControllerPaths.BASE_URI + AuthTokenDBControllerPaths.ALL;
         final String uri = getWithParams(resourceUri, params);
         return httpClient.sendDeleteRequest(uri, Void.class)
