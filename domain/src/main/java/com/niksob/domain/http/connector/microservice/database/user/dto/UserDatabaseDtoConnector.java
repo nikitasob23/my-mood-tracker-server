@@ -4,7 +4,7 @@ import com.niksob.domain.dto.user.*;
 import reactor.core.publisher.Mono;
 
 public interface UserDatabaseDtoConnector {
-    Mono<SecurityUserDetailsDto> load(UsernameDto usernameDto);
+    Mono<UserDto> load(UsernameDto usernameDto);
 
     Mono<FullUserInfoDto> loadFull(UsernameDto usernameDto);
 

@@ -1,7 +1,7 @@
 package com.niksob.gateway_service.service.auth;
 
 import com.niksob.domain.http.connector.microservice.database.user.UserDatabaseConnector;
-import com.niksob.domain.model.user.SecurityUserDetails;
+import com.niksob.domain.model.user.User;
 import com.niksob.domain.model.user.UserInfo;
 import com.niksob.domain.model.user.Username;
 import com.niksob.logger.object_state.ObjectStateLogger;
@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
-    public Mono<SecurityUserDetails> loadByUsername(Username username) {
+    public Mono<User> loadByUsername(Username username) {
         return userDatabaseConnector.load(username)
                 .doOnNext(ignore -> log.info("Successful user loading", null, username))
                 .doOnError(throwable -> log.error("Failure user loading", throwable, username));

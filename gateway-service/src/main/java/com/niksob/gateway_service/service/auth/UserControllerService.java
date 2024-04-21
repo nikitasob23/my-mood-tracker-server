@@ -1,10 +1,10 @@
 package com.niksob.gateway_service.service.auth;
 
 import com.niksob.domain.dto.user.FullUserInfoDto;
-import com.niksob.domain.dto.user.SecurityUserDetailsDto;
+import com.niksob.domain.dto.user.UserDto;
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;
-import com.niksob.domain.mapper.dto.user.SecurityUserDetailsDtoMapper;
+import com.niksob.domain.mapper.dto.user.UserDtoMapper;
 import com.niksob.domain.mapper.dto.user.UserDtoMonoMapper;
 import com.niksob.domain.mapper.dto.user.UserInfoDtoMapper;
 import com.niksob.domain.mapper.dto.user.UsernameDtoMapper;
@@ -20,11 +20,11 @@ import reactor.core.publisher.Mono;
                 UserIdDtoMapper.class,
                 UserDtoMonoMapper.class,
                 FullUserInfoDtoMapper.class,
-                SecurityUserDetailsDtoMapper.class
+                UserDtoMapper.class
         }
 )
 public interface UserControllerService {
-    Mono<SecurityUserDetailsDto> loadByUsername(UsernameDto username);
+    Mono<UserDto> loadByUsername(UsernameDto username);
 
     Mono<FullUserInfoDto> loadFullByUsername(UsernameDto username);
 

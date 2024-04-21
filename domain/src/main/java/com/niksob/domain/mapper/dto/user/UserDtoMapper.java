@@ -1,19 +1,19 @@
 package com.niksob.domain.mapper.dto.user;
 
-import com.niksob.domain.dto.user.SecurityUserDetailsDto;
-import com.niksob.domain.model.user.SecurityUserDetails;
+import com.niksob.domain.dto.user.UserDto;
+import com.niksob.domain.model.user.User;
 import com.niksob.domain.model.user.UserInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import reactor.core.publisher.Mono;
 
 @Mapper(componentModel = "spring")
-public interface SecurityUserDetailsDtoMapper {
+public interface UserDtoMapper {
     @Mapping(source = "id.value", target = "id")
     @Mapping(source = "email.value", target = "email")
     @Mapping(source = "username.value", target = "username")
     @Mapping(source = "password.value", target = "password")
-    SecurityUserDetailsDto toDto(UserInfo userInfo);
+    UserDto toDto(UserInfo userInfo);
 
     @Mapping(source = "id", target = "id.value")
     @Mapping(source = "email", target = "email.value")
@@ -21,35 +21,35 @@ public interface SecurityUserDetailsDtoMapper {
     @Mapping(source = "password", target = "password.value")
     @Mapping(target = "moodEntries", ignore = true)
     @Mapping(target = "moodTags", ignore = true)
-    UserInfo fromDto(SecurityUserDetailsDto dto);
+    UserInfo fromDto(UserDto dto);
 
     @Mapping(source = "id.value", target = "id")
     @Mapping(source = "email.value", target = "email")
     @Mapping(source = "username.value", target = "username")
     @Mapping(source = "password.value", target = "password")
-    SecurityUserDetailsDto toSecurityUserDetailsDto(SecurityUserDetails securityUserDetails);
+    UserDto toSecurityUserDetailsDto(User user);
 
     @Mapping(source = "id", target = "id.value")
     @Mapping(source = "email", target = "email.value")
     @Mapping(source = "username", target = "username.value")
     @Mapping(source = "password", target = "password.value")
-    SecurityUserDetails toSecurityUserDetails(SecurityUserDetailsDto dto);
+    User toSecurityUserDetails(UserDto dto);
 
-    UserInfo toUserInfo(SecurityUserDetails userDetails);
+    UserInfo toUserInfo(User userDetails);
 
-    default Mono<SecurityUserDetailsDto> toMonoDto(Mono<UserInfo> mono) {
+    default Mono<UserDto> toMonoDto(Mono<UserInfo> mono) {
         return mono.map(this::toDto);
     }
 
-    default Mono<UserInfo> fromMonoDto(Mono<SecurityUserDetailsDto> mono) {
+    default Mono<UserInfo> fromMonoDto(Mono<UserDto> mono) {
         return mono.map(this::fromDto);
     }
 
-    default Mono<SecurityUserDetailsDto> toSecurityUserDetailsMonoDto(Mono<SecurityUserDetails> mono) {
+    default Mono<UserDto> toSecurityUserDetailsMonoDto(Mono<User> mono) {
         return mono.map(this::toSecurityUserDetailsDto);
     }
 
-    default Mono<SecurityUserDetails> toSecurityUserDetailsMono(Mono<SecurityUserDetailsDto> mono) {
+    default Mono<User> toSecurityUserDetailsMono(Mono<UserDto> mono) {
         return mono.map(this::toSecurityUserDetails);
     }
 }

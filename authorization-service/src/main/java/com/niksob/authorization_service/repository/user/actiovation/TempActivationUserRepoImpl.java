@@ -2,7 +2,7 @@ package com.niksob.authorization_service.repository.user.actiovation;
 
 import com.niksob.domain.model.user.activation.ActivationUserDetails;
 import com.niksob.domain.model.auth.login.active_code.ActiveCode;
-import com.niksob.domain.model.user.SecurityUserDetails;
+import com.niksob.domain.model.user.User;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import org.springframework.cache.annotation.CachePut;
@@ -17,7 +17,7 @@ public class TempActivationUserRepoImpl implements TempActivationUserRepo {
 
     @Override
     @Cacheable(value = USER_ACTIVATION_DETAILS_CACHE_NAME, key = "#activeCode.getValue()")
-    public SecurityUserDetails load(ActiveCode activeCode) {
+    public User load(ActiveCode activeCode) {
         log.info("Activation user details is not found in cache", activeCode);
         return null; //If active code was generate, cache will return it. If wasn't generate, then will return null
     }
@@ -25,7 +25,7 @@ public class TempActivationUserRepoImpl implements TempActivationUserRepo {
     @Override
     @CachePut(value = USER_ACTIVATION_DETAILS_CACHE_NAME,
             key = "#activationUserDetails.getActiveCode().getValue()")
-    public SecurityUserDetails save(ActivationUserDetails activationUserDetails) {
+    public User save(ActivationUserDetails activationUserDetails) {
         log.info("Save activation user details in cache", activationUserDetails);
         return activationUserDetails.getUserDetails();
     }

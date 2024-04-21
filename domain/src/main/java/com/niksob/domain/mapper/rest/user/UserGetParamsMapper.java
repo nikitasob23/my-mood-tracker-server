@@ -1,15 +1,21 @@
 package com.niksob.domain.mapper.rest.user;
 
+import com.niksob.domain.dto.user.UserIdDto;
 import com.niksob.domain.dto.user.UsernameDto;
 import org.mapstruct.Mapper;
 
 import java.util.Map;
 
-@Mapper(componentModel = "spring")
-public interface UserGetParamsMapper {
-    String USERNAME_PARAM_KEY = "username";
+import static com.niksob.domain.mapper.rest.user.UserRestParamNames.USERNAME_PARAM_KEY;
+import static com.niksob.domain.mapper.rest.user.UserRestParamNames.USER_ID_PARAM_NAME;
 
-    default Map<String, String> getHttpParams(UsernameDto username) {
+@Mapper(componentModel = "spring")
+public abstract class UserGetParamsMapper {
+    public Map<String, String> getHttpParams(UsernameDto username) {
         return Map.of(USERNAME_PARAM_KEY, username.getValue());
+    }
+
+    public Map<String, String> getHttpParams(UserIdDto userId) {
+        return Map.of(USER_ID_PARAM_NAME, userId.getValue());
     }
 }

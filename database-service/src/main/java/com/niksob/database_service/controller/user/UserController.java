@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @GetMapping
-    public Mono<SecurityUserDetailsDto> load(@RequestParam("username") UsernameDto usernameDto) {
+    public Mono<UserDto> load(@RequestParam("username") UsernameDto usernameDto) {
         return userControllerService.loadByUsername(usernameDto)
                 .doOnSuccess(ignore -> log.debug("Successful user loading", usernameDto))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))

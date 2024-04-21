@@ -33,10 +33,10 @@ public class UserDatabaseDtoConnectorImpl extends BaseConnector implements UserD
     }
 
     @Override
-    public Mono<SecurityUserDetailsDto> load(UsernameDto usernameDto) {
+    public Mono<UserDto> load(UsernameDto usernameDto) {
         final Map<String, String> params = userGetParamsMapper.getHttpParams(usernameDto);
         final String uri = getWithParams(UserControllerPaths.BASE_URI, params);
-        return httpClient.sendGetRequest(uri, SecurityUserDetailsDto.class)
+        return httpClient.sendGetRequest(uri, UserDto.class)
                 .onErrorResume(throwable -> errorHandler.createLoadingError(throwable, usernameDto));
     }
 

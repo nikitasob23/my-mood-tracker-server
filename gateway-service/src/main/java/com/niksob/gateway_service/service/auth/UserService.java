@@ -1,12 +1,12 @@
 package com.niksob.gateway_service.service.auth;
 
-import com.niksob.domain.model.user.SecurityUserDetails;
+import com.niksob.domain.model.user.User;
 import com.niksob.domain.model.user.UserInfo;
 import com.niksob.domain.model.user.Username;
 import reactor.core.publisher.Mono;
 
 public interface UserService {
-    Mono<SecurityUserDetails> loadByUsername(Username username);
+    Mono<User> loadByUsername(Username username);
 
     Mono<UserInfo> loadFullByUsername(Username username);
 

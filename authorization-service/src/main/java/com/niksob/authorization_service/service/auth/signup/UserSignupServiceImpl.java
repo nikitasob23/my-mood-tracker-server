@@ -3,13 +3,14 @@ package com.niksob.authorization_service.service.auth.signup;
 import com.niksob.authorization_service.exception.auth.signup.DuplicateSignupAttemptException;
 import com.niksob.authorization_service.exception.auth.signup.SignupException;
 import com.niksob.authorization_service.mapper.auth.login.SignOutDetailsMapper;
+import com.niksob.domain.mapper.dto.user.UserDtoMapper;
+import com.niksob.domain.model.user.User;
 import com.niksob.domain.model.user.activation.ActivationUserDetails;
 import com.niksob.authorization_service.service.auth.email.EmailValidationService;
 import com.niksob.authorization_service.service.user.UserService;
 import com.niksob.authorization_service.values.user.DefaultUserInfo;
 import com.niksob.domain.exception.user.email.InvalidEmailException;
 import com.niksob.domain.http.connector.microservice.mail_sender.MailSenderConnector;
-import com.niksob.domain.mapper.dto.user.SecurityUserDetailsDtoMapper;
 import com.niksob.domain.model.auth.login.active_code.ActiveCode;
 import com.niksob.authorization_service.repository.user.actiovation.TempActivationUserRepo;
 import com.niksob.authorization_service.service.auth.signup.activation.code.ActiveCodeService;
@@ -20,7 +21,6 @@ import com.niksob.authorization_service.service.password_encoder.PasswordEncoder
 import com.niksob.domain.exception.resource.ResourceAlreadyExistsException;
 import com.niksob.domain.exception.resource.ResourceSavingException;
 import com.niksob.domain.model.auth.login.SignOutDetails;
-import com.niksob.domain.model.user.SecurityUserDetails;
 import com.niksob.domain.model.user.UserId;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -41,7 +41,7 @@ public class UserSignupServiceImpl implements UserSignupService {
 
     private final TempActivationUserRepo tempActivationUserRepo;
 
-    private final SecurityUserDetailsDtoMapper userDetailsDtoMapper;
+    private final UserDtoMapper userDetailsDtoMapper;
     private final SignOutDetailsMapper signOutDetailsMapper;
 
 
@@ -79,8 +79,8 @@ public class UserSignupServiceImpl implements UserSignupService {
                 .onErrorResume(throwable -> createSignupError(throwable, activeCode));
     }
 
-    private SecurityUserDetails loadActiveUserOrThrow(ActiveCode activeCode) {
-        final SecurityUserDetails userDetails = tempActivationUserRepo.load(activeCode);
+    private User loadActiveUserOrThrow(ActiveCode activeCode) {
+        final User userDetails = tempActivationUserRepo.load(activeCode);
         if (userDetails == null) {
             throw new InvalidActiveCodeException("Wrong activation code");
         }
@@ -110,7 +110,7 @@ public class UserSignupServiceImpl implements UserSignupService {
     }
 
     private ActivationUserDetails createActivationUserDetails(SignupDetails signupDetails) {
-        final SecurityUserDetails userDetails = new SecurityUserDetails(
+        final User userDetails = new User(
                 signupDetails.getEmail(),
                 DefaultUserInfo.createUsernameIfEmpty(signupDetails),
                 passwordEncoderService.encode(signupDetails.getRowPassword()));

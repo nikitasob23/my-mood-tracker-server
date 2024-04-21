@@ -1,4 +1,4 @@
-package com.niksob.domain.mapper.rest.auth.token.params;
+package com.niksob.domain.mapper.rest.auth;
 
 import com.niksob.domain.dto.auth.login.SignOutDetailsDto;
 import com.niksob.domain.dto.auth.login.active_code.ActiveCodeDto;
@@ -12,7 +12,7 @@ import static com.niksob.domain.mapper.rest.auth.AuthRestParamNames.DEVICE_PARAM
 import static com.niksob.domain.mapper.rest.user.UserRestParamNames.USER_ID_PARAM_NAME;
 
 @Mapper(componentModel = "spring")
-public abstract class AuthTokenGetParamsMapper {
+public abstract class AuthGetParamsMapper {
     public Map<String, String> getHttpParams(AuthTokenDetailsDto authTokenDetails) {
         return Map.of(
                 USER_ID_PARAM_NAME, authTokenDetails.getUserId(),

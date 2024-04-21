@@ -4,7 +4,7 @@ import com.niksob.database_service.service.user.UserServiceImpl;
 import com.niksob.database_service.service.user.existence.UserExistenceService;
 import com.niksob.database_service.service.user.loader.UserLoader;
 import com.niksob.domain.dto.user.*;
-import com.niksob.domain.mapper.dto.user.SecurityUserDetailsDtoMapper;
+import com.niksob.domain.mapper.dto.user.UserDtoMapper;
 import com.niksob.domain.mapper.dto.user.UserDtoMonoMapper;
 import com.niksob.domain.mapper.dto.user.UserInfoDtoMapper;
 import com.niksob.domain.mapper.dto.user.UsernameDtoMapper;
@@ -24,13 +24,13 @@ import reactor.core.publisher.Mono;
                 UserIdDtoMapper.class,
                 UserDtoMonoMapper.class,
                 FullUserInfoDtoMapper.class,
-                SecurityUserDetailsDtoMapper.class
+                UserDtoMapper.class
         }
 )
 public interface UserControllerService {
     Mono<Boolean> existsByEmail(EmailDto email);
 
-    Mono<SecurityUserDetailsDto> loadByUsername(UsernameDto usernameDto);
+    Mono<UserDto> loadByUsername(UsernameDto usernameDto);
 
     Mono<FullUserInfoDto> loadFullByUsername(UsernameDto usernameDto);
 

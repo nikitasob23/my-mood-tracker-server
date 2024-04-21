@@ -9,6 +9,7 @@ import com.niksob.domain.http.client.HttpClient;
 import com.niksob.domain.http.connector.base.BaseConnector;
 import com.niksob.domain.http.rest.path.RestPath;
 import com.niksob.domain.mapper.rest.auth.token.params.AuthTokenGetParamsMapper;
+import com.niksob.domain.mapper.rest.user.UserGetParamsMapper;
 import com.niksob.domain.path.controller.authorization_service.AuthControllerPaths;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 @Component
 public class AuthControllerDtoConnectorImpl extends BaseConnector implements LoginControllerDtoConnector {
+    private final UserGetParamsMapper userGetParamsMapper;
     private final AuthTokenGetParamsMapper authTokenGetParamsMapper;
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(AuthControllerDtoConnectorImpl.class);
 
@@ -26,9 +28,11 @@ public class AuthControllerDtoConnectorImpl extends BaseConnector implements Log
             HttpClient httpClient,
             RestPath restPath,
             AuthConnectionProperties connectionProperties,
+            UserGetParamsMapper userGetParamsMapper,
             AuthTokenGetParamsMapper authTokenGetParamsMapper
     ) {
         super(httpClient, restPath, connectionProperties);
+        this.userGetParamsMapper = userGetParamsMapper;
         this.authTokenGetParamsMapper = authTokenGetParamsMapper;
     }
 
@@ -58,7 +62,7 @@ public class AuthControllerDtoConnectorImpl extends BaseConnector implements Log
 
     @Override
     public Mono<Void> signOutAll(UserIdDto userId) {
-        final Map<String, String> params = authTokenGetParamsMapper.getHttpParams(userId);
+        final Map<String, String> params = userGetParamsMapper.getHttpParams(userId);
         final String uri = getWithParams(AuthControllerPaths.SIGNOUT_ALL, params);
         return httpClient.sendGetRequest(uri, Void.class)
                 .doOnError(throwable -> log.error(
