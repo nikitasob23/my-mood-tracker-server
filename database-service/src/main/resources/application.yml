@@ -22,9 +22,9 @@ spring:
     show-sql: false
 
   datasource:
-    url: jdbc:mysql://localhost:3306/test_mood_tracker
-    username: test_server_user
-    password: my_pass123
+    url: jdbc:mysql://localhost:9196/mood_tracker_db
+    username: server_user
+    password: iosk2LV4gh
     driver-class-name: com.mysql.cj.jdbc.Driver
 
     database-init-enable: true

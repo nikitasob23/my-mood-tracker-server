@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  db-mood-tracker:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - '9196:3306'
+    environment:
+      MYSQL_USER: server_user
+      MYSQL_PASSWORD: iosk2LV4gh
+#      MYSQL_ROOT_PASSWORD: jkr367sk9Kn
+      MYSQL_DATABASE: mood_tracker_db
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - '9197:8080'

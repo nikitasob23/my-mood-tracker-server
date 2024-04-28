@@ -49,6 +49,7 @@ public class CachedUserEntityUpdaterDao implements UserEntityUpdaterDao {
         final UserEntity updated;
         try {
             updated = userRepository.save(userEntity);
+            userRepository.flush(); // For immediate invocation of save() and throwing an exception in the try-catch block
         } catch (Exception e) {
             log.error("Failed updating user in repository", null, userEntity);
             throw new ResourceUpdatingException("User has not updated", e, userEntity.getId());
