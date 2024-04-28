@@ -13,7 +13,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb
 
 {
   "id": 4,
-  "username": "nikitos0023@gmail.com",
+  "username": "TEST_USERNAME",
   "nickname": "TEST_NICKNAME",
   "password": "0000"
 }
