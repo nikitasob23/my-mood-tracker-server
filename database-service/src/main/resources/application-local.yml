@@ -6,14 +6,15 @@ spring:
       - configserver:http://localhost:9191/logger
       - configserver:http://localhost:9191/database-connection
 
-  profiles:
-    active: dev
+#  profiles:
+#    active:
+#      - dev
+#      - local
 
   data:
     redis:
       host: localhost
       port: 9003
-      password: my_redis_password
 
   jpa:
     hibernate:
@@ -23,8 +24,8 @@ spring:
 
   datasource:
     url: jdbc:mysql://localhost:9196/mood_tracker_db
-    username: server_user
-    password: iosk2LV4gh
+    username: root
+    password: jkr367sk9Kn
     driver-class-name: com.mysql.cj.jdbc.Driver
 
     database-init-enable: true

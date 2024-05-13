@@ -7,7 +7,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("dev")
+@Profile("local")
 public class RedisCacheCleaner implements ApplicationListener<ContextRefreshedEvent> {
 
     private final RedisTemplate<String, Object> redisTemplate;

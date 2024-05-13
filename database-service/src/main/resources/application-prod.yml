@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: database-service
+  config:
+    import: configserver:http://localhost:9191
