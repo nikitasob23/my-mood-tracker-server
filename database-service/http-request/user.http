@@ -3,7 +3,7 @@ POST http://localhost:8081/api/service/database/user/email
 Content-Type: application/json
 
 {
-  "email": "clark@gmail.com"
+  "email": "TEST_EMAIL@gmail.com"
 }
 
 ### GET Request
@@ -17,6 +17,7 @@ POST http://localhost:8081/api/service/database/user
 Content-Type: application/json
 
 {
+  "email": "TEST_EMAIL@gmail.com",
   "username": "TEST_USERNAME",
   "nickname": "TEST_NICKNAME",
   "password": "TEST_PASSWORD"
@@ -27,10 +28,11 @@ PUT http://localhost:8081/api/service/database/user
 Content-Type: application/json
 
 {
-"id": 4,
-"username": "TEST_USERNAME",
-"nickname": "TEST_NICKNAME",
-"password": "0000"
+  "id": 4,
+  "email": "TEST_EMAIL@gmail.com",
+  "username": "TEST_USERNAME",
+  "nickname": "TEST_NICKNAME",
+  "password": "0000"
 }
 
 ### DELETE Request

@@ -85,9 +85,6 @@ public class CachedAuthTokenFacadeDaoFacade implements AuthTokenEntityFacadeDao 
     @Transactional
     public void deleteByUserId(Long userId) {
         final Set<AuthTokenEntity> authTokens = loaderDao.loadAllByUserId(userId); // non cached
-        if (authTokens != null && authTokens.isEmpty()) {
-            throw exceptionHandler.createResourceNotFoundException(userId);
-        }
         deleteAllByUserIdFromCache(authTokens);
         updaterDao.deleteByUserId(userId);
     }
