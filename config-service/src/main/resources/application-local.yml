@@ -1,8 +1,12 @@
 server:
   port: 9191
+
 spring:
-  profiles:
-    active: native
+#  profiles:
+#    active:
+#      - local
+#      - dev
+#      - native
   cloud:
     config:
       server:
