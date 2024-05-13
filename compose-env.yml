@@ -1,19 +1,61 @@
-version: '3.8'
+version: '3.4'
 services:
-  db-mood-tracker:
+  db-sql:
     image: mysql
-    command: --default-authentication-plugin=mysql_native_password
+    #    command: --default-authentication-plugin=mysql_native_password
     restart: always
     ports:
       - '9196:3306'
+    networks:
+      - db-network
     environment:
-      MYSQL_USER: server_user
-      MYSQL_PASSWORD: iosk2LV4gh
-#      MYSQL_ROOT_PASSWORD: jkr367sk9Kn
+      #      MYSQL_USER: server_user
+      #      MYSQL_PASSWORD: iosk2LV4gh
+      MYSQL_ROOT_PASSWORD: jkr367sk9Kn
       MYSQL_DATABASE: mood_tracker_db
 
-  adminer:
+  adminer-sql:
     image: adminer
     restart: always
     ports:
       - '9197:8080'
+
+  db-service-cache:
+    image: redis
+    restart: always
+    ports:
+      - '9003:6379'
+    networks:
+      - db-network
+    command:
+      - 'redis-server'
+      - '--maxmemory 2gb'
+      - '--maxmemory-policy allkeys-random'
+
+  config-service:
+    image: niksob/my-mood-tracker:config-service-1.0.0
+    restart: always
+    ports:
+      - '9191:9191'
+    networks:
+      - db-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9191/logger/default" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  db-service:
+    image: niksob/my-mood-tracker:database-service-1.0.0
+    restart: always
+    ports:
+      - '8081:8081'
+    networks:
+      - db-network
+    depends_on:
+      config-service:
+        condition: service_healthy
+
+networks:
+  db-network:
+    driver: bridge
