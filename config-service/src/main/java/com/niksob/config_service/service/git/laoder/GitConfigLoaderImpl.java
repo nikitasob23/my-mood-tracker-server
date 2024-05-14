@@ -37,7 +37,7 @@ public class GitConfigLoaderImpl implements GitConfigLoader {
     @Override
     public void load() {
         log.info("Start to clone remote git repository: %s by user: %s"
-                .formatted(gitRemoteRepoConfig.getUsername(), gitRemoteRepoConfig.getUri())
+                .formatted(gitRemoteRepoConfig.getUri(), gitRemoteRepoConfig.getUsername())
         );
         try {
             fileUtil.dropDir(localRepoPath);
