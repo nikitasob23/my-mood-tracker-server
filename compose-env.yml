@@ -19,6 +19,8 @@ services:
     restart: always
     ports:
       - '9197:8080'
+    networks:
+      - db-network
 
   db-service-cache:
     image: redis
@@ -40,10 +42,12 @@ services:
     networks:
       - db-network
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9191/logger/default" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:9191/database_service/default" ]
       interval: 5s
       timeout: 5s
       retries: 5
+    environment:
+      SPRING_PROFILES_ACTIVE: prod,native
 
   db-service:
     image: niksob/my-mood-tracker:database-service-1.0.0
@@ -55,6 +59,8 @@ services:
     depends_on:
       config-service:
         condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
 
 networks:
   db-network:

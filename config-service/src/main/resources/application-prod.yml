@@ -1,14 +1,9 @@
-server:
-  port: 9191
 spring:
-#  profiles:
-#    active: native
   cloud:
     config:
       server:
         native:
-          search-locations:
-            - file:///service-configs
+          search-locations: file:///service_configs
 
 repo:
   remote:
@@ -16,9 +11,9 @@ repo:
       uri: https://github.com/nikitasob23/my-mood-tracker-config.git
       username: nikitasob23
       password: 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
-      properties-file: merge-properties
+      properties-file: merge_properties
   local:
     git:
-      path: /Users/nickworker/Documents/Repo/my-mood-tracker-server/config-service/git-configs
+      path: /git_configs
     config:
-      path: /Users/nickworker/Documents/Repo/my-mood-tracker-server/config-service/service-configs
+      path: /service_configs
