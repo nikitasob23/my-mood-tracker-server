@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   db-sql:
-    image: mysql
+    image: niksob/my-mood-tracker:db-sql-1.0.0
     #    command: --default-authentication-plugin=mysql_native_password
     restart: always
     ports:
@@ -23,7 +23,7 @@ services:
       - db-network
 
   db-service-cache:
-    image: redis
+    image: niksob/my-mood-tracker:db-redis-cache-1.0.0
     restart: always
     ports:
       - '9003:6379'

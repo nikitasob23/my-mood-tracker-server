@@ -3,7 +3,7 @@ spring:
     config:
       server:
         native:
-          search-locations: file:///service_configs
+          search-locations: file:///app/service_configs
 
 repo:
   remote:
@@ -14,6 +14,6 @@ repo:
       properties-file: merge_properties
   local:
     git:
-      path: /git_configs
+      path: app/git_configs
     config:
-      path: /service_configs
+      path: app/service_configs
