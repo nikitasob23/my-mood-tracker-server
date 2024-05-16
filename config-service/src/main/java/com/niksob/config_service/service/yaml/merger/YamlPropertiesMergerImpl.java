@@ -58,7 +58,7 @@ public class YamlPropertiesMergerImpl implements YamlPropertiesMerger {
                 for (String include : mergeProperties.get(service)) {
                     final String path = gitRepoPath + "/" + include + YAML_FORMAT;
                     Map<String, Object> properties = yaml.load(new FileInputStream(path));
-                    combinedProperties.putAll(properties);
+                    deepMerge(combinedProperties, properties);
                 }
                 final String serviceConfigPath = configPath + "/" + service + YAML_FORMAT;
                 new File(serviceConfigPath).getParentFile().mkdirs();
@@ -67,6 +67,18 @@ public class YamlPropertiesMergerImpl implements YamlPropertiesMerger {
             }
         } catch (IOException e) {
             log.error("Error during read and merge properties", e);
+        }
+    }
+
+    private void deepMerge(Map<String, Object> original, Map<String, Object> newMap) {
+        for (String key : newMap.keySet()) {
+            if (newMap.get(key) instanceof Map && original.get(key) instanceof Map) {
+                Map<String, Object> originalSubMap = (Map<String, Object>) original.get(key);
+                Map<String, Object> newSubMap = (Map<String, Object>) newMap.get(key);
+                deepMerge(originalSubMap, newSubMap);
+            } else {
+                original.put(key, newMap.get(key));
+            }
         }
     }
 
