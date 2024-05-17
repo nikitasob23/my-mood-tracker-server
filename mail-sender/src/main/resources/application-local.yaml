@@ -19,3 +19,9 @@ server:
   port: ${microservice.connection.mail-sender.port}
   servlet:
     context-path: ${microservice.connection.mail-sender.path}
+
+mail:
+  sending:
+    activation-code:
+      confirmation:
+        address: 80.242.58.161

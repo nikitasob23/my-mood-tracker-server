@@ -24,7 +24,7 @@ public class SendActiveCodeByMailService implements ExecutableService<ActiveCode
 
     @Value("${microservice.connection.gateway.protocol}")
     private String protocol;
-    @Value("${microservice.connection.gateway.hostname}")
+    @Value("${mail.sending.activation-code.confirmation.address}")
     private String hostname;
     @Value("${microservice.connection.gateway.port}")
     private String port;
@@ -37,14 +37,13 @@ public class SendActiveCodeByMailService implements ExecutableService<ActiveCode
 
     @Override
     public Void execute(ActiveCodeSendingInfo activeCodeSendingInfo) {
-        final String messageWithUri = new StringBuilder(MESSAGE)
-                .append(protocol)
-                .append("://").append(hostname)
-                .append(":").append(port)
-                .append(basePath)
-                .append(AuthControllerPaths.BASE_URI + AuthControllerPaths.ACTIVE_CODE)
-                .append("/").append(activeCodeSendingInfo.getActiveCode().data())
-                .toString();
+        final String messageWithUri = MESSAGE +
+                protocol +
+                "://" + hostname +
+                ":" + port +
+                basePath +
+                AuthControllerPaths.BASE_URI + AuthControllerPaths.ACTIVE_CODE +
+                "/" + activeCodeSendingInfo.getActiveCode().data();
 
         sendActiveCodeTo(activeCodeSendingInfo.getRecipientEmail().value(), messageWithUri);
         return null;

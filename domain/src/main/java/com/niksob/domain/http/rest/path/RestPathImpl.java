@@ -9,12 +9,11 @@ import java.util.Map;
 public class RestPathImpl implements RestPath {
     @Override
     public String getWithParams(ConnectionProperties connectionProperties, String resourceUri, Map<String, String> params) {
-        final String uri = new StringBuilder(connectionProperties.getProtocol())
-                .append("://").append(connectionProperties.getHostname())
-                .append(":").append(connectionProperties.getPort())
-                .append(connectionProperties.getPath())
-                .append(resourceUri)
-                .toString();
+        final String uri = connectionProperties.getProtocol() +
+                "://" + connectionProperties.getHostname() +
+                ":" + connectionProperties.getPort() +
+                connectionProperties.getPath() +
+                resourceUri;
         if (params == null || params.isEmpty()) {
             return uri;
         }
@@ -28,11 +27,10 @@ public class RestPathImpl implements RestPath {
 
     @Override
     public String getWithBody(ConnectionProperties connectionProperties, String resourceUri) {
-        return new StringBuilder(connectionProperties.getProtocol())
-                .append("://").append(connectionProperties.getHostname())
-                .append(":").append(connectionProperties.getPort())
-                .append(connectionProperties.getPath())
-                .append(resourceUri)
-                .toString();
+        return connectionProperties.getProtocol() +
+                "://" + connectionProperties.getHostname() +
+                ":" + connectionProperties.getPort() +
+                connectionProperties.getPath() +
+                resourceUri;
     }
 }
