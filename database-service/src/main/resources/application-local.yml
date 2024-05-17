@@ -4,7 +4,7 @@ spring:
   config:
     import:
       - configserver:http://localhost:9191/logger
-      - configserver:http://localhost:9191/database_connection
+      - configserver:http://localhost:9191/database-connection
 
 #  profiles:
 #    active:

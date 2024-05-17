@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: mail_sender
+  config:
+    import: configserver:http://config-service:9191
