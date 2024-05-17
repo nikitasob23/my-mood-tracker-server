@@ -4,10 +4,10 @@ services:
     image: niksob/my-mood-tracker:db-sql-1.0.0
     #    command: --default-authentication-plugin=mysql_native_password
     restart: always
-    ports:
-      - '9196:3306'
     networks:
       - db-network
+    volumes:
+      - db_data:/var/lib/mysql
     environment:
       #      MYSQL_USER: server_user
       #      MYSQL_PASSWORD: iosk2LV4gh
@@ -25,10 +25,18 @@ services:
   db-service-cache:
     image: niksob/my-mood-tracker:db-redis-cache-1.0.0
     restart: always
-    ports:
-      - '9003:6379'
     networks:
       - db-network
+    command:
+      - 'redis-server'
+      - '--maxmemory 2gb'
+      - '--maxmemory-policy allkeys-random'
+
+  auth-service-cache:
+    image: niksob/my-mood-tracker:auth-redis-cache-1.0.0
+    restart: always
+    networks:
+      - auth-network
     command:
       - 'redis-server'
       - '--maxmemory 2gb'
@@ -37,10 +45,10 @@ services:
   config-service:
     image: niksob/my-mood-tracker:config-service-1.0.0
     restart: always
-    ports:
-      - '9191:9191'
     networks:
       - db-network
+      - auth-network
+      - gateway-network
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:9191/database_service/default" ]
       interval: 5s
@@ -52,16 +60,60 @@ services:
   db-service:
     image: niksob/my-mood-tracker:database-service-1.0.0
     restart: always
-    ports:
-      - '8081:8081'
     networks:
       - db-network
+      - auth-network
+      - gateway-network
     depends_on:
       config-service:
         condition: service_healthy
     environment:
       SPRING_PROFILES_ACTIVE: prod
 
+  auth-service:
+    image: niksob/my-mood-tracker:authorization-service-1.0.0
+    restart: always
+    networks:
+      - auth-network
+      - gateway-network
+    depends_on:
+      config-service:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+
+  mail-sender:
+    image: niksob/my-mood-tracker:mail-sender-1.0.0
+    restart: always
+    networks:
+      - auth-network
+      - gateway-network
+    depends_on:
+      config-service:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+
+  gateway-service:
+    image: niksob/my-mood-tracker:gateway-service-1.0.0
+    restart: always
+    ports:
+      - '8082:8082'
+    networks:
+      - gateway-network
+    depends_on:
+      config-service:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+
+volumes:
+  db_data:
+
 networks:
   db-network:
+    driver: bridge
+  auth-network:
+    driver: bridge
+  gateway-network:
     driver: bridge
