@@ -51,7 +51,7 @@ public class AuthController {
 
     @GetMapping(AuthControllerPaths.SIGNOUT_ALL)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> signOutAll(@RequestParam("user_id") UserIdDto userId) {
+    public Mono<Void> signOutAll(@RequestParam("userId") UserIdDto userId) {
         return loginControllerService.signOutAll(userId)
                 .doOnSuccess(u -> log.info("User is sign out from all devices", userId))
                 .doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.NO_CONTENT))
