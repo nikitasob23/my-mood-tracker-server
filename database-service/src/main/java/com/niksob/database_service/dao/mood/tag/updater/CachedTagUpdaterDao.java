@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 @Component
 @AllArgsConstructor
 public class CachedTagUpdaterDao implements TagEntityUpdaterDao {
+    public static final String RESOURCE_NAME = "tags";
+
     private final TagEntityLoaderDao loaderDao;
     private final MoodTagRepository moodTagRepository;
 
@@ -89,7 +91,7 @@ public class CachedTagUpdaterDao implements TagEntityUpdaterDao {
             log.info("Mood tag entities merged", mergedList);
         } catch (Exception e) {
             log.error("Failed merging mood tag entities in repository", null, moodTags);
-            throw new ResourceUpdatingException("Mood tag entity has not updated", e, moodTags);
+            throw new ResourceUpdatingException("Mood tag entity has not updated", e, RESOURCE_NAME, moodTags);
         }
 
         storedTags.putAll(mergedList);

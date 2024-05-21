@@ -47,6 +47,9 @@ public class CachedTagDaoFacade implements TagEntityDaoFacade {
     @Override
     @Transactional
     public Set<MoodTagEntity> mergeAll(Set<MoodTagEntity> tags) {
+        if (tags == null || tags.isEmpty()) {
+            return Set.of();
+        }
         final Long userId = extractSingleUserId(tags);
         final Set<Long> storedIds = loadByUserId(userId).stream()
                 .map(MoodTagEntity::getId)

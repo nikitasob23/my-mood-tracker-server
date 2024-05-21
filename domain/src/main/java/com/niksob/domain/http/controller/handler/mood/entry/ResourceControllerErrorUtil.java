@@ -39,6 +39,9 @@ public class ResourceControllerErrorUtil {
             return createAndLogHttpClientExceptionMono(throwable, HttpStatus.BAD_REQUEST);
         } else if (throwable instanceof ResourceAlreadyExistsException) {
             return createAndLogHttpClientExceptionMono(throwable, HttpStatus.CONFLICT);
+        } else if (throwable instanceof ResourceUpdatingException
+                && ((ResourceUpdatingException) throwable).getResource().equals("tags")) {
+            return createAndLogHttpClientExceptionMono(throwable, HttpStatus.BAD_REQUEST);
         }
         return Mono.error(createLoadingError(throwable));
     }
