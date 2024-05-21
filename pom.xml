@@ -12,7 +12,7 @@
 
     <groupId>com.niksob</groupId>
     <artifactId>my-mood-tracker-server</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>my-mood-tracker-server</name>
     <description>my-mood-tracker-server</description>
     <dependencies>
@@ -25,9 +25,13 @@
 
     <packaging>pom</packaging>
     <modules>
-        <module>domain</module>
         <module>logger</module>
-        <module>database-service</module>
         <module>layer-connector</module>
+        <module>domain</module>
+        <module>config-service</module>
+        <module>database-service</module>
+        <module>authorization-service</module>
+        <module>mail-sender</module>
+        <module>gateway-service</module>
     </modules>
 </project>

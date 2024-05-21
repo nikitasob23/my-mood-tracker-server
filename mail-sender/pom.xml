@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.niksob</groupId>
     <artifactId>mail-sender</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>mail-sender</name>
     <description>mail-sender</description>
     <properties>
@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.niksob</groupId>
             <artifactId>domain</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
 
         <!-- Spring test -->

@@ -2,11 +2,11 @@
 
 # Copy jars
 echo "\nStart copying service's jar files"
-scp -P 65001 config-service/target/config-service-0.0.1-SNAPSHOT.jar root@80.242.58.161:/root/my-mood-tracker-server/config-service/config-service-0.0.1.jar &
-scp -P 65001 database-service/target/database-service-0.0.1-SNAPSHOT.jar root@80.242.58.161:/root/my-mood-tracker-server/database-service/database-service-0.0.1.jar &
-scp -P 65001 authorization-service/target/authorization-service-0.0.1-SNAPSHOT.jar root@80.242.58.161:/root/my-mood-tracker-server/authorization-service/authorization-service-0.0.1.jar &
-scp -P 65001 mail-sender/target/mail-sender-0.0.1-SNAPSHOT.jar root@80.242.58.161:/root/my-mood-tracker-server/mail-sender/mail-sender-0.0.1.jar &
-scp -P 65001 gateway-service/target/gateway-service-0.0.1-SNAPSHOT.jar root@80.242.58.161:/root/my-mood-tracker-server/gateway-service/gateway-service-0.0.1.jar &
+scp -P 65001 config-service/target/config-service-1.0.0.jar root@80.242.58.161:/root/my-mood-tracker-server/config-service/config-service-1.0.0.jar &
+scp -P 65001 database-service/target/database-service-1.0.0.jar root@80.242.58.161:/root/my-mood-tracker-server/database-service/database-service-1.0.0.jar &
+scp -P 65001 authorization-service/target/authorization-service-1.0.0.jar root@80.242.58.161:/root/my-mood-tracker-server/authorization-service/authorization-service-1.0.0.jar &
+scp -P 65001 mail-sender/target/mail-sender-1.0.0.jar root@80.242.58.161:/root/my-mood-tracker-server/mail-sender/mail-sender-1.0.0.jar &
+scp -P 65001 gateway-service/target/gateway-service-1.0.0.jar root@80.242.58.161:/root/my-mood-tracker-server/gateway-service/gateway-service-1.0.0.jar &
 wait
 echo "All JAR files have been copied successfully."
 

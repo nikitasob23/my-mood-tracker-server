@@ -5,6 +5,6 @@ RUN apk update && apk add --no-cache curl
 RUN apk add vim
 
 RUN mkdir app
-COPY my-mood-tracker-server/config-service/config-service-0.0.1.jar app/config-service-0.0.1.jar
+COPY my-mood-tracker-server/config-service/config-service-1.0.0.jar app/config-service-1.0.0.jar
 
-ENTRYPOINT ["java", "-jar", "app/config-service-0.0.1.jar"]
+ENTRYPOINT ["java", "-jar", "app/config-service-1.0.0.jar"]

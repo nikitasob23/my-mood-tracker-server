@@ -10,7 +10,7 @@
     </parent>
     <groupId>org.niksob</groupId>
     <artifactId>authorization-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>authorization-service</name>
     <description>authorization-service</description>
     <properties>
@@ -21,8 +21,14 @@
         <dependency>
             <groupId>com.niksob</groupId>
             <artifactId>domain</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.niksob</groupId>
+            <artifactId>logger</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
         <!-- Spring -->
