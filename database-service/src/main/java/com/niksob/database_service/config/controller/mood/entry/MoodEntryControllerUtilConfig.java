@@ -18,7 +18,7 @@ public class MoodEntryControllerUtilConfig {
 
     @Bean("moodEntryControllerUtil")
     public ResourceControllerErrorUtil getMoodTagControllerUtil() {
-        final String staticPath = "%s/%s".formatted(contextPath, MoodEntryControllerPaths.BASE_URI);
+        final String staticPath = contextPath + MoodEntryControllerPaths.BASE_URI;
         return new ResourceControllerErrorUtil("Mood entry", staticPath, logger);
     }
 }
