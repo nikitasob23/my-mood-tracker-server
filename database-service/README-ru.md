@@ -1049,7 +1049,7 @@ Connection: keep-alive
 }
 ```
 
-### Reference Documentation
+### Дополнительные ссылки на документацию
 Для получения дополнительной информации, пожалуйста, ознакомьтесь со следующими разделами:
 
 * [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
