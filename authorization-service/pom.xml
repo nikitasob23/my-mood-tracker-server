@@ -93,13 +93,6 @@
             <artifactId>reactor-core</artifactId>
         </dependency>
 
-        <!-- YAML -->
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>2.0</version>
-        </dependency>
-
         <!-- json -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
