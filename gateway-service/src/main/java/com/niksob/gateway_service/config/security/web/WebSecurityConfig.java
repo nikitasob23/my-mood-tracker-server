@@ -1,6 +1,6 @@
 package com.niksob.gateway_service.config.security.web;
 
-import com.niksob.gateway_service.config.security.context.NullSecurityContextRepository;
+import com.niksob.gateway_service.config.security.context.SecurityContextRepository;
 import com.niksob.domain.path.controller.gateway_service.AuthControllerPaths;
 import com.niksob.gateway_service.path.controller.auth.token.AuthTokenControllerPaths;
 import lombok.AllArgsConstructor;
@@ -24,7 +24,7 @@ public class WebSecurityConfig {
     @Qualifier("accessTokenFilter")
     private final AuthenticationWebFilter accessTokenFilter;
 
-    private final NullSecurityContextRepository nullSecurityContextRepository;
+    private final SecurityContextRepository securityContextRepository;
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
@@ -38,7 +38,7 @@ public class WebSecurityConfig {
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
                 .authenticationManager(authenticationManager)
-                .securityContextRepository(nullSecurityContextRepository)
+                .securityContextRepository(securityContextRepository)
                 .addFilterAt(accessTokenFilter, SecurityWebFiltersOrder.AUTHENTICATION);
         return http.build();
     }

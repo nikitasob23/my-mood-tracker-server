@@ -15,7 +15,9 @@ import java.util.Set;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class UserSecurityDetails implements UserDetails {
+    @Getter
     private Long id;
+    @Getter
     private String email;
     private String username;
     private String encodedPassword;

@@ -30,12 +30,12 @@ public class AccessTokenAuthentication implements Authentication {
 
     @Override
     public Object getDetails() {
-        return userDetails;
+        return null;
     }
 
     @Override
     public Object getPrincipal() {
-        return userDetails.getUsername();
+        return userDetails;
     }
 
     @Override
