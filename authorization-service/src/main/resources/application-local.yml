@@ -12,10 +12,8 @@ spring:
     redis:
       host: localhost
       port: 9004
-      password: my_redis_password
 
 server:
-  address: ${microservice.connection.authorization.hostname}
   port: ${microservice.connection.authorization.port}
   servlet:
     context-path: ${microservice.connection.authorization.path}

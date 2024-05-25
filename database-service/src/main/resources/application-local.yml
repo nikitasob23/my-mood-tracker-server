@@ -36,7 +36,6 @@ spring:
     clean-disabled: false
 
 server:
-  address: ${microservice.connection.database.hostname}
   port: ${microservice.connection.database.port}
   servlet:
     context-path: ${microservice.connection.database.path}

@@ -8,9 +8,6 @@ spring:
       - configserver:http://localhost:9191/authorization-connection
       - configserver:http://localhost:9191/gateway-connection
 
-  profiles:
-    active: dev
-
   webflux:
     base-path: ${microservice.connection.gateway.path}
 server:

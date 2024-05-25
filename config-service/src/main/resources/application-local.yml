@@ -12,17 +12,8 @@ spring:
       server:
         native:
           search-locations:
-            - file:///Users/nickworker/Documents/Repo/my-mood-tracker-server/config-service/src/main/resources/common-config
-
-repo:
-  remote:
-    git:
-      uri: https://github.com/nikitasob23/my-mood-tracker-config.git
-      username: nikitasob23
-      password: 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
-      properties-file: merge-properties
-  local:
-    git:
-      path: /Users/nickworker/Documents/Repo/my-mood-tracker-server/config-service/git-configs
-    config:
-      path: /Users/nickworker/Documents/Repo/my-mood-tracker-server/config-service/service-configs
+            - file:///Users/nickworker/Documents/Repo/my-mood-tracker-server/logger/src/main/resources/common-config
+            - file:///Users/nickworker/Documents/Repo/my-mood-tracker-server/database-service/src/main/resources/common-config
+            - file:///Users/nickworker/Documents/Repo/my-mood-tracker-server/authorization-service/src/main/resources/common-config
+            - file:///Users/nickworker/Documents/Repo/my-mood-tracker-server/gateway-service/src/main/resources/common-config
+            - file:///Users/nickworker/Documents/Repo/my-mood-tracker-server/mail-sender/src/main/resources/common-config
