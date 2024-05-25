@@ -11,7 +11,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import static com.niksob.mailsender.values.mail.message.MailMessage.MESSAGE;
+import static com.niksob.mailsender.values.mail.message.MailMessage.MESSAGE_TEMPLATE;
 
 @Service
 @RequiredArgsConstructor
@@ -37,13 +37,15 @@ public class SendActiveCodeByMailService implements ExecutableService<ActiveCode
 
     @Override
     public Void execute(ActiveCodeSendingInfo activeCodeSendingInfo) {
-        final String messageWithUri = MESSAGE +
-                protocol +
-                "://" + hostname +
-                ":" + port +
-                basePath +
-                AuthControllerPaths.BASE_URI + AuthControllerPaths.ACTIVE_CODE +
-                "/" + activeCodeSendingInfo.getActiveCode().data();
+        final String message = MESSAGE_TEMPLATE.formatted(activeCodeSendingInfo.getSenderUsername()
+                .getValue());
+        final String messageWithUri = message
+                + protocol
+                + "://" + hostname
+                + ":" + port
+                + basePath
+                + AuthControllerPaths.BASE_URI + AuthControllerPaths.ACTIVE_CODE
+                + "/" + activeCodeSendingInfo.getActiveCode().data();
 
         sendActiveCodeTo(activeCodeSendingInfo.getRecipientEmail().value(), messageWithUri);
         return null;
