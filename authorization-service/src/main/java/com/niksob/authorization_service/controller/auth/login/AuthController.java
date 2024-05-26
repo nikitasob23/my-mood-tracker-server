@@ -1,6 +1,7 @@
 package com.niksob.authorization_service.controller.auth.login;
 
 import com.niksob.authorization_service.controller.auth.exception.handler.ControllerErrorHandler;
+import com.niksob.domain.dto.auth.login.UserEmailDto;
 import com.niksob.domain.dto.auth.login.UserPasswordPairDto;
 import com.niksob.domain.dto.auth.login.active_code.ActiveCodeDto;
 import com.niksob.domain.dto.user.UserIdDto;
@@ -35,7 +36,16 @@ public class AuthController {
     public Mono<Void> resetPassword(@RequestBody UserPasswordPairDto passwordPair) {
         return loginControllerService.resetPassword(passwordPair)
                 .doOnSuccess(u ->
-                        log.info("Success password resetting for user with id", passwordPair.getUserId())
+                        log.info("Success password resetting for user with id", passwordPair)
+                ).doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.OK))
+                .onErrorResume(errorHandler::createLoginError);
+    }
+
+    @PostMapping(AuthControllerPaths.EMAIL_RESETTING)
+    public Mono<Void> resetEmail(@RequestBody UserEmailDto userEmail) {
+        return loginControllerService.resetEmail(userEmail)
+                .doOnSuccess(u ->
+                        log.info("Success email resetting for user with id", userEmail)
                 ).doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.OK))
                 .onErrorResume(errorHandler::createLoginError);
     }
@@ -45,6 +55,14 @@ public class AuthController {
         return loginControllerService.signupByActiveCode(activeCode)
                 .doOnSuccess(u -> log.info("User is signup by active code"))
                 .doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.CREATED))
+                .onErrorResume(errorHandler::createLoginError);
+    }
+
+    @GetMapping(AuthControllerPaths.EMAIL_RESETTING_ACTIVATION)
+    public Mono<Void> resetEmailByActiveCode(@RequestParam("active_code") ActiveCodeDto activeCode) {
+        return loginControllerService.resetEmailByActiveCode(activeCode)
+                .doOnSuccess(u -> log.info("User is reset email by active code"))
+                .doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.OK))
                 .onErrorResume(errorHandler::createLoginError);
     }
 

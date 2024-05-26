@@ -28,12 +28,12 @@ spring:
     password: jkr367sk9Kn
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-    database-init-enable: true
-    database-init-resource-file: db/dml/data_insertion.sql
-  flyway:
-    baseline-on-migrate: true
-    clean-on-validation-error: true
-    clean-disabled: false
+#    database-init-enable: true
+#    database-init-resource-file: db/dml/data_insertion.sql
+#  flyway:
+#    baseline-on-migrate: true
+#    clean-on-validation-error: true
+#    clean-disabled: false
 
 server:
   port: ${microservice.connection.database.port}

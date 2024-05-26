@@ -6,4 +6,6 @@ public class AuthControllerPaths {
     public static final String SIGNOUT = "/signout";
     public static final String SIGNOUT_ALL = SIGNOUT + "/all";
     public static final String PASSWORD_RESETTING = "/reset/password";
+    public static final String EMAIL_RESETTING = "/reset/email";
+    public static final String EMAIL_RESETTING_ACTIVATION = "/reset/email/activation";
 }

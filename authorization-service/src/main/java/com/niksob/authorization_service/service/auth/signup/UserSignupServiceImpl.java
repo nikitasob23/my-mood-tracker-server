@@ -5,10 +5,9 @@ import com.niksob.authorization_service.exception.auth.signup.SignupException;
 import com.niksob.authorization_service.mapper.auth.login.SignOutDetailsMapper;
 import com.niksob.authorization_service.model.login.password.WrongPasswordException;
 import com.niksob.domain.mapper.dto.user.UserDtoMapper;
+import com.niksob.domain.model.auth.login.UserEmail;
 import com.niksob.domain.model.auth.login.UserPasswordPair;
-import com.niksob.domain.model.user.Password;
-import com.niksob.domain.model.user.User;
-import com.niksob.domain.model.user.UserInfo;
+import com.niksob.domain.model.user.*;
 import com.niksob.domain.model.user.activation.ActivationUserDetails;
 import com.niksob.authorization_service.service.auth.email.EmailValidationService;
 import com.niksob.authorization_service.service.user.UserService;
@@ -25,7 +24,6 @@ import com.niksob.authorization_service.service.password_encoder.PasswordEncoder
 import com.niksob.domain.exception.resource.ResourceAlreadyExistsException;
 import com.niksob.domain.exception.resource.ResourceSavingException;
 import com.niksob.domain.model.auth.login.SignOutDetails;
-import com.niksob.domain.model.user.UserId;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
@@ -47,7 +45,6 @@ public class UserSignupServiceImpl implements UserSignupService {
 
     private final UserDtoMapper userDetailsDtoMapper;
     private final SignOutDetailsMapper signOutDetailsMapper;
-
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserSignupServiceImpl.class);
 
@@ -86,15 +83,47 @@ public class UserSignupServiceImpl implements UserSignupService {
     }
 
     @Override
+    public Mono<Void> resetEmail(UserEmail userEmail) {
+        return userService.loadById(userEmail.getUserId())
+                .filter(userInfo -> emailValidationService.validate(userEmail.getEmail()))
+                .switchIfEmpty(createIncorrectEmailMonoError(userEmail))
+
+                .map(userInfo -> generateActivationUserDetails(userEmail, userInfo))
+                .doOnNext(tempActivationUserRepo::save)
+                .flatMap(mailSenderConnector::sendActiveCodeMessage)
+
+                .doOnSuccess(ignore -> log.info("Successful preparing to reset email", null, userEmail))
+                .onErrorResume(throwable -> createSignupError(throwable, userEmail));
+    }
+
+    @Override
     public Mono<Void> signupByActiveCode(ActiveCode activeCode) {
         return Mono.just(activeCode)
-                .map(this::loadActiveUserOrThrow)
-                .map(userDetailsDtoMapper::toUserInfo)
-
+                .map(this::activeCodeToUserInfo)
                 .flatMap(userService::save)
                 .doOnSuccess(userInfo -> log.info("Successful signup of user", null, userInfo))
                 .then()
                 .onErrorResume(throwable -> createSignupError(throwable, activeCode));
+    }
+
+    @Override
+    public Mono<Void> resetEmailByActiveCode(ActiveCode activeCode) {
+        return Mono.just(activeCode)
+                .map(this::activeCodeToUserInfo)
+                .flatMap(userService::update)
+                .doOnSuccess(userInfo -> log.info("Successful resetting of email"))
+                .onErrorResume(throwable -> createResettingEmailMonoError(throwable, activeCode));
+    }
+
+    private ActivationUserDetails generateActivationUserDetails(UserEmail userEmail, UserInfo userInfo) {
+        final User user = userDetailsDtoMapper.fromUserInfo(userInfo);
+        final ActiveCode activeCode = activeCodeService.generate(user.getEmail());
+        return new ActivationUserDetails(userEmail.getEmail(), activeCode, user);
+    }
+
+    private UserInfo activeCodeToUserInfo(ActiveCode activeCode) {
+        final User user = loadActiveUserOrThrow(activeCode);
+        return userDetailsDtoMapper.toUserInfo(user);
     }
 
     private User loadActiveUserOrThrow(ActiveCode activeCode) {
@@ -133,10 +162,11 @@ public class UserSignupServiceImpl implements UserSignupService {
                 signupDetails.getEmail(),
                 DefaultUserInfo.createUsernameIfEmpty(signupDetails),
                 passwordEncoderService.encode(signupDetails.getRowPassword()));
-        return new ActivationUserDetails(activeCodeService.generate(userDetails.getEmail()), userDetails);
+        final ActiveCode activeCode = activeCodeService.generate(userDetails.getEmail());
+        return new ActivationUserDetails(signupDetails.getEmail(), activeCode, userDetails);
     }
 
-    private Mono<SignupDetails> createIncorrectEmailMonoError(Object state) {
+    private <T> Mono<T> createIncorrectEmailMonoError(Object state) {
         final String message = "Incorrect email";
         var e = new InvalidEmailException(message);
         log.error(message, e, state);
@@ -148,6 +178,12 @@ public class UserSignupServiceImpl implements UserSignupService {
         var e = new WrongPasswordException(message);
         log.error(message, e, state);
         return Mono.error(e);
+    }
+
+    private <T> Mono<T> createResettingEmailMonoError(Throwable throwable, Object state) {
+        final String message = "Resetting email is failed";
+        log.error(message, throwable, state);
+        return Mono.error(throwable);
     }
 
     private <T> Mono<T> createSignupError(Throwable throwable, Object state) {

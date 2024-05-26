@@ -37,6 +37,8 @@ public interface UserDtoMapper {
 
     UserInfo toUserInfo(User userDetails);
 
+    User fromUserInfo(UserInfo userInfo);
+
     default Mono<UserDto> toMonoDto(Mono<UserInfo> mono) {
         return mono.map(this::toDto);
     }

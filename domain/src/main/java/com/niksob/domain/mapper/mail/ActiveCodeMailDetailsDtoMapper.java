@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ActiveCodeMailDetailsDtoMapper {
     @Mapping(source = "userDetails.username.value", target = "senderUsername")
-    @Mapping(source = "userDetails.email.value", target = "recipientEmail")
+    @Mapping(source = "email.value", target = "recipientEmail")
     @Mapping(source = "activeCode.value", target = "activeCode")
     ActiveCodeMailDetailsDto toDto(ActivationUserDetails activationUserDetails);
 }
