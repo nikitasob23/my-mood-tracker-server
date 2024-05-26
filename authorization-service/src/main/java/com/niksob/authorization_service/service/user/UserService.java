@@ -14,4 +14,6 @@ public interface UserService {
     Mono<UserInfo> loadById(UserId userId);
 
     Mono<UserInfo> save(UserInfo userInfo);
+
+    Mono<Void> update(UserInfo userInfo);
 }

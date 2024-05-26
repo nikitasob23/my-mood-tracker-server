@@ -1,5 +1,6 @@
 package com.niksob.authorization_service.service.auth.signup;
 
+import com.niksob.domain.model.auth.login.UserPasswordPair;
 import com.niksob.domain.model.auth.login.active_code.ActiveCode;
 import com.niksob.domain.model.auth.login.SignupDetails;
 import com.niksob.domain.model.auth.login.SignOutDetails;
@@ -8,6 +9,8 @@ import reactor.core.publisher.Mono;
 
 public interface UserSignupService {
     Mono<Void> signup(SignupDetails signupDetails);
+
+    Mono<Void> resetPassword(UserPasswordPair userPasswordPair);
 
     Mono<Void> signupByActiveCode(ActiveCode activeCode);
 

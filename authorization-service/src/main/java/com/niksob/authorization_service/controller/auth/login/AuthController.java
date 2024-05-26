@@ -1,6 +1,7 @@
 package com.niksob.authorization_service.controller.auth.login;
 
 import com.niksob.authorization_service.controller.auth.exception.handler.ControllerErrorHandler;
+import com.niksob.domain.dto.auth.login.UserPasswordPairDto;
 import com.niksob.domain.dto.auth.login.active_code.ActiveCodeDto;
 import com.niksob.domain.dto.user.UserIdDto;
 import com.niksob.domain.dto.user.signup.SignupDetailsDto;
@@ -30,8 +31,17 @@ public class AuthController {
                 .onErrorResume(errorHandler::createLoginError);
     }
 
+    @PostMapping(AuthControllerPaths.PASSWORD_RESETTING)
+    public Mono<Void> resetPassword(@RequestBody UserPasswordPairDto passwordPair) {
+        return loginControllerService.resetPassword(passwordPair)
+                .doOnSuccess(u ->
+                        log.info("Success password resetting for user with id", passwordPair.getUserId())
+                ).doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.OK))
+                .onErrorResume(errorHandler::createLoginError);
+    }
+
     @GetMapping(AuthControllerPaths.ACTIVE_CODE)
-    public Mono<Void> signupByActiveCode(@RequestParam("active_code")ActiveCodeDto activeCode) {
+    public Mono<Void> signupByActiveCode(@RequestParam("active_code") ActiveCodeDto activeCode) {
         return loginControllerService.signupByActiveCode(activeCode)
                 .doOnSuccess(u -> log.info("User is signup by active code"))
                 .doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.CREATED))

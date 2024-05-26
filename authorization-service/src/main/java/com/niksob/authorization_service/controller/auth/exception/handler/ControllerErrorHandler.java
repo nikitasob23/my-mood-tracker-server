@@ -43,6 +43,9 @@ public class ControllerErrorHandler {
         } else if (throwable instanceof InvalidActiveCodeException) {
             httpStatus = HttpStatus.CONFLICT;
             message = "Invalid signup activation code";
+        } else if (throwable instanceof WrongPasswordException) {
+            httpStatus = HttpStatus.FORBIDDEN;
+            message = "Invalid password";
         } else if (throwable instanceof SignupException) {
             httpStatus = HttpStatus.BAD_REQUEST;
             message = "Failure signup";

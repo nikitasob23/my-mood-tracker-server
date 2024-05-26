@@ -3,8 +3,12 @@ package com.niksob.authorization_service.service.auth.signup;
 import com.niksob.authorization_service.exception.auth.signup.DuplicateSignupAttemptException;
 import com.niksob.authorization_service.exception.auth.signup.SignupException;
 import com.niksob.authorization_service.mapper.auth.login.SignOutDetailsMapper;
+import com.niksob.authorization_service.model.login.password.WrongPasswordException;
 import com.niksob.domain.mapper.dto.user.UserDtoMapper;
+import com.niksob.domain.model.auth.login.UserPasswordPair;
+import com.niksob.domain.model.user.Password;
 import com.niksob.domain.model.user.User;
+import com.niksob.domain.model.user.UserInfo;
 import com.niksob.domain.model.user.activation.ActivationUserDetails;
 import com.niksob.authorization_service.service.auth.email.EmailValidationService;
 import com.niksob.authorization_service.service.user.UserService;
@@ -12,7 +16,7 @@ import com.niksob.authorization_service.values.user.DefaultUserInfo;
 import com.niksob.domain.exception.user.email.InvalidEmailException;
 import com.niksob.domain.http.connector.microservice.mail_sender.MailSenderConnector;
 import com.niksob.domain.model.auth.login.active_code.ActiveCode;
-import com.niksob.authorization_service.repository.user.actiovation.TempActivationUserRepo;
+import com.niksob.authorization_service.repository.user.activation.TempActivationUserRepo;
 import com.niksob.authorization_service.service.auth.signup.activation.code.ActiveCodeService;
 import com.niksob.domain.exception.auth.signup.active_code.InvalidActiveCodeException;
 import com.niksob.domain.model.auth.login.SignupDetails;
@@ -65,6 +69,20 @@ public class UserSignupServiceImpl implements UserSignupService {
 
                 .doOnSuccess(ignore -> log.info("Successful preparing to signup", null, signupDetails))
                 .onErrorResume(throwable -> createSignupError(throwable, signupDetails));
+    }
+
+    @Override
+    public Mono<Void> resetPassword(UserPasswordPair userPasswordPair) {
+        return userService.loadById(userPasswordPair.getUserId())
+                .flatMap(user -> {
+                    if (!passwordEncoderService.matches(userPasswordPair.getOldRowPassword(), user.getPassword())) {
+                        return createIncorrectOldPasswordMonoError(user);
+                    }
+                    log.info("Old password is correct. Change password allowed for user", user);
+                    final Password newEncodePassword = passwordEncoderService.encode(userPasswordPair.getNewRowPassword());
+                    final UserInfo newUser = new UserInfo(user, newEncodePassword);
+                    return userService.update(newUser);
+                });
     }
 
     @Override
@@ -121,6 +139,13 @@ public class UserSignupServiceImpl implements UserSignupService {
     private Mono<SignupDetails> createIncorrectEmailMonoError(Object state) {
         final String message = "Incorrect email";
         var e = new InvalidEmailException(message);
+        log.error(message, e, state);
+        return Mono.error(e);
+    }
+
+    private <T> Mono<T> createIncorrectOldPasswordMonoError(Object state) {
+        final String message = "Incorrect old password for user";
+        var e = new WrongPasswordException(message);
         log.error(message, e, state);
         return Mono.error(e);
     }

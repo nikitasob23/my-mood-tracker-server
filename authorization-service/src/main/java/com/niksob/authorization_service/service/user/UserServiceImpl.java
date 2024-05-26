@@ -45,7 +45,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<UserInfo> save(UserInfo userInfo) {
-        return userDatabaseConnector.save(userInfo);
+        return userDatabaseConnector.save(userInfo)
+                .doOnNext(user -> log.info("User was saved", user));
+    }
+
+    @Override
+    public Mono<Void> update(UserInfo userInfo) {
+        return userDatabaseConnector.update(userInfo)
+                .doOnSuccess(ignore -> log.info("User was updated", userInfo));
     }
 
     private <T> Mono<T> createUserAlreadyExistsError(String marker, Object state) {
