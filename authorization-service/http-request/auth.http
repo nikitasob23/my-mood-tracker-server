@@ -14,4 +14,4 @@ Content-Type: application/json
 }
 
 ### Signup confirmation
-POST http://localhost:8092/api/service/auth/signup/activate/d4aba17b-0077-4bbb-85b4-1a9cd43cbcc5
+GET http://localhost:8092/api/service/auth/signup/activate?active_code=8acc5e2a-9f45-4f3e-a323-c3f7eedaf275

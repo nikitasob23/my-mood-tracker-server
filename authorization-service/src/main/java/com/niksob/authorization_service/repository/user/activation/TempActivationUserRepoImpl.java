@@ -5,6 +5,7 @@ import com.niksob.domain.model.auth.login.active_code.ActiveCode;
 import com.niksob.domain.model.user.User;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
@@ -28,5 +29,10 @@ public class TempActivationUserRepoImpl implements TempActivationUserRepo {
     public User save(ActivationUserDetails activationUserDetails) {
         log.info("Save activation user details in cache", activationUserDetails);
         return activationUserDetails.getUserDetails();
+    }
+
+    @Override
+    @CacheEvict(value = USER_ACTIVATION_DETAILS_CACHE_NAME, key = "#activeCode.getValue()")
+    public void remove(ActiveCode activeCode) {
     }
 }

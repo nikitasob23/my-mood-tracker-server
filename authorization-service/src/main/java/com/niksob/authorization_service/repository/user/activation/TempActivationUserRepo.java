@@ -8,4 +8,6 @@ public interface TempActivationUserRepo {
     User load(ActiveCode activeCode);
 
     User save(ActivationUserDetails activationUserDetails);
+
+    void remove(ActiveCode activeCode);
 }

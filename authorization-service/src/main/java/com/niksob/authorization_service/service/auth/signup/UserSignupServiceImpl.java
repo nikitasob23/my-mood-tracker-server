@@ -81,6 +81,7 @@ public class UserSignupServiceImpl implements UserSignupService {
 
     private User loadActiveUserOrThrow(ActiveCode activeCode) {
         final User userDetails = tempActivationUserRepo.load(activeCode);
+        tempActivationUserRepo.remove(activeCode);
         if (userDetails == null) {
             throw new InvalidActiveCodeException("Wrong activation code");
         }
