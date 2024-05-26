@@ -30,6 +30,14 @@ public class UserController {
                 .onErrorResume(controllerErrorUtil::createLoadingErrorMono);
     }
 
+    @GetMapping(UserControllerPaths.ID)
+    public Mono<UserInfoDto> loadById(@RequestParam("userId") UserIdDto userId) {
+        return userControllerService.loadById(userId)
+                .doOnSuccess(ignore -> log.debug("Successful user loading", userId))
+                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
+                .onErrorResume(controllerErrorUtil::createLoadingErrorMono);
+    }
+
     @GetMapping
     public Mono<UserDto> load(@RequestParam("username") UsernameDto usernameDto) {
         return userControllerService.loadByUsername(usernameDto)

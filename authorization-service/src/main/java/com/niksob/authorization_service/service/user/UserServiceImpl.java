@@ -4,6 +4,7 @@ import com.niksob.domain.exception.resource.ResourceAlreadyExistsException;
 import com.niksob.domain.exception.resource.ResourceNotFoundException;
 import com.niksob.domain.http.connector.microservice.database.user.UserDatabaseConnector;
 import com.niksob.domain.model.user.Email;
+import com.niksob.domain.model.user.UserId;
 import com.niksob.domain.model.user.UserInfo;
 import com.niksob.domain.model.user.Username;
 import com.niksob.logger.object_state.ObjectStateLogger;
@@ -34,6 +35,12 @@ public class UserServiceImpl implements UserService {
                     }
                     return createUserAlreadyExistsError("Username", username);
                 }).then(Mono.just(Boolean.TRUE));
+    }
+
+    @Override
+    public Mono<UserInfo> loadById(UserId userId) {
+        return userDatabaseConnector.loadById(userId)
+                .doOnNext(user -> log.info("User was loaded", user));
     }
 
     @Override

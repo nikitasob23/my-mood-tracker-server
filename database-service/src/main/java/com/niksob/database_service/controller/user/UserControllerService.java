@@ -39,4 +39,6 @@ public interface UserControllerService {
     Mono<Void> update(UserInfoDto userInfoDto);
 
     Mono<Void> delete(UsernameDto usernameDto);
+
+    Mono<UserInfoDto> loadById(UserIdDto userId);
 }

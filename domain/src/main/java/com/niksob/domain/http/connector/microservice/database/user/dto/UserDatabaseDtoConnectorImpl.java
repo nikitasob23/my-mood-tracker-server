@@ -8,6 +8,8 @@ import com.niksob.domain.http.connector.microservice.database.error.handler.Data
 import com.niksob.domain.http.rest.path.RestPath;
 import com.niksob.domain.mapper.rest.user.UserGetParamsMapper;
 import com.niksob.domain.path.controller.database_service.user.UserControllerPaths;
+import com.niksob.logger.object_state.ObjectStateLogger;
+import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -18,6 +20,7 @@ import java.util.Map;
 public class UserDatabaseDtoConnectorImpl extends BaseConnector implements UserDatabaseDtoConnector {
     private final UserGetParamsMapper userGetParamsMapper;
     private final DatabaseDtoConnectorErrorHandler errorHandler;
+    private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserDatabaseDtoConnectorImpl.class);
 
     public UserDatabaseDtoConnectorImpl(
             HttpClient httpClient,
@@ -30,6 +33,14 @@ public class UserDatabaseDtoConnectorImpl extends BaseConnector implements UserD
         super(httpClient, restPath, connectionProperties);
         this.errorHandler = errorHandler;
         this.userGetParamsMapper = userGetParamsMapper;
+    }
+
+    @Override
+    public Mono<UserInfoDto> loadById(UserIdDto userId) {
+        final Map<String, String> params = userGetParamsMapper.getHttpParams(userId);
+        final String uri = getWithParams(UserControllerPaths.BASE_URI + UserControllerPaths.ID, params);
+        return httpClient.sendGetRequest(uri, UserInfoDto.class)
+                .onErrorResume(throwable -> errorHandler.createLoadingError(throwable, userId));
     }
 
     @Override
@@ -59,6 +70,7 @@ public class UserDatabaseDtoConnectorImpl extends BaseConnector implements UserD
     public Mono<UserInfoDto> save(UserInfoDto userInfoDto) {
         final String uri = getWithBody(UserControllerPaths.BASE_URI);
         return httpClient.sendPostRequest(uri, userInfoDto, UserInfoDto.class, UserInfoDto.class)
+                .doOnNext(user -> log.info("Database connector RECEIVE an answer", user))
                 .onErrorResume(throwable -> errorHandler.createSavingError(throwable, userInfoDto));
     }
 
