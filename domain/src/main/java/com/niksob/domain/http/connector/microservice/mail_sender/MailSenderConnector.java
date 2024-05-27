@@ -8,5 +8,7 @@ import reactor.core.publisher.Mono;
 
 @LayerConnector(source = MailSenderDtoConnector.class, mapper = ActiveCodeMailDetailsDtoMapper.class)
 public interface MailSenderConnector {
-    Mono<Void> sendActiveCodeMessage(ActivationUserDetails activationUserDetails);
+    Mono<Void> sendSignupMessage(ActivationUserDetails activationUserDetails);
+
+    Mono<Void> sendEmailResettingMessage(ActivationUserDetails activationUserDetails);
 }

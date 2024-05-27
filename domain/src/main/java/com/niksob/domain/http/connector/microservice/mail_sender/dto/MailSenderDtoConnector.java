@@ -4,5 +4,7 @@ import com.niksob.domain.dto.mood.active_code.ActiveCodeMailDetailsDto;
 import reactor.core.publisher.Mono;
 
 public interface MailSenderDtoConnector {
-    Mono<Void> sendActiveCodeMessage(ActiveCodeMailDetailsDto activeCodeMailDetails);
+    Mono<Void> sendSignupMessage(ActiveCodeMailDetailsDto activeCodeMailDetails);
+
+    Mono<Void> sendEmailResettingMessage(ActiveCodeMailDetailsDto activeCodeMailDetails);
 }

@@ -24,4 +24,8 @@ mail:
   sending:
     activation-code:
       confirmation:
-        address: localhost
+        path:
+          protocol: ${microservice.connection.gateway.protocol}
+          hostname: ${microservice.connection.gateway.hostname}
+          port: ${microservice.connection.gateway.port}
+          base-path: ${microservice.connection.gateway.path}

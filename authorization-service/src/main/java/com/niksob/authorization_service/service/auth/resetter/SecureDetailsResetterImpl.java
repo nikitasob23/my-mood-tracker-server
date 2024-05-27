@@ -49,7 +49,7 @@ public class SecureDetailsResetterImpl implements SecureDetailsResetter {
         }
         return userService.loadById(userEmail.getUserId())
                 .map(userInfo -> new UserInfo(userInfo, userEmail.getEmail()))
-                .flatMap(userConformationService::sendActiveCodeMessage)
+                .flatMap(userConformationService::sendEmailResettingActiveCodeMessage)
                 .doOnSuccess(ignore -> log.info("Successful preparing to reset email", null, userEmail))
                 .onErrorResume(throwable -> exceptionHandler.createSignupError(throwable, userEmail));
     }

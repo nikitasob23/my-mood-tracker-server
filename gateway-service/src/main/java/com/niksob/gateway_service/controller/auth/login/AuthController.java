@@ -35,7 +35,7 @@ public class AuthController {
                         log.error("Controller returning failed response", null, signupDetails));
     }
 
-    @PostMapping(AuthControllerPaths.EMAIL_RESETTING_ACTIVATION)
+    @PostMapping(AuthControllerPaths.EMAIL_RESETTING)
     public Mono<Void> resetEmail(
             @RequestBody EmailDto email, @AuthenticationPrincipal UserSecurityDetails userDetails
     ) {

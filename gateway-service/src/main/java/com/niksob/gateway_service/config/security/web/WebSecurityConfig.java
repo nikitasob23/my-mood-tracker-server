@@ -32,6 +32,7 @@ public class WebSecurityConfig {
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(
                                 AuthControllerPaths.BASE_URI + AuthControllerPaths.SIGNUP + "/**",
+                                AuthControllerPaths.BASE_URI + AuthControllerPaths.EMAIL_RESETTING_ACTIVATION + "/**",
                                 AuthTokenControllerPaths.BASE_URI + "/**"
                         ).permitAll()
                         .anyExchange().authenticated())

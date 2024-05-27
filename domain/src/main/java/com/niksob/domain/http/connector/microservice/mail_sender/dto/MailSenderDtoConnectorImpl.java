@@ -25,8 +25,19 @@ public class MailSenderDtoConnectorImpl extends BaseConnector implements MailSen
     }
 
     @Override
-    public Mono<Void> sendActiveCodeMessage(ActiveCodeMailDetailsDto activeCodeMailDetails) {
-        final String uri = getWithBody(ActiveCodeMailSenderControllerPaths.BASE_URI);
+    public Mono<Void> sendSignupMessage(ActiveCodeMailDetailsDto activeCodeMailDetails) {
+        final String uri = getWithBody(
+                ActiveCodeMailSenderControllerPaths.BASE_URI + ActiveCodeMailSenderControllerPaths.SIGNUP
+        );
+        return httpClient.sendPostRequest(uri, activeCodeMailDetails, ActiveCodeMailDetailsDto.class, Void.class)
+                .onErrorResume(throwable -> createInternalServerMonoError(throwable, activeCodeMailDetails));
+    }
+
+    @Override
+    public Mono<Void> sendEmailResettingMessage(ActiveCodeMailDetailsDto activeCodeMailDetails) {
+        final String uri = getWithBody(
+                ActiveCodeMailSenderControllerPaths.BASE_URI + ActiveCodeMailSenderControllerPaths.EMAIL_RESETTING
+        );
         return httpClient.sendPostRequest(uri, activeCodeMailDetails, ActiveCodeMailDetailsDto.class, Void.class)
                 .onErrorResume(throwable -> createInternalServerMonoError(throwable, activeCodeMailDetails));
     }

@@ -1,4 +1,4 @@
 package com.niksob.mailsender.model.auth;
 
-public record ActiveCode(String data) {
+public record ActiveCode(String value) {
 }

@@ -31,19 +31,19 @@ public class UserConformationServiceImpl implements UserConformationService {
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserConformationServiceImpl.class);
 
     @Override
-    public Mono<Void> sendActiveCodeMessage(SignupDetails signupDetails) {
+    public Mono<Void> sendSignupActiveCodeMessage(SignupDetails signupDetails) {
         return Mono.fromCallable(() -> createActivationUserDetails(signupDetails))
                 .doOnNext(tempActivationUserRepo::save)
-                .flatMap(mailSenderConnector::sendActiveCodeMessage)
+                .flatMap(mailSenderConnector::sendSignupMessage)
                 .doOnSuccess(ignore -> log.info("Active message sending success", signupDetails))
                 .onErrorResume(throwable -> logSendActiveCodeMonoError(throwable, signupDetails));
     }
 
     @Override
-    public Mono<Void> sendActiveCodeMessage(UserInfo userInfo) {
+    public Mono<Void> sendEmailResettingActiveCodeMessage(UserInfo userInfo) {
         return Mono.fromCallable(() -> createActivationUserDetails(userInfo))
                 .doOnNext(tempActivationUserRepo::save)
-                .flatMap(mailSenderConnector::sendActiveCodeMessage)
+                .flatMap(mailSenderConnector::sendEmailResettingMessage)
                 .doOnSuccess(ignore -> log.info("Active message sending success", userInfo))
                 .onErrorResume(throwable -> logSendActiveCodeMonoError(throwable, userInfo));
     }

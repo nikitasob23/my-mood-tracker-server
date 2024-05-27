@@ -37,7 +37,7 @@ public class SignupServiceImpl implements SignupService {
                         (emailExists, usernameExists) -> emailExists && usernameExists
                 ))
 
-                .flatMap(exists -> userConformationService.sendActiveCodeMessage(signupDetails))
+                .flatMap(exists -> userConformationService.sendSignupActiveCodeMessage(signupDetails))
 
                 .doOnSuccess(ignore -> log.info("Successful preparing to signup", null, signupDetails))
                 .onErrorResume(throwable -> exceptionHandler.createSignupError(throwable, signupDetails));
