@@ -11,7 +11,7 @@ Content-Type: application/json
 {
   "email": "TEST_EMAIL@mail.com",
   "username": "TEST_USERNAME",
-  "password": "TEST_PASSWORD"
+  "password": "test_PASSWORD1"
 }
 
 ### Signup confirmation
@@ -35,6 +35,6 @@ Content-Type: application/json
 
 {
   "user_id":  "1",
-  "old_password":  "TEST_PASSWORD",
-  "new_password":  "SECRET"
+  "old_password":  "test_PASSWORD1",
+  "new_password":  "very_SECRET1"
 }

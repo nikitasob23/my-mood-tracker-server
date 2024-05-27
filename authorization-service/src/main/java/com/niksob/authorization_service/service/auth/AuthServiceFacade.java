@@ -1,4 +1,4 @@
-package com.niksob.authorization_service.service.auth.signup;
+package com.niksob.authorization_service.service.auth;
 
 import com.niksob.domain.model.auth.login.UserEmail;
 import com.niksob.domain.model.auth.login.UserPasswordPair;
@@ -8,7 +8,7 @@ import com.niksob.domain.model.auth.login.SignOutDetails;
 import com.niksob.domain.model.user.UserId;
 import reactor.core.publisher.Mono;
 
-public interface UserSignupService {
+public interface AuthServiceFacade {
     Mono<Void> signup(SignupDetails signupDetails);
 
     Mono<Void> resetPassword(UserPasswordPair userPasswordPair);

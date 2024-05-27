@@ -75,4 +75,13 @@ public class UserInfo {
         this.moodEntries = old.getMoodEntries();
         this.moodTags = old.getMoodTags();
     }
+
+    public UserInfo(UserInfo old, Email email) {
+        this.id = old.getId();
+        this.email = email;
+        this.username = old.getUsername();
+        this.password = old.getPassword();
+        this.moodEntries = old.getMoodEntries();
+        this.moodTags = old.getMoodTags();
+    }
 }
