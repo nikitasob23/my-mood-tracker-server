@@ -24,4 +24,4 @@ mail:
   sending:
     activation-code:
       confirmation:
-        address: 80.242.58.161
+        address: localhost

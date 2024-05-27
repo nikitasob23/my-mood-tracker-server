@@ -1,6 +1,9 @@
 package com.niksob.gateway_service.controller.auth.login;
 
 import com.niksob.domain.dto.auth.login.SignOutDetailsDto;
+import com.niksob.domain.dto.auth.login.UserEmailDto;
+import com.niksob.domain.dto.auth.login.UserPasswordPairDto;
+import com.niksob.domain.dto.user.EmailDto;
 import com.niksob.domain.dto.user.UserIdDto;
 import com.niksob.domain.dto.user.signup.SignupDetailsDto;
 import com.niksob.domain.path.controller.gateway_service.AuthControllerPaths;
@@ -32,7 +35,33 @@ public class AuthController {
                         log.error("Controller returning failed response", null, signupDetails));
     }
 
+    @PostMapping(AuthControllerPaths.EMAIL_RESETTING_ACTIVATION)
+    public Mono<Void> resetEmail(
+            @RequestBody EmailDto email, @AuthenticationPrincipal UserSecurityDetails userDetails
+    ) {
+        final UserEmailDto userEmail = new UserEmailDto(userDetails.getId(), email.getValue());
+        return loginControllerService.resetEmail(userEmail)
+                .doOnSuccess(u ->
+                        log.info("Success email resetting for user with id", userEmail)
+                ).doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.OK))
+                .doOnError(throwable -> log.error("Controller returning failed response", null, userEmail));
+    }
+
+    @PostMapping(AuthControllerPaths.PASSWORD_RESETTING)
+    public Mono<Void> resetPassword(
+            @RequestBody UserPasswordPairDto userPasswordPair, @AuthenticationPrincipal UserSecurityDetails userDetails
+    ) {
+        userPasswordPair.setUserId(userDetails.getId());
+        return loginControllerService.resetPassword(userPasswordPair)
+                .doOnSuccess(u ->
+                        log.info("Success password resetting for user with id", userPasswordPair)
+                ).doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.OK))
+                .doOnError(throwable ->
+                        log.error("Controller returning failed response", null, userPasswordPair));
+    }
+
     @GetMapping(AuthControllerPaths.ACTIVE_CODE + "/{code}")
+    @ResponseStatus(HttpStatus.CREATED)
     public Mono<Void> signupByActiveCode(@PathVariable String code) {
         return loginControllerService.signupByActiveCode(code)
                 .doOnSuccess(u -> log.info("User is signup by active code"))
@@ -41,9 +70,20 @@ public class AuthController {
                         log.error("Controller returning failed response", null, code));
     }
 
+    @GetMapping(AuthControllerPaths.EMAIL_RESETTING_ACTIVATION + "/{code}")
+    public Mono<Void> resetEmailByActiveCode(@PathVariable String code) {
+        return loginControllerService.resetEmailByActiveCode(code)
+                .doOnSuccess(u -> log.info("User reset email by active code"))
+                .doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.OK))
+                .doOnError(throwable ->
+                        log.error("Controller returning failed response", null, code));
+    }
+
     @GetMapping(AuthControllerPaths.SIGNOUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> signOut(@RequestParam("device") String device, @AuthenticationPrincipal UserSecurityDetails userDetails) {
+    public Mono<Void> signOut(
+            @RequestParam("device") String device, @AuthenticationPrincipal UserSecurityDetails userDetails
+    ) {
         final SignOutDetailsDto signOutDetails = new SignOutDetailsDto(userDetails.getId().toString(), device);
         return loginControllerService.signOut(signOutDetails)
                 .doOnSuccess(u -> log.info("User is sign out", signOutDetails))

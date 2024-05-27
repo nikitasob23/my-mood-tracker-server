@@ -1,0 +1,41 @@
+### GET Request
+GET http://localhost:8092/api/auth/signout?userId=4&device=TEST_DEVICE
+
+### GET Request
+GET http://localhost:8092/api/auth/signout/all?user_id=4
+
+### Signup request
+POST http://localhost:8082/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "TEST_EMAIL",
+  "username": "TEST_USERNAME",
+  "password": "test_PASSWORD1"
+}
+
+### Signup confirmation
+GET http://localhost:8082/api/auth/signup/activate/6afb1594-e451-4802-a953-37a85546553b
+
+### Reset email
+POST http://localhost:8082/api/auth/reset/email
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4MTgzNTYsInVzZXJJZCI6IjEiLCJkZXYiOiJURVNUX0RFVklDRSJ9.M0uxLZbI-dmwVWzd2NCQWD-G1FPO5LXa7sk_IZFVv-L4KygJROVgB-5SfgXVOoaTCSC2rnIfSY36CEK8CxUPoQ
+Content-Type: application/json
+
+{
+  "email": "TEST_EMAIL@mail.com"
+}
+
+### Email resetting confirmation
+GET http://localhost:8082/api/auth/reset/email/activate/c3678995-31ae-4b4e-97ff-acf2f093de00
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4MTgzNTYsInVzZXJJZCI6IjEiLCJkZXYiOiJURVNUX0RFVklDRSJ9.M0uxLZbI-dmwVWzd2NCQWD-G1FPO5LXa7sk_IZFVv-L4KygJROVgB-5SfgXVOoaTCSC2rnIfSY36CEK8CxUPoQ
+
+### Reset password
+POST http://localhost:8082/api/auth/reset/password
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4MTgzNTYsInVzZXJJZCI6IjEiLCJkZXYiOiJURVNUX0RFVklDRSJ9.M0uxLZbI-dmwVWzd2NCQWD-G1FPO5LXa7sk_IZFVv-L4KygJROVgB-5SfgXVOoaTCSC2rnIfSY36CEK8CxUPoQ
+Content-Type: application/json
+
+{
+  "old_password": "test_PASSWORD1",
+  "new_password": "very_SECRET1"
+}
