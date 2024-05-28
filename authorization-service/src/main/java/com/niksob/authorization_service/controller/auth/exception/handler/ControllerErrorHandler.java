@@ -6,6 +6,7 @@ import com.niksob.authorization_service.exception.auth.signup.UnregisteredUserEx
 import com.niksob.authorization_service.exception.auth.token.expired.ExpiredAuthTokenException;
 import com.niksob.authorization_service.exception.auth.token.invalid.InvalidAuthTokenException;
 import com.niksob.authorization_service.model.login.password.WrongPasswordException;
+import com.niksob.domain.exception.auth.signup.SignupDetailsAlreadyExistsException;
 import com.niksob.domain.exception.auth.signup.active_code.InvalidActiveCodeException;
 import com.niksob.domain.exception.resource.ResourceNotFoundException;
 import com.niksob.domain.exception.resource.ResourceSavingException;
@@ -46,6 +47,9 @@ public class ControllerErrorHandler {
         } else if (throwable instanceof WrongPasswordException) {
             httpStatus = HttpStatus.FORBIDDEN;
             message = "Invalid password";
+        } else if (throwable instanceof SignupDetailsAlreadyExistsException) {
+            httpStatus = HttpStatus.BAD_REQUEST;
+            message = throwable.getMessage();
         } else if (throwable instanceof SignupException) {
             httpStatus = HttpStatus.BAD_REQUEST;
             message = "Failure signup";

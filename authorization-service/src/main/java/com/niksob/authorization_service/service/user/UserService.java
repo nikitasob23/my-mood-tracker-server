@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 public interface UserService {
     Mono<Boolean> existsByEmailOrThrow(Email email);
 
-    Mono<Boolean> existsByUsernameorThrow(Username username);
+    Mono<Boolean> existsByUsernameOrThrow(Username username);
 
     Mono<UserInfo> loadById(UserId userId);
 

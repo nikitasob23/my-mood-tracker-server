@@ -27,14 +27,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Mono<Boolean> existsByUsernameorThrow(Username username) {
+    public Mono<Boolean> existsByUsernameOrThrow(Username username) {
         return userDatabaseConnector.load(username)
+                .map(u -> Boolean.TRUE)
                 .onErrorResume(throwable -> {
                     if (throwable instanceof ResourceNotFoundException) {
-                        return Mono.empty();
+                        return Mono.just(Boolean.FALSE);
                     }
                     return createUserAlreadyExistsError("Username", username);
-                }).then(Mono.just(Boolean.TRUE));
+                });
     }
 
     @Override

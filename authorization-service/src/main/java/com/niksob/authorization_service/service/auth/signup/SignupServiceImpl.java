@@ -4,6 +4,7 @@ import com.niksob.authorization_service.service.auth.conformation.UserConformati
 import com.niksob.authorization_service.service.auth.handler.AuthExceptionHandler;
 import com.niksob.authorization_service.service.auth.validation.signup.SignupDetailsValidationService;
 import com.niksob.authorization_service.service.user.UserService;
+import com.niksob.domain.exception.auth.signup.SignupDetailsAlreadyExistsException;
 import com.niksob.domain.model.auth.login.SignupDetails;
 import com.niksob.domain.model.auth.login.active_code.ActiveCode;
 import com.niksob.logger.object_state.ObjectStateLogger;
@@ -34,13 +35,21 @@ public class SignupServiceImpl implements SignupService {
                 .flatMap(details -> Mono.zip(
                         userService.existsByEmailOrThrow(signupDetails.getEmail()),
                         checkUsernameExistence(signupDetails),
-                        (emailExists, usernameExists) -> emailExists && usernameExists
+                        (emailExists, usernameExists) -> !(emailExists || usernameExists)
                 ))
+                .filter(exists -> exists).switchIfEmpty(createSignupDetailsExistsMonoError(signupDetails))
 
                 .flatMap(exists -> userConformationService.sendSignupActiveCodeMessage(signupDetails))
 
                 .doOnSuccess(ignore -> log.info("Successful preparing to signup", null, signupDetails))
                 .onErrorResume(throwable -> exceptionHandler.createSignupError(throwable, signupDetails));
+    }
+
+    private <T> Mono<T> createSignupDetailsExistsMonoError(Object state) {
+        final String message = "User already registered by this email or username";
+        var e = new SignupDetailsAlreadyExistsException(message);
+        log.error(message, e, state);
+        return Mono.error(e);
     }
 
     @Override
@@ -57,6 +66,6 @@ public class SignupServiceImpl implements SignupService {
         if (signupDetails.getUsername() == null || signupDetails.getUsername().getValue() == null) {
             return Mono.just(false);
         }
-        return userService.existsByUsernameorThrow(signupDetails.getUsername());
+        return userService.existsByUsernameOrThrow(signupDetails.getUsername());
     }
 }
