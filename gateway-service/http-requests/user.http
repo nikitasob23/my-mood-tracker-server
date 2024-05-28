@@ -1,23 +1,22 @@
 ### GET Request
-GET http://localhost:8082/api/user?username=TEST_USERNAME
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb20iLCJleHAiOjE3MTM3MDA3NjksImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiNCJ9.VBnqWckwu73BMYy0eI32b-kJXO0vY_wtZA3qeiHML2M_Yli4VRaDujAJp2aqKfV6JnT27bxlQrooy8rQkkcPRg
+GET http://localhost:8082/api/user?username=nik
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw
 
 ### GET Request
-GET http://localhost:8082/api/user/full?username=TEST_USERNAME
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyMyIsImV4cCI6MTcxMzcwMTIzNiwiZGV2IjoiVEVTVF9ERVZJQ0UiLCJ1c2VySWQiOiI0In0.-XSwDi52Q4DJKMgzC-Int1kWOZyHFZa0yfiZvq1Xf3iOqSRjtjfAa-4cNnW43MOi-mY8zc5vUyUlQpXx4VlcyA
+GET http://localhost:8082/api/user/full?username=nik
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw
 
 ### PUT Request
 PUT http://localhost:8082/api/user
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb20iLCJleHAiOjE3MTM1MjU4NjgsInVzZXJJZCI6IjQiLCJkZXYiOiJURVNUX0RFVklDRSJ9.N09drnTiUzPuQOcPzeh4vVzHxrEd5h8-HBmmSL57sA7H16Fz34eaQITGuHbMHmljhGs9opjjXklUAxW613fABw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw
 
 {
-  "id": 4,
-  "username": "TEST_USERNAME",
-  "nickname": "TEST_NICKNAME",
+  "email": "cawebod994@cgbird.com",
+  "username": "nik",
   "password": "0000"
 }
 
 ### DELETE Request
-DELETE http://localhost:8082/api/user?username=nikitos0023@gmail.com
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb20iLCJleHAiOjE3MTM1MjU4NjgsInVzZXJJZCI6IjQiLCJkZXYiOiJURVNUX0RFVklDRSJ9.N09drnTiUzPuQOcPzeh4vVzHxrEd5h8-HBmmSL57sA7H16Fz34eaQITGuHbMHmljhGs9opjjXklUAxW613fABw
+DELETE http://localhost:8082/api/user?username=nik
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw

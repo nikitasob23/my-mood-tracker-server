@@ -4,12 +4,14 @@ import com.niksob.domain.dto.user.FullUserInfoDto;
 import com.niksob.domain.dto.user.UserDto;
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;
+import com.niksob.gateway_service.model.user.security.UserSecurityDetails;
 import com.niksob.gateway_service.path.controller.user.UserControllerPaths;
 import com.niksob.gateway_service.service.auth.UserControllerService;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -39,7 +41,10 @@ public class UserController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> update(@RequestBody UserInfoDto userInfoDto) {
+    public Mono<Void> update(
+            @RequestBody UserInfoDto userInfoDto, @AuthenticationPrincipal UserSecurityDetails userDetails
+    ) {
+        userInfoDto.setId(userDetails.getId());
         return userControllerService.update(userInfoDto)
                 .doOnSuccess(ignore -> log.debug("Successful user updating", userInfoDto))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))

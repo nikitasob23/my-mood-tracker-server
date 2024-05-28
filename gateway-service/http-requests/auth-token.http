@@ -3,7 +3,7 @@ POST http://localhost:8082/api/auth/token
 Content-Type: application/json
 
 {
-  "username": "TEST_USERNAME",
+  "username": "nik",
   "password": "test_PASSWORD1",
   "device": "TEST_DEVICE"
 }

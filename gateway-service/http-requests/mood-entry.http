@@ -1,27 +1,24 @@
 ### GET Request
-GET http://localhost:8082/api/mood_entry?user_id=4&start_date=2024-04-01&end_date=2024-04-18
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb20iLCJleHAiOjE3MTM1MjU4NjgsInVzZXJJZCI6IjQiLCJkZXYiOiJURVNUX0RFVklDRSJ9.N09drnTiUzPuQOcPzeh4vVzHxrEd5h8-HBmmSL57sA7H16Fz34eaQITGuHbMHmljhGs9opjjXklUAxW613fABw
+GET http://localhost:8082/api/mood_entry?start_date=2024-04-01&end_date=2024-04-18
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw
 
 ### POST Request
 POST http://localhost:8082/api/mood_entry
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb20iLCJleHAiOjE3MTM1MjU4NjgsInVzZXJJZCI6IjQiLCJkZXYiOiJURVNUX0RFVklDRSJ9.N09drnTiUzPuQOcPzeh4vVzHxrEd5h8-HBmmSL57sA7H16Fz34eaQITGuHbMHmljhGs9opjjXklUAxW613fABw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw
 
 {
   "degree": 1,
-  "user_id": 4,
-  "date_time": "2024-04-10T23:07:38",
+  "date_time": "2024-05-28T11:23:51",
   "mood_tags": [
     {
-      "id": 6,
+      "id": 8,
       "name": "home",
-      "degree": 3,
-      "userId": 4
+      "degree": 3
     },
     {
       "name": "sleep",
-      "degree": 0,
-      "userId": 4
+      "degree": 0
     }
   ]
 }
@@ -29,34 +26,30 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb
 ### PUT Request
 PUT http://localhost:8082/api/mood_entry
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb20iLCJleHAiOjE3MTM1MjU4NjgsInVzZXJJZCI6IjQiLCJkZXYiOiJURVNUX0RFVklDRSJ9.N09drnTiUzPuQOcPzeh4vVzHxrEd5h8-HBmmSL57sA7H16Fz34eaQITGuHbMHmljhGs9opjjXklUAxW613fABw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw
 
 {
-  "id": 4,
+  "id": 3,
   "degree": 3,
-  "user_id": 4,
-  "date_time": "2024-04-10T23:59:02",
+  "date_time": "2024-05-28T12:01:02",
   "mood_tags": [
     {
       "name": "impro",
-      "degree": 3,
-      "userId": 4
+      "degree": 3
     },
     {
-      "id": 7,
+      "id": 9,
       "name": "sleep",
-      "degree": 1,
-      "userId": 4
+      "degree": 1
     },
     {
       "name": "friends",
-      "degree": 4,
-      "userId": 4
+      "degree": 4
     }
   ]
 }
 
 
 ### DELETE Request
-DELETE http://localhost:8082/api/mood_entry?id=4
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb20iLCJleHAiOjE3MTM1MjU4NjgsInVzZXJJZCI6IjQiLCJkZXYiOiJURVNUX0RFVklDRSJ9.N09drnTiUzPuQOcPzeh4vVzHxrEd5h8-HBmmSL57sA7H16Fz34eaQITGuHbMHmljhGs9opjjXklUAxW613fABw
+DELETE http://localhost:8082/api/mood_entry?id=3
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw

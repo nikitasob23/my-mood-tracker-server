@@ -1,30 +1,28 @@
 ### GET Request
-GET http://localhost:8082/api/mood_tag?user_id=4
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb20iLCJleHAiOjE3MTM1MjU4NjgsInVzZXJJZCI6IjQiLCJkZXYiOiJURVNUX0RFVklDRSJ9.N09drnTiUzPuQOcPzeh4vVzHxrEd5h8-HBmmSL57sA7H16Fz34eaQITGuHbMHmljhGs9opjjXklUAxW613fABw
+GET http://localhost:8082/api/mood_tag
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw
 
 ### POST Request
 POST http://localhost:8082/api/mood_tag
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb20iLCJleHAiOjE3MTM1MjU4NjgsInVzZXJJZCI6IjQiLCJkZXYiOiJURVNUX0RFVklDRSJ9.N09drnTiUzPuQOcPzeh4vVzHxrEd5h8-HBmmSL57sA7H16Fz34eaQITGuHbMHmljhGs9opjjXklUAxW613fABw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw
 
 {
   "name": "home",
-  "degree": 3,
-  "userId": 4
+  "degree": 3
 }
 
 ### PUT Request
 PUT http://localhost:8082/api/mood_tag
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb20iLCJleHAiOjE3MTM1MjU4NjgsInVzZXJJZCI6IjQiLCJkZXYiOiJURVNUX0RFVklDRSJ9.N09drnTiUzPuQOcPzeh4vVzHxrEd5h8-HBmmSL57sA7H16Fz34eaQITGuHbMHmljhGs9opjjXklUAxW613fABw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw
 
 {
-  "id": 6,
+  "id": 1,
   "name": "home",
-  "degree": 0,
-  "userId": 4
+  "degree": 0
 }
 
 ### DELETE Request
-DELETE http://localhost:8082/api/mood_tag?id=6&user_id=4
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb20iLCJleHAiOjE3MTM1MjU4NjgsInVzZXJJZCI6IjQiLCJkZXYiOiJURVNUX0RFVklDRSJ9.N09drnTiUzPuQOcPzeh4vVzHxrEd5h8-HBmmSL57sA7H16Fz34eaQITGuHbMHmljhGs9opjjXklUAxW613fABw
+DELETE http://localhost:8082/api/mood_tag?id=3
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw
