@@ -1,6 +1,7 @@
 package com.niksob.domain.exception.rest.controller.response;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
@@ -10,7 +11,8 @@ public class HttpClientException extends RuntimeException {
 
     private final String timestamp;
     private final HttpStatus httpStatus;
-    private final String path;
+    @Setter
+    private String path;
 
     public HttpClientException(HttpStatus httpStatus, String timestamp, String path) {
         this.timestamp = timestamp;

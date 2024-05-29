@@ -4,6 +4,8 @@ import com.niksob.domain.dto.user.FullUserInfoDto;
 import com.niksob.domain.dto.user.UserDto;
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;
+import com.niksob.domain.http.controller.handler.mood.entry.ResourceControllerErrorUtil;
+import com.niksob.gateway_service.controller.BaseControllerErrorHandler;
 import com.niksob.gateway_service.mapper.user.secure.UserWithoutSecurityDetailsDtoMapper;
 import com.niksob.gateway_service.model.user.security.UserSecurityDetails;
 import com.niksob.gateway_service.model.user.security.UserWithoutSecurityDetailsDto;
@@ -12,6 +14,7 @@ import com.niksob.gateway_service.service.auth.UserControllerService;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +27,8 @@ public class UserController {
     private final UserControllerService userControllerService;
     private final UserWithoutSecurityDetailsDtoMapper userWithoutSecurityDetailsDtoMapper;
 
+    @Qualifier("userControllerUtil")
+    private final ResourceControllerErrorUtil errorHandler;
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserController.class);
 
     @GetMapping
@@ -31,7 +36,7 @@ public class UserController {
         return userControllerService.loadByUsername(usernameDto)
                 .doOnSuccess(ignore -> log.debug("Successful user loading", usernameDto))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
-                .doOnError(user -> log.error("Failure user loading", null, usernameDto));
+                .onErrorResume(errorHandler::createLoadingErrorMono);
     }
 
     @GetMapping(UserControllerPaths.FULL_USER)
@@ -39,7 +44,7 @@ public class UserController {
         return userControllerService.loadFullByUsername(usernameDto)
                 .doOnSuccess(ignore -> log.debug("Successful full user loading", usernameDto))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
-                .doOnError(user -> log.error("Failure full user loading", null, usernameDto));
+                .onErrorResume(errorHandler::createLoadingErrorMono);
     }
 
     @PutMapping
@@ -53,7 +58,7 @@ public class UserController {
         return userControllerService.update(userInfo)
                 .doOnSuccess(ignore -> log.debug("Successful user updating", userWithoutSecurityDetails))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
-                .doOnError(user -> log.error("Failure user updating", null, userWithoutSecurityDetails));
+                .onErrorResume(errorHandler::createUpdatingError);
     }
 
     @DeleteMapping
@@ -62,6 +67,6 @@ public class UserController {
         return userControllerService.delete(usernameDto)
                 .doOnSuccess(ignore -> log.debug("Successful user deletion", usernameDto))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
-                .doOnError(user -> log.error("Failure user deletion", null, usernameDto));
+                .onErrorResume(errorHandler::createDeleteError);
     }
 }

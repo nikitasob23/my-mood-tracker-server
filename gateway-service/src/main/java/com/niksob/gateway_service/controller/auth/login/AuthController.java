@@ -7,11 +7,13 @@ import com.niksob.domain.dto.user.EmailDto;
 import com.niksob.domain.dto.user.UserIdDto;
 import com.niksob.domain.dto.user.signup.SignupDetailsDto;
 import com.niksob.domain.path.controller.gateway_service.AuthControllerPaths;
+import com.niksob.gateway_service.controller.BaseControllerErrorHandler;
 import com.niksob.gateway_service.model.user.security.UserSecurityDetails;
 import com.niksob.gateway_service.service.auth.login.LoginControllerService;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,8 @@ import reactor.core.publisher.Mono;
 public class AuthController {
     private final LoginControllerService loginControllerService;
 
+    @Qualifier("authControllerErrorHandler")
+    private final BaseControllerErrorHandler errorHandler;
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(AuthController.class);
 
     @PostMapping(AuthControllerPaths.SIGNUP)
@@ -31,8 +35,9 @@ public class AuthController {
         return loginControllerService.signup(signupDetails)
                 .doOnSuccess(u -> log.info("User is signup", signupDetails.getEmail()))
                 .doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.CREATED))
-                .doOnError(throwable ->
-                        log.error("Controller returning failed response", null, signupDetails));
+                .onErrorResume(throwable -> errorHandler.baseError(
+                        "Controller returning failed response", throwable, signupDetails
+                ));
     }
 
     @PostMapping(AuthControllerPaths.EMAIL_RESETTING)
@@ -44,7 +49,7 @@ public class AuthController {
                 .doOnSuccess(u ->
                         log.info("Success email resetting for user with id", userEmail)
                 ).doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.OK))
-                .doOnError(throwable -> log.error("Controller returning failed response", null, userEmail));
+                .onErrorResume(e -> errorHandler.baseError("Controller returning failed response", e, email));
     }
 
     @PostMapping(AuthControllerPaths.PASSWORD_RESETTING)
@@ -56,8 +61,8 @@ public class AuthController {
                 .doOnSuccess(u ->
                         log.info("Success password resetting for user with id", userPasswordPair)
                 ).doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.OK))
-                .doOnError(throwable ->
-                        log.error("Controller returning failed response", null, userPasswordPair));
+                .onErrorResume(e ->
+                        errorHandler.baseError("Controller returning failed response", e, userPasswordPair));
     }
 
     @GetMapping(AuthControllerPaths.ACTIVE_CODE + "/{code}")
@@ -66,8 +71,8 @@ public class AuthController {
         return loginControllerService.signupByActiveCode(code)
                 .doOnSuccess(u -> log.info("User is signup by active code"))
                 .doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.CREATED))
-                .doOnError(throwable ->
-                        log.error("Controller returning failed response", null, code));
+                .onErrorResume(e ->
+                        errorHandler.baseError("Controller returning failed response", e, code));
     }
 
     @GetMapping(AuthControllerPaths.EMAIL_RESETTING_ACTIVATION + "/{code}")
@@ -75,8 +80,8 @@ public class AuthController {
         return loginControllerService.resetEmailByActiveCode(code)
                 .doOnSuccess(u -> log.info("User reset email by active code"))
                 .doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.OK))
-                .doOnError(throwable ->
-                        log.error("Controller returning failed response", null, code));
+                .onErrorResume(e ->
+                        errorHandler.baseError("Controller returning failed response", e, code));
     }
 
     @GetMapping(AuthControllerPaths.SIGNOUT)
@@ -88,8 +93,8 @@ public class AuthController {
         return loginControllerService.signOut(signOutDetails)
                 .doOnSuccess(u -> log.info("User is sign out", signOutDetails))
                 .doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.NO_CONTENT))
-                .doOnError(throwable ->
-                        log.error("Controller returning failed response", null, signOutDetails));
+                .onErrorResume(e ->
+                        errorHandler.baseError("Controller returning failed response", e, signOutDetails));
     }
 
     @GetMapping(AuthControllerPaths.SIGNOUT_ALL)
@@ -99,7 +104,7 @@ public class AuthController {
         return loginControllerService.signOutAll(userId)
                 .doOnSuccess(u -> log.info("User is sign out from all devices", userId))
                 .doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.NO_CONTENT))
-                .doOnError(throwable ->
-                        log.error("Controller returning failed response", null, userId));
+                .onErrorResume(e ->
+                        errorHandler.baseError("Controller returning failed response", e, userId));
     }
 }
