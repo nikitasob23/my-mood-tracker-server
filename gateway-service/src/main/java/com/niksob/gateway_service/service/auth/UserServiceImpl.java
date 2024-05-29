@@ -20,35 +20,35 @@ public class UserServiceImpl implements UserService {
     @Override
     public Mono<User> loadByUsername(Username username) {
         return userDatabaseConnector.load(username)
-                .doOnNext(ignore -> log.info("Successful user loading", null, username))
+                .doOnNext(ignore -> log.info("Successful user loading", username))
                 .doOnError(throwable -> log.error("Failure user loading", throwable, username));
     }
 
     @Override
     public Mono<UserInfo> loadFullByUsername(Username username) {
         return userDatabaseConnector.loadFull(username)
-                .doOnNext(ignore -> log.info("Successful full user loading", null, username))
+                .doOnNext(ignore -> log.info("Successful full user loading", username))
                 .doOnError(throwable -> log.error("Failure full user loading", throwable, username));
     }
 
     @Override
     public Mono<UserInfo> save(UserInfo userInfo) {
         return userDatabaseConnector.save(userInfo)
-                .doOnNext(ignore -> log.info("Successful user saving", null, userInfo))
+                .doOnNext(ignore -> log.info("Successful user saving", userInfo))
                 .doOnError(throwable -> log.error("Failure user saving", throwable, userInfo));
     }
 
     @Override
     public Mono<Void> update(UserInfo userInfo) {
         return userDatabaseConnector.update(userInfo)
-                .doOnSuccess(ignore -> log.info("Successful user updating", null, userInfo))
+                .doOnSuccess(ignore -> log.info("Successful user updating", userInfo))
                 .doOnError(throwable -> log.error("Failure user updating", throwable, userInfo));
     }
 
     @Override
     public Mono<Void> delete(Username username) {
         return userDatabaseConnector.delete(username)
-                .doOnSuccess(ignore -> log.info("Successful user deletion", null, username))
+                .doOnSuccess(ignore -> log.info("Successful user deletion", username))
                 .doOnError(throwable -> log.error("Failure user deletion", throwable, username));
     }
 }

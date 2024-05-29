@@ -70,8 +70,8 @@ public class CachedUserEntityDaoFacade implements UserEntityDaoFacade {
 
     @Override
     public UserEntity update(UserEntity user) {
-        if (!existsByUsername(user.getUsername())) {
-            throw exceptionHandler.createResourceNotFoundException(user.getUsername());
+        if (!existsByEmail(user.getEmail())) {
+            throw exceptionHandler.createResourceNotFoundException(user.getEmail());
         }
         return updaterDao.update(user);
     }

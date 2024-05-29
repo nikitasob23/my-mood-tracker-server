@@ -12,9 +12,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw
 
 {
-  "email": "cawebod994@cgbird.com",
-  "username": "nik",
-  "password": "0000"
+  "username": "Ivan"
 }
 
 ### DELETE Request

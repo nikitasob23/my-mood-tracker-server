@@ -4,7 +4,9 @@ import com.niksob.domain.dto.user.FullUserInfoDto;
 import com.niksob.domain.dto.user.UserDto;
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;
+import com.niksob.gateway_service.mapper.user.secure.UserWithoutSecurityDetailsDtoMapper;
 import com.niksob.gateway_service.model.user.security.UserSecurityDetails;
+import com.niksob.gateway_service.model.user.security.UserWithoutSecurityDetailsDto;
 import com.niksob.gateway_service.path.controller.user.UserControllerPaths;
 import com.niksob.gateway_service.service.auth.UserControllerService;
 import com.niksob.logger.object_state.ObjectStateLogger;
@@ -20,6 +22,7 @@ import reactor.core.publisher.Mono;
 @RequestMapping(UserControllerPaths.BASE_URI)
 public class UserController {
     private final UserControllerService userControllerService;
+    private final UserWithoutSecurityDetailsDtoMapper userWithoutSecurityDetailsDtoMapper;
 
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserController.class);
 
@@ -42,13 +45,15 @@ public class UserController {
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> update(
-            @RequestBody UserInfoDto userInfoDto, @AuthenticationPrincipal UserSecurityDetails userDetails
+            @RequestBody UserWithoutSecurityDetailsDto userWithoutSecurityDetails,
+            @AuthenticationPrincipal UserSecurityDetails userDetails
     ) {
-        userInfoDto.setId(userDetails.getId());
-        return userControllerService.update(userInfoDto)
-                .doOnSuccess(ignore -> log.debug("Successful user updating", userInfoDto))
+        final UserInfoDto userInfo =
+                userWithoutSecurityDetailsDtoMapper.toUserInfo(userWithoutSecurityDetails, userDetails);
+        return userControllerService.update(userInfo)
+                .doOnSuccess(ignore -> log.debug("Successful user updating", userWithoutSecurityDetails))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
-                .doOnError(user -> log.error("Failure user updating", null, userInfoDto));
+                .doOnError(user -> log.error("Failure user updating", null, userWithoutSecurityDetails));
     }
 
     @DeleteMapping
