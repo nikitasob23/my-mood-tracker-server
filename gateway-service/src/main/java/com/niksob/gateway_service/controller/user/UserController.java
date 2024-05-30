@@ -5,7 +5,6 @@ import com.niksob.domain.dto.user.UserDto;
 import com.niksob.domain.dto.user.UserInfoDto;
 import com.niksob.domain.dto.user.UsernameDto;
 import com.niksob.domain.http.controller.handler.mood.entry.ResourceControllerErrorUtil;
-import com.niksob.gateway_service.controller.BaseControllerErrorHandler;
 import com.niksob.gateway_service.mapper.user.secure.UserWithoutSecurityDetailsDtoMapper;
 import com.niksob.gateway_service.model.user.security.UserSecurityDetails;
 import com.niksob.gateway_service.model.user.security.UserWithoutSecurityDetailsDto;
@@ -32,17 +31,19 @@ public class UserController {
     private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserController.class);
 
     @GetMapping
-    public Mono<UserDto> load(@RequestParam("username") UsernameDto usernameDto) {
-        return userControllerService.loadByUsername(usernameDto)
-                .doOnSuccess(ignore -> log.debug("Successful user loading", usernameDto))
+    public Mono<UserDto> load(@AuthenticationPrincipal UserSecurityDetails userDetails) {
+        final UsernameDto username = new UsernameDto(userDetails.getUsername());
+        return userControllerService.loadByUsername(username)
+                .doOnSuccess(ignore -> log.debug("Successful user loading", username))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
                 .onErrorResume(errorHandler::createLoadingErrorMono);
     }
 
     @GetMapping(UserControllerPaths.FULL_USER)
-    public Mono<FullUserInfoDto> loadFull(@RequestParam("username") UsernameDto usernameDto) {
-        return userControllerService.loadFullByUsername(usernameDto)
-                .doOnSuccess(ignore -> log.debug("Successful full user loading", usernameDto))
+    public Mono<FullUserInfoDto> loadFull(@AuthenticationPrincipal UserSecurityDetails userDetails) {
+        final UsernameDto username = new UsernameDto(userDetails.getUsername());
+        return userControllerService.loadFullByUsername(username)
+                .doOnSuccess(ignore -> log.debug("Successful full user loading", username))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
                 .onErrorResume(errorHandler::createLoadingErrorMono);
     }
@@ -63,9 +64,10 @@ public class UserController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> delete(@RequestParam("username") UsernameDto usernameDto) {
-        return userControllerService.delete(usernameDto)
-                .doOnSuccess(ignore -> log.debug("Successful user deletion", usernameDto))
+    public Mono<Void> delete(@AuthenticationPrincipal UserSecurityDetails userDetails) {
+        final UsernameDto username = new UsernameDto(userDetails.getUsername());
+        return userControllerService.delete(username)
+                .doOnSuccess(ignore -> log.debug("Successful user deletion", username))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
                 .onErrorResume(errorHandler::createDeleteError);
     }
