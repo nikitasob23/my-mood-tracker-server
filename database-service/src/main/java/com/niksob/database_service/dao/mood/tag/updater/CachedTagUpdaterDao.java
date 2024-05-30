@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -62,6 +63,9 @@ public class CachedTagUpdaterDao implements TagEntityUpdaterDao {
 
         if (nonPresentInRepoById(tag, storedTags)) {
             throw createResourceNotFoundException(tag);
+        }
+        if (presentInRepoByUserIdAndName(tag, storedTags)) {
+            throw createAlreadyExistsException(tag);
         }
         final MoodTagEntity updated;
         try {
@@ -142,6 +146,12 @@ public class CachedTagUpdaterDao implements TagEntityUpdaterDao {
                 .noneMatch(moodTag.getId()::equals);
     }
 
+    private boolean presentInRepoByUserIdAndName(MoodTagEntity moodTag, UserMoodTagEntities storedTags) {
+        return storedTags.getTags().stream()
+                .filter(tag -> Objects.equals(tag.getUserId(), moodTag.getUserId()))
+                .anyMatch(tag -> tag.getName().equals(moodTag.getName()));
+    }
+
     private Long extractSingleUserId(Collection<MoodTagEntity> moodTags) {
         final Set<Long> userIds = moodTags.stream()
                 .map(MoodTagEntity::getUserId)
@@ -162,5 +172,10 @@ public class CachedTagUpdaterDao implements TagEntityUpdaterDao {
     private ResourceNotFoundException createResourceNotFoundException(Object state) {
         log.error("Failed getting mood tag entity by id from repository", null, state);
         return new ResourceNotFoundException("The mood tag was not found", null, state);
+    }
+
+    private ResourceAlreadyExistsException createAlreadyExistsException(Object state) {
+        log.error("Failed updating mood tag entity in repository", null, state);
+        return new ResourceAlreadyExistsException("Another tag already has this name", "tag", null, state);
     }
 }

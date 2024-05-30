@@ -50,6 +50,9 @@ public class ResourceControllerErrorUtil {
         if (throwable instanceof ResourceUpdatingException) {
             final var errorResponse = createAndLogHttpClientException(throwable, HttpStatus.BAD_REQUEST);
             return Mono.error(errorResponse);
+        } else if (throwable instanceof ResourceAlreadyExistsException
+                && ((ResourceAlreadyExistsException) throwable).getResource().equals("tag")) {
+            return createAndLogHttpClientExceptionMono(throwable, HttpStatus.BAD_REQUEST);
         }
         return createLoadingErrorMono(throwable);
     }
