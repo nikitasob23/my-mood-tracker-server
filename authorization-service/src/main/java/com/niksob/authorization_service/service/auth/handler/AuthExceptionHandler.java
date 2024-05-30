@@ -29,6 +29,13 @@ public class AuthExceptionHandler {
         return Mono.error(e);
     }
 
+    public  <T> Mono<T> createNotValidPasswordMonoError(Object state) {
+        final String message = "The password does not meet the security requirements";
+        var e = new WrongPasswordException(message);
+        log.error(message, e, state);
+        return Mono.error(e);
+    }
+
     public  <T> Mono<T> createResettingEmailMonoError(Throwable throwable, Object state) {
         final String message = "Resetting email is failed";
         log.error(message, throwable, state);

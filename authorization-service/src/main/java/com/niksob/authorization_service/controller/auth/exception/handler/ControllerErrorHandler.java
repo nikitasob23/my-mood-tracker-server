@@ -43,10 +43,10 @@ public class ControllerErrorHandler {
             message = "Invalid email";
         } else if (throwable instanceof InvalidActiveCodeException) {
             httpStatus = HttpStatus.CONFLICT;
-            message = "Invalid signup activation code";
+            message = throwable.getMessage();
         } else if (throwable instanceof WrongPasswordException) {
             httpStatus = HttpStatus.FORBIDDEN;
-            message = "Invalid password";
+            message = throwable.getMessage();
         } else if (throwable instanceof SignupDetailsAlreadyExistsException) {
             httpStatus = HttpStatus.BAD_REQUEST;
             message = throwable.getMessage();

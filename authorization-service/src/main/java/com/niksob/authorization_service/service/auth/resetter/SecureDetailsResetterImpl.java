@@ -31,9 +31,11 @@ public class SecureDetailsResetterImpl implements SecureDetailsResetter {
     public Mono<Void> resetPassword(UserPasswordPair userPasswordPair) {
         return userService.loadById(userPasswordPair.getUserId())
                 .flatMap(user -> {
-                    if (!passwordEncoderService.matches(userPasswordPair.getOldRowPassword(), user.getPassword())
-                            || !signupDetailsValidationService.validate(userPasswordPair.getNewRowPassword())) {
+                    if (!passwordEncoderService.matches(userPasswordPair.getOldRowPassword(), user.getPassword())) {
                         return exceptionHandler.createIncorrectPasswordMonoError(user);
+                    }
+                    if (!signupDetailsValidationService.validate(userPasswordPair.getNewRowPassword())) {
+                        return exceptionHandler.createNotValidPasswordMonoError(user);
                     }
                     log.info("Old password is correct. Change password allowed for user", user);
                     var newEncodedPassword = passwordEncoderService.encode(userPasswordPair.getNewRowPassword());

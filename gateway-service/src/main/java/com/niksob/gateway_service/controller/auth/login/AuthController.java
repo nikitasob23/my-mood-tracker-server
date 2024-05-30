@@ -41,6 +41,7 @@ public class AuthController {
     }
 
     @PostMapping(AuthControllerPaths.EMAIL_RESETTING)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> resetEmail(
             @RequestBody EmailDto email, @AuthenticationPrincipal UserSecurityDetails userDetails
     ) {
@@ -48,11 +49,12 @@ public class AuthController {
         return loginControllerService.resetEmail(userEmail)
                 .doOnSuccess(u ->
                         log.info("Success email resetting for user with id", userEmail)
-                ).doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.OK))
+                ).doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.NO_CONTENT))
                 .onErrorResume(e -> errorHandler.baseError("Controller returning failed response", e, email));
     }
 
     @PostMapping(AuthControllerPaths.PASSWORD_RESETTING)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> resetPassword(
             @RequestBody UserPasswordPairDto userPasswordPair, @AuthenticationPrincipal UserSecurityDetails userDetails
     ) {
@@ -60,7 +62,7 @@ public class AuthController {
         return loginControllerService.resetPassword(userPasswordPair)
                 .doOnSuccess(u ->
                         log.info("Success password resetting for user with id", userPasswordPair)
-                ).doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.OK))
+                ).doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.NO_CONTENT))
                 .onErrorResume(e ->
                         errorHandler.baseError("Controller returning failed response", e, userPasswordPair));
     }
@@ -76,10 +78,11 @@ public class AuthController {
     }
 
     @GetMapping(AuthControllerPaths.EMAIL_RESETTING_ACTIVATION + "/{code}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> resetEmailByActiveCode(@PathVariable String code) {
         return loginControllerService.resetEmailByActiveCode(code)
                 .doOnSuccess(u -> log.info("User reset email by active code"))
-                .doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.OK))
+                .doOnSuccess(ignore -> log.info("Controller returning success status", HttpStatus.NO_CONTENT))
                 .onErrorResume(e ->
                         errorHandler.baseError("Controller returning failed response", e, code));
     }
