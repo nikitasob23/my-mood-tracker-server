@@ -53,12 +53,6 @@
             <artifactId>reactor-core</artifactId>
         </dependency>
 
-        <!-- Tomcat -->
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
-        </dependency>
-
         <!-- security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -72,18 +66,17 @@
             <version>6.4</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.niksob</groupId>
+            <artifactId>logger</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency>
-
-        <!-- YAML -->
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>2.0</version>
         </dependency>
 
         <!-- Map Struct -->

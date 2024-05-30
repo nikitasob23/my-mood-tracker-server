@@ -1,5 +1,4 @@
-
-# Layer Connector Library HELP
+# Layer Connector Library
 ## Overview
 The Layer Connector library is a Java annotation processor designed to simplify the integration of multi-layer architectures in Spring Boot applications. 
 It automates the creation of adapter classes that connect two layers of your application. This README provides a guide on effectively using the library.

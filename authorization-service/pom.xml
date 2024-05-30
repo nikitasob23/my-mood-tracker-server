@@ -105,6 +105,7 @@
             <artifactId>gson</artifactId>
             <version>2.10.1</version>
         </dependency>
+
         <!-- Map Struct -->
         <dependency>
             <groupId>org.mapstruct</groupId>

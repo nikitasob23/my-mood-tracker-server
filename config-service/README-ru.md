@@ -1,4 +1,4 @@
-# Документация сервиса config-service
+# Руководство сервиса config-service
 Open API v1.0.0
 
 ## Обзор:

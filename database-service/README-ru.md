@@ -1,4 +1,4 @@
-# Документация API сервиса database-service
+# Руководство API сервиса database-service
 Open API v1.0.0
 
 ## Обзор
@@ -7,7 +7,7 @@ Open API v1.0.0
 ## Содержание
 1. [Зависимости](#зависимости)
 2. [Основные сущности](#основные-сущности)
-3. [REST методы](#методы)
+3. [REST методы](#rest-методы)
    - [User](#User)
    - [MoodTag](#MoodTag)
    - [MoodEntry](#MoodEntry)
@@ -24,6 +24,7 @@ Open API v1.0.0
 5. **Spring Data JPA** - обеспечивает работу с базой данных через автоматическое создание репозиториев и других абстракций
 6. **Spring Cache** - обеспечивает кэширование данных из базы и других вспомогательных значений
 7. **Spring Data Redis** - NoSQL хранилище для кэша приложения
+8. **Spring cloud config client** - клиент, обеспечивающий получение конфигурации для микросервиса
 
 ### Логирование
 1. **Logstash Logback Encoder** - библиотека для логирования данных в определенном формате
@@ -112,9 +113,6 @@ service:
       def-date-interval-days: 15
 ```
 
-## API получения данных
-В продакшене API данного микросервиса рассчитан на взаимодействие только в рамках внутренних сетей. Микросервис не подразумевает авторизации или аутентификации. Этим занимается auth-service в рамках приложения. Сервис отдает и принимает данные только в формате JSON.
-
 ## Основные сущности
 ### 1. User
 Сущность, содержащая основные данные пользователя, включая данные авторизации и бизнес модели
@@ -160,31 +158,39 @@ public class MoodTagEntity {
 ```
 
 ## REST методы
+В продакшене API данного микросервиса рассчитан на взаимодействие только в рамках внутренних сетей. Микросервис не подразумевает авторизации или аутентификации. Этим занимается auth-service в рамках приложения. Сервис отдает и принимает данные только в формате JSON.
 ## User
 
 ### 1. Проверка существования пользователя по email
 ### Пример запроса
 
-POST http://80.242.58.161:8081/api/service/database/user/email
-
-**Body:**
+```http request
+GET http://localhost:8082/api/user?username=Ivan
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE2ODk5MzgzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIzIn0.5r4HYBkec0NkbuZ6HdJE2gWfEM3P-J7uq3MNNhQo2EK6TxdKJaeNo8a1RFoCfqzUwRVhBC7B4qdDyqf5haeMQw
 ```
-Content-Type: application/json
 
-{
-  "email": "email@mail.com"
-}
-```
 ### Успешный ответ:
 ```
 HTTP/1.1 200 
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 0
+Referrer-Policy: no-referrer
 Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Tue, 21 May 2024 14:36:13 GMT
+Content-Length: 132
+Date: Tue, 28 May 2024 12:19:48 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 
-true
+{
+  "id": 3,
+  "email": "lagecah864@adrais.com",
+  "username": "Ivan",
+  "password": "$2a$08$JUlzlFijRiKpz41FaOZOuenUMUq8XKB1KJZULq1.zYgXu.RJqWsI6"
+}
 ```
 **Пользователь не найден:**
 ```
