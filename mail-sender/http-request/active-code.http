@@ -1,9 +1,19 @@
-### POST Request
-POST http://localhost:8095/api/service/mail_sender/active_code
+### Signup conformation
+POST http://localhost:8095/api/service/mail_sender/active_code/signup
 Content-Type: application/json
 
 {
-  "sender_username": "Nikita",
-  "recipient_email": "nikitos0023@gmail.com",
+  "sender_username": "Ivan",
+  "recipient_email": "IvanIvanov@mail.com",
+  "active_code":  "TEST_ACTIVE_CODE"
+}
+
+### Resetting email conformation
+POST http://localhost:8095/api/service/mail_sender/active_code/reset/email
+Content-Type: application/json
+
+{
+  "sender_username": "Ivan",
+  "recipient_email": "IvanIvanov@mail.com",
   "active_code":  "TEST_ACTIVE_CODE"
 }
