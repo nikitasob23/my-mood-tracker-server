@@ -1,51 +1,51 @@
-# Руководство API сервиса database-service
+# Database-service API Guide
 Open API v1.0.0
 
-## Обзор
-Данный микросервис предоставляет REST API для взаимодействия микросервисов приложения Mood tracker с базой данных.
+## Overview
+This microservice provides a REST API for the Mood tracker application to interact with the database.
 
-## Содержание
-1. [Зависимости](#зависимости)
-2. [Основные сущности](#основные-сущности)
-3. [REST методы](#rest-методы)
-   - [User](#User)
-   - [MoodTag](#MoodTag)
-   - [MoodEntry](#MoodEntry)
-4. [Документация](#дополнительные-ссылки-на-документацию)
+## Contents
+1. [Dependencies](#dependencies)
+2. [Core Entities](#core-entities)
+3. [REST Methods](#rest-methods)
+    - [User](#user)
+    - [MoodTag](#moodtag)
+    - [MoodEntry](#moodentry)
+4. [Documentation Links](#additional-documentation-links)
 
-## Зависимости
-Проект database-service использует следующие Maven зависимости для обеспечения функциональности, управления базами данных, кэширования, логирования, и других ключевых аспектов сервиса:
+## Dependencies
+The database-service project utilizes the following Maven dependencies to ensure functionality, database management, caching, logging, and other key aspects of the service:
 
-### Spring boot
-1. **Spring Boot Starter** - зависимость, обеспечивающая работу Spring
-2. **Spring boot starter test** - библиотека для работы с тестами
-3. **spring boot starter web** - предоставляет все необходимые инструменты для веб-функционала: RESTful контроллеров, сервлетов и тд 
-4. **spring Web Flux** - фреймворк, использующийся для асинхронной и реактивной обработки веб-запросов
-5. **Spring Data JPA** - обеспечивает работу с базой данных через автоматическое создание репозиториев и других абстракций
-6. **Spring Cache** - обеспечивает кэширование данных из базы и других вспомогательных значений
-7. **Spring Data Redis** - NoSQL хранилище для кэша приложения
-8. **Spring cloud config client** - клиент, обеспечивающий получение конфигурации для микросервиса
+### Spring Boot
+1. **Spring Boot Starter** - enables Spring functionalities
+2. **Spring Boot Starter Test** - library for testing support
+3. **Spring Boot Starter Web** - provides necessary tools for web functionalities: RESTful controllers, servlets, etc.
+4. **Spring Web Flux** - framework for asynchronous and reactive web request handling
+5. **Spring Data JPA** - enables database interactions through automatic repository creation and other abstractions
+6. **Spring Cache** - enables data caching from the database and other auxiliary values
+7. **Spring Data Redis** - NoSQL storage for application caching
+8. **Spring Cloud Config Client** - client for retrieving microservice configurations
 
-### Логирование
-1. **Logstash Logback Encoder** - библиотека для логирования данных в определенном формате
-2. **Logger** - модуль, реализующий работу кастомного логера. Данный логер добавляет к сообщениям состояние объекта
+### Logging
+1. **Logstash Logback Encoder** - library for logging data in a specific format
+2. **Logger** - module implementing a custom logger. This logger adds object state to the log messages.
 
-### Прочее
-1. **Lombok** - используется для уменьшения шаблонного кода
-2. **MapStruct** - фреймворк для маппинга разных моделей и сущностей, уменьшая количество кода и потенциальных ошибок при преобразовании данных
+### Miscellaneous
+1. **Lombok** - reduces boilerplate code
+2. **MapStruct** - framework for mapping different models and entities, reducing code and potential errors in data conversion
 
-### Работа с данными
-1. **MySQL Connector J** — драйвер для подключения к базам данных MySQL.
-2. **Flyway MySQL** — инструмент для версионирования и миграции баз данных.
+### Data Handling
+1. **MySQL Connector J** - driver for connecting to MySQL databases
+2. **Flyway MySQL** - tool for database versioning and migration
 
-### Вспомогательные модули
-1. **Domain** - модуль, содержащий основные модели и вспомогательные компоненты для функционирования микросервиса.
-2. **Layer connector** - модуль, который обеспечивает автоматический маппинг моделей между разными слоями приложения
+### Auxiliary Modules
+1. **Domain** - module containing core models and auxiliary components for microservice functionality
+2. **Layer Connector** - module that provides automatic model mapping between different application layers
 
-## Конфигурация
-### 1. Получение конфигурации
-В микросервисе есть возможность получения конфигурации из config service, поэтому вы можете указать имя сервиса и адрес, по которому будет отправлен запрос на получение конфигурации
-```
+## Configuration
+### 1. Configuration Retrieval
+The microservice can retrieve configuration from the config service, so you can specify the service name and the address where the configuration request will be sent.
+```yaml
 spring:
   application:
     name: [APP_NAME]
@@ -53,8 +53,8 @@ spring:
     import: configserver:[CONFIG_SERVER_ADDRESS]
 ```
 
-### 2. Подключение кэша
-Микросервис использует redis в качестве кэш хранилища, данные для подключения:
+### 2. Cache Connection
+The microservice uses Redis as a cache store. Connection details:
 ```yaml
 spring:
   data:
@@ -62,7 +62,8 @@ spring:
       host: [HOST]
       port: [PORT]
 ```
-### 3. Подключение базы данных
+
+### 3. Database Connection
 ```yaml
 spring:
   datasource:
@@ -71,8 +72,9 @@ spring:
     password: [PASSWORD]
     driver-class-name: com.mysql.cj.jdbc.Driver
 ```
-### 4. Логирование
-Так как в проекте используется кастомный логер: ObjectStateLogger, который логгирует не только сообщение, но и состояние указанного объекта, важно указать фабрику для генерации логгера. А так же названия тех полей, которые логгер должен маскировать при логгировании состояния объекта
+
+### 4. Logging
+Since the project uses a custom logger: ObjectStateLogger, which logs not only messages but also the state of the specified object, it is important to specify the factory for generating the logger. Additionally, specify the field names that the logger should mask when logging the object's state.
 ```yaml
 org:
   slf4j:
@@ -89,7 +91,8 @@ logger:
         - refreshToken
         - refresh
 ```
-### 5. Данные для подключения
+
+### 5. Connection Details
 ```yaml
 microservice:
   connection:
@@ -104,8 +107,9 @@ server:
   servlet:
     context-path: ${microservice.connection.database.path}
 ```
-### 6. Другие настройки
-Так как записей mood entries в базе данных может быть очень много, то их получение возможно только по диапазону дат. Для указания диапазона дат по умолчанию, нужно использовать данные настройки
+
+### 6. Other Settings
+Since there can be many mood entries in the database, retrieval is possible only by date range. To specify the default date range, use the following settings:
 ```yaml
 service:
   loading:
@@ -113,9 +117,9 @@ service:
       def-date-interval-days: 15
 ```
 
-## Основные сущности
+## Core Entities
 ### 1. User
-Сущность, содержащая основные данные пользователя, включая данные авторизации и бизнес модели
+Entity containing core user data, including authorization and business model data.
 ```java
 public class UserEntity {
     private Long id;
@@ -130,7 +134,7 @@ public class UserEntity {
 ```
 
 ### 2. MoodEntry
-Сущность, содержащая слепок состояния настроения в определенный момент времени. У него есть основной параметр - это степень настроения.  
+Entity representing a snapshot of mood state at a specific point in time. Its main parameter is the mood degree.
 ```java
 public class MoodEntryEntity {
     private Long id;
@@ -144,7 +148,7 @@ public class MoodEntryEntity {
 ```
 
 ### 3. MoodTag
-Сущность, характеризующая состояния настроения. Это могут быть какие-то люди или обстоятельства, которые влияют на состояние. Например, друзья или работа. 
+Entity characterizing mood states. These can be people or circumstances affecting the state, such as friends or work.
 ```java
 public class MoodTagEntity {
     private Long id;
@@ -157,16 +161,17 @@ public class MoodTagEntity {
 }
 ```
 
-## REST методы
-В продакшене API данного микросервиса рассчитан на взаимодействие только в рамках внутренних сетей. Микросервис не подразумевает авторизации или аутентификации. Этим занимается auth-service в рамках приложения. Сервис отдает и принимает данные только в формате JSON.
+## REST Methods
+In production, the API of this microservice is intended for interaction only within internal networks. The microservice does not imply authorization or authentication. This is handled by the auth-service within the application. The service sends and receives data only in JSON format.
+
 ## User
 
-### 1. Проверка существования пользователя по email
-### Пример запроса
+### 1. Check if a user exists by email
+### Request Example
 GET http://localhost:8082/api/user?username=Ivan
 
-### Успешный ответ:
-```
+### Successful Response:
+```http request
 HTTP/1.1 200 
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
@@ -188,7 +193,7 @@ Connection: keep-alive
   "password": "$2a$08$JUlzlFijRiKpz41FaOZOuenUMUq8XKB1KJZULq1.zYgXu.RJqWsI6"
 }
 ```
-**Пользователь не найден:**
+**User not found:**
 ```
 HTTP/1.1 200 
 Content-Type: application/json
@@ -200,13 +205,13 @@ Connection: keep-alive
 false
 ```
 
-## 2. Получение пользователя
-### Пример запроса
+## 2. Retrieve User
+### Request Example
 
 GET http://80.242.58.161:8081/api/service/database/user?username=Ivan
 
-### Успешный ответ
-```
+### Successful Response
+```http request
 HTTP/1.1 200 
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -222,9 +227,9 @@ Connection: keep-alive
 }
 ```
 
-### Ошибки
-Случай, когда пользователь не найден по _username_:
-```
+### Errors
+User not found by _username_:
+```http request
 HTTP/1.1 404 
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -241,13 +246,13 @@ Connection: keep-alive
 }
 ```
 
-## 3. Получение полного пользователя с состояниями и тегами настроения
+## 3. Retrieve Full User with Mood States and Tags
 
-### Пример запроса
+### Request Example
 GET http://80.242.58.161:8081/api/service/database/user/full?username=Ivan
 
-### Успешный ответ
-```
+### Successful Response
+```http request
 Content-Type: application/json
 Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 17:10:14 GMT
@@ -288,9 +293,9 @@ Connection: keep-alive
 }
 ```
 
-### Ошибки
-Пользователь не найден по _username_:
-```
+### Errors
+User not found by _username_:
+```http request
 HTTP/1.1 404 
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -307,13 +312,13 @@ Connection: keep-alive
 }
 ```
 
-## 4. Добавление нового пользователя:
+## 4. Add New User:
 
-### Пример запроса
+### Request Example
 POST http://80.242.58.161:8081/api/service/database/user
 
 **Body:**
-```
+```http request
 Content-Type: application/json
 
 {
@@ -323,8 +328,8 @@ Content-Type: application/json
 }
 ```
 
-### Успешный ответ
-```
+### Successful Response
+```http request
 HTTP/1.1 201 
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -342,9 +347,9 @@ Connection: keep-alive
 }
 ```
 
-### Ошибки
-Пользователь уже существует:
-```
+### Errors
+User already exists:
+```http request
 HTTP/1.1 409 
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -361,8 +366,8 @@ Connection: keep-alive
 }
 ```
 
-Пользователь отправил не все данные:
-```
+User did not send all data:
+```http request
 HTTP/1.1 400 
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -378,12 +383,12 @@ Connection: close
 }
 ```
 
-## 5. Изменение пользователя:
-### Пример запроса
+## 5. Update User:
+### Request Example
 PUT http://80.242.58.161:8081/api/service/database/user
 
 **Body:**
-```
+```http request
 Content-Type: application/json
 
 {
@@ -394,19 +399,19 @@ Content-Type: application/json
 }
 ```
 
-### Успешный ответ
+### Successful Response
 
-На данный запрос возвращается успешный статус: NO_CONTENT с пустым телом ответа 
-```
+This request returns a successful status: NO_CONTENT with an empty response body
+```http request
 HTTP/1.1 204 
 Date: Tue, 21 May 2024 19:37:58 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 ```
 
-### Ошибки
-Пользователь не найден:
-```
+### Errors
+User not found:
+```http request
 HTTP/1.1 404 
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -422,8 +427,8 @@ Connection: keep-alive
   "path": "/api/service/database/user"
 }
 ```
-Пользователь отправил не все данные:
-```
+User did not send all data:
+```http request
 HTTP/1.1 400 
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -439,22 +444,22 @@ Connection: close
 }
 ```
 
-## 6. Удаление пользователя:
-### Пример запроса
+## 6. Delete User:
+### Request Example
 
 DELETE http://80.242.58.161:8081/api/service/database/user?username=Ivan
 
-### Успешный ответ
-На данный запрос возвращается успешный статус: NO_CONTENT с пустым телом ответа 
-```
+### Successful Response
+This request returns a successful status: NO_CONTENT with an empty response body
+```http request
 HTTP/1.1 204 
 Date: Tue, 21 May 2024 19:42:29 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 ```
 
-### Ошибки
-```
+### Errors
+```http request
 HTTP/1.1 404 
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -473,19 +478,17 @@ Connection: keep-alive
 
 ## MoodTag
 
-### 1. Получение тега настроения
-### Пример запроса
+###1. Getting a mood tag
+### Request example
 GET http://80.242.58.161:8081/api/service/database/mood_tag?user_id=9
-
-### Успешный ответ
-```
+### Successful response
+```http request
 HTTP/1.1 200 
 Content-Type: application/json
 Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 20:54:49 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-
 [
   {
     "id": 3,
@@ -501,26 +504,23 @@ Connection: keep-alive
   }
 ]
 ```
-
-Если токена не существует, возвращается статус: NO_CONTENT
-```
+If the token does not exist, the status is returned: NO_CONTENT with an empty response body
+```http request
 HTTP/1.1 204 
 Content-Type: application/json
 Date: Tue, 21 May 2024 20:53:09 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 ```
-
-### Ошибки
-Если пользователь, которому принадлежит тег, не существует:
-```
+### Errors
+If the user who owns the tag does not exist:
+```http request
 HTTP/1.1 404 
 Content-Type: application/json
 Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 20:55:27 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-
 {
   "timestamp": "2024-05-21T20:55:27.883609884",
   "status": 404,
@@ -529,31 +529,26 @@ Connection: keep-alive
   "path": "/api/service/database/mood_tag"
 }
 ```
-
-### 2. Добавление нового тега настроения
-### Пример запроса
+###2. Adding a new mood tag
+### Request example
 POST http://80.242.58.161:8081/api/service/database/mood_tag
-
 **body:**
-```
+```http request
 Content-Type: application/json
-
 {
   "name": "moves",
   "degree": 4,
   "userId": 11
 }
 ```
-
-### Успешный ответ
-```
+### Successful response
+```http request
 HTTP/1.1 201 
 Content-Type: application/json
 Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 21:04:18 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-
 {
   "id": 6,
   "name": "moves",
@@ -561,17 +556,15 @@ Connection: keep-alive
   "userId": 11
 }
 ```
-
-### Ошибки
-Тег уже существует:
-```
+### Errors
+The tag already exists:
+```http request
 HTTP/1.1 409 
 Content-Type: application/json
 Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 21:05:21 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-
 {
   "timestamp": "2024-05-21T21:05:21.130307364",
   "status": 409,
@@ -580,16 +573,14 @@ Connection: keep-alive
   "path": "/api/service/database/mood_tag"
 }
 ```
-
-Пользователя, к которому пытаются добавить тег, не существует:
-```
+The user they are trying to add the tag to does not exist:
+```http request
 HTTP/1.1 404 
 Content-Type: application/json
 Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 21:07:04 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-
 {
   "timestamp": "2024-05-21T21:07:04.639999771",
   "status": 404,
@@ -598,15 +589,12 @@ Connection: keep-alive
   "path": "/api/service/database/mood_tag"
 }
 ```
-
-### 3. Обновление тега настроения
-### Пример запроса
+###3. Updating the mood tag
+### Request example
 PUT http://80.242.58.161:8081/api/service/database/mood_tag
-
 **body:**
-```
+```http request
 Content-Type: application/json
-
 {
   "id": 8,
   "name": "friends",
@@ -614,26 +602,23 @@ Content-Type: application/json
   "userId": 12
 }
 ```
-
-### Успешный ответ
-В случае удачной попытки обновления тега, возвращается успешный статус: NO_CONTENT
-```
+### Successful response
+In case of a successful attempt to update the tag, the successful status is returned: NO_CONTENT with an empty response body
+```http request
 HTTP/1.1 204 
 Date: Tue, 21 May 2024 21:15:38 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 ```
-
-### Ошибки
-Пользователя, тег которого пытаются удалить, не существует:
-```
+### Errors
+The user whose tag they are trying to delete does not exist:
+```http request
 HTTP/1.1 404 
 Content-Type: application/json
 Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 21:11:36 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-
 {
   "timestamp": "2024-05-21T21:11:36.988615630",
   "status": 404,
@@ -642,16 +627,14 @@ Connection: keep-alive
   "path": "/api/service/database/mood_tag"
 }
 ```
-
-Тега не существует:
-```
+The tag does not exist:
+```http request
 HTTP/1.1 404 
 Content-Type: application/json
 Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 21:14:17 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-
 {
   "timestamp": "2024-05-21T21:14:17.902811650",
   "status": 404,
@@ -660,30 +643,26 @@ Connection: keep-alive
   "path": "/api/service/database/mood_tag"
 }
 ```
-
-### 3. Удаление тега настроения
-### Пример запроса
+### 3. Deleting a mood tag
+### Request example
 DELETE http://80.242.58.161:8081/api/service/database/mood_tag?id=8&user_id=12
-
-### Успешный ответ
-В случае удачной попытки обновления тега, возвращается успешный статус: NO_CONTENT
-```
+### Successful response
+In case of a successful attempt to update the tag, the successful status is returned: NO_CONTENT with an empty response body
+```http request
 HTTP/1.1 204 
 Date: Tue, 21 May 2024 21:23:22 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 ```
-
-### Ошибки
-Пользователя, тег которого пытаются удалить, не существует:
-```
+### Errors
+The user whose tag they are trying to delete does not exist:
+```http request
 HTTP/1.1 404 
 Content-Type: application/json
 Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 21:22:00 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-
 {
   "timestamp": "2024-05-21T21:22:00.299286118",
   "status": 404,
@@ -692,16 +671,14 @@ Connection: keep-alive
   "path": "/api/service/database/mood_tag"
 }
 ```
-
-Тега не существует:
-```
+The tag does not exist:
+```http request
 HTTP/1.1 404 
 Content-Type: application/json
 Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 21:22:30 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-
 {
   "timestamp": "2024-05-21T21:22:30.080287882",
   "status": 404,
@@ -713,19 +690,17 @@ Connection: keep-alive
 
 ## MoodEntry
 
-### 1. Получение тега настроения
-### Пример запроса
+###1. Getting a mood tag
+### Request example
 GET http://80.242.58.161:8081/api/service/database/mood_entry?user_id=4&start_date=2024-05-01&end_date=2024-05-23
-
-### Успешный ответ
-```
+### Successful response
+```http request
 HTTP/1.1 200 
 Content-Type: application/json
 Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 20:54:49 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-
 [
   {
     "id": 3,
@@ -741,18 +716,16 @@ Connection: keep-alive
   }
 ]
 ```
-
-Если состояния не существует, возвращается статус: NO_CONTENT
-```
+If the status does not exist, the status is returned: NO_CONTENT with an empty response body
+```http request
 HTTP/1.1 204 
 Content-Type: application/json
 Date: Tue, 21 May 2024 21:26:38 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 ```
-
-### Ошибки
-Если пользователя, которому принадлежит состояние, не существует:
+### Errors
+If the user who owns the state does not exist:
 ```
 HTTP/1.1 404 
 Content-Type: application/json
@@ -760,7 +733,6 @@ Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 21:26:06 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-
 {
   "timestamp": "2024-05-21T21:26:06.646318574",
   "status": 404,
@@ -769,23 +741,19 @@ Connection: keep-alive
   "path": "/api/service/database//mood_entry"
 }
 ```
-
-### 2. Добавление нового состояния настроения
-### Пример запроса
+###2. Adding a new mood state
+### Request example
 POST http://80.242.58.161:8081/api/service/database/mood_entry
-
 **body:**
 ```
 Content-Type: application/json
-
 {
   "degree": 1,
   "user_id": 12,
   "date_time": "2024-04-10T23:07:38"
 }
 ```
-
-### Успешный ответ
+### Successful response
 ```
 HTTP/1.1 201 
 Content-Type: application/json
@@ -793,7 +761,6 @@ Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 21:40:49 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-
 {
   "id": 2,
   "degree": 1,
@@ -802,17 +769,13 @@ Connection: keep-alive
   "mood_tags": []
 }
 ```
-
-Так же с состоянием можно добавлять новый тег настроения или редактировать старый.
-Если нужно прикрепить старый тег и обновить его, то нужно указать id тега в запросе вместе с остальными данными. 
-Если нужно добавить новый тег, то достаточно указать только обязательные поля: _name_, _user id_ 
-
+You can also add a new mood tag or edit an old one with the state.
+If you need to attach an old tag and update it, then you need to specify the tag id in the request along with the rest of the data.
+If you need to add a new tag, it is enough to specify only the required fields: _name_, _user id_
 POST http://80.242.58.161:8081/api/service/database/mood_entry
-
 **body:**
 ```
 Content-Type: application/json
-
 {
   "degree": 1,
   "user_id": 12,
@@ -832,8 +795,7 @@ Content-Type: application/json
   ]
 }
 ```
-
-### Успешный ответ
+### Successful response
 ```
 HTTP/1.1 201 
 Content-Type: application/json
@@ -841,7 +803,6 @@ Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 21:46:46 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-
 {
   "id": 3,
   "degree": 1,
@@ -863,16 +824,14 @@ Connection: keep-alive
   ]
 }
 ```
-
-### Ошибки
-Тег, который добавлен в состояние настроения, невозможно обновить, так как не удается его найти:
+### Errors
+The tag that was added to the mood state cannot be updated because it cannot be found:
 ```
 HTTP/1.1 400 
 Content-Type: application/json
 Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 21:45:39 GMT
 Connection: close
-
 {
   "timestamp": "2024-05-21T21:45:39.769223574",
   "status": 400,
@@ -881,15 +840,13 @@ Connection: close
   "path": "/api/service/database/mood_entry"
 }
 ```
-
-Попытка повторного добавления тега, который уже создан, через состояние настроения: 
+An attempt to re-add a tag that has already been created through the mood state:
 ```
 HTTP/1.1 400 
 Content-Type: application/json
 Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 22:47:20 GMT
 Connection: close
-
 {
   "timestamp": "2024-05-21T22:47:20.942831708",
   "status": 400,
@@ -898,8 +855,7 @@ Connection: close
   "path": "/api/service/database/mood_entry"
 }
 ```
-
-Добавление состояния настроения, когда пользователь еще не создан:
+Adding a mood state when the user has not yet been created:
 ```
 HTTP/1.1 404 
 Content-Type: application/json
@@ -907,7 +863,6 @@ Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 22:50:28 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-
 {
   "timestamp": "2024-05-21T22:50:28.561393551",
   "status": 404,
@@ -916,15 +871,12 @@ Connection: keep-alive
   "path": "/api/service/database/mood_entry"
 }
 ```
-
-### 3. Обновление состояния настроения
-### Пример запроса
+###3. Mood Status Update
+### Request example
 PUT http://80.242.58.161:8081/api/service/database/mood_entry
-
 **body:**
 ```
 Content-Type: application/json
-
 {
   "id": 9,
   "degree": 3,
@@ -950,25 +902,22 @@ Content-Type: application/json
   ]
 }
 ```
-
-### Успешный ответ
-В случае удачной попытки обновления тега, возвращается успешный статус: NO_CONTENT
+### Successful response
+In case of a successful attempt to update the tag, the successful status is returned: NO_CONTENT with an empty response body
 ```
 HTTP/1.1 204 
 Date: Tue, 21 May 2024 23:10:00 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 ```
-
-### Ошибки
-Тег, который добавлен в состояние настроения, невозможно обновить, так как не удается его найти:
+### Errors
+The tag that was added to the mood state cannot be updated because it cannot be found:
 ```
 HTTP/1.1 400 
 Content-Type: application/json
 Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 21:45:39 GMT
 Connection: close
-
 {
   "timestamp": "2024-05-21T21:45:39.769223574",
   "status": 400,
@@ -977,15 +926,13 @@ Connection: close
   "path": "/api/service/database/mood_entry"
 }
 ```
-
-Попытка повторного добавления тега, который уже создан, через состояние настроения:
+An attempt to re-add a tag that has already been created through the mood state:
 ```
 HTTP/1.1 400 
 Content-Type: application/json
 Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 22:51:56 GMT
 Connection: close
-
 {
   "timestamp": "2024-05-21T22:51:56.515041527",
   "status": 400,
@@ -994,8 +941,7 @@ Connection: close
   "path": "/api/service/database/mood_entry"
 }
 ```
-
-Добавление состояния настроения, когда пользователь еще не создан:
+Adding a mood state when the user has not yet been created:
 ```
 HTTP/1.1 404 
 Content-Type: application/json
@@ -1003,7 +949,6 @@ Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 22:50:28 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-
 {
   "timestamp": "2024-05-21T22:50:28.561393551",
   "status": 404,
@@ -1012,15 +957,13 @@ Connection: keep-alive
   "path": "/api/service/database/mood_entry"
 }
 ```
-
-Добавление в состояние настроения одного пользователя тега другого пользователя:
+Adding another user's tag to one user's mood state:
 ```
 HTTP/1.1 400 
 Content-Type: application/json
 Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 23:12:40 GMT
 Connection: close
-
 {
   "timestamp": "2024-05-21T23:12:40.281634041",
   "status": 400,
@@ -1029,30 +972,27 @@ Connection: close
   "path": "/api/service/database/mood_entry"
 }
 ```
-
-### 3. Удаление состояния настроения
-### Пример запроса
+### 3. Deleting a mood state
+### Request example
 DELETE http://80.242.58.161:8081/api/service/database/mood_entry?id=9
-
-### Успешный ответ
-В случае удачной попытки обновления состояния настроения, возвращается успешный статус: NO_CONTENT
-```
+### Successful response
+In case of a successful attempt to update the mood state, the successful status is returned: NO_CONTENT with an empty response body
+```http request
 HTTP/1.1 204 
 Date: Tue, 21 May 2024 23:16:41 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 ```
 
-### Ошибки
-Состояния настроения не существует:
-```
+### Errors
+There is no mood state:
+```http request
 HTTP/1.1 404 
 Content-Type: application/json
 Transfer-Encoding: chunked
 Date: Tue, 21 May 2024 21:22:30 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-
 {
   "timestamp": "2024-05-21T21:22:30.080287882",
   "status": 404,
@@ -1061,9 +1001,8 @@ Connection: keep-alive
   "path": "/api/service/database/mood_tag"
 }
 ```
-
-### Дополнительные ссылки на документацию
-Для получения дополнительной информации, пожалуйста, ознакомьтесь со следующими разделами:
+### Additional links to documentation
+For more information, please refer to the following sections:
 
 * [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
 * [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/3.1.5/maven-plugin/reference/html/)

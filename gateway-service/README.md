@@ -1,55 +1,55 @@
-# Руководство по API gateway-service
+# API gateway-service Guide
 Open API v1.0.0
 
-## Обзор
-gateway-service является входной точкой для всего приложения. Этот микросервис отвечает за безопасность и управление функциональностью других микросервисов.
+## Overview
+gateway-service is the entry point for the entire application. This microservice is responsible for the security and functionality management of other microservices.
 
-## Содержание
-1. [Зависимости](#зависимости)
-2. [Конфигурация](#конфигурация)
-3. [REST методы](#rest-методы)
-   - [Управление учетной записью пользователя](#регистрация-аутентификация-и-авторизация-)
-        - [Регистрация](#1-регистрация)
-        - [Подтверждение почты после регистрации](#2-подтверждение-почты-после-регистрации)
-        - [Авторизация по логину и паролю](#3-авторизация-по-логину-и-паролю)
-        - [Авторизация по refresh token](#4-авторизация-по-refresh-token)
-        - [Сброс пароля](#5-сброс-пароля)
-        - [Изменение почты](#6-изменение-почты)
-        - [Подтверждение почты после ее смены](#7-подтверждение-почты-после-ее-смены)
-        - [Выход из системы](#8-выход-из-системы)
-   - [Методы управления пользовательскими данными](#2-методы-управления-пользовательскими-данными)
-     - [User](#user)
-     - [Mood tag](#mood-tag)
-     - [Mood entry](#mood-entry)
-4. [Дополнительные ссылки на документацию](#дополнительные-ссылки-на-документацию)
-   
+## Content
+1. [Dependencies](#dependencies)
+2. [Configuration](#configuration)
+3. [REST methods](#rest-methods)
+    - [User Account Management](#user-account-management)
+        - [Registration](#1-registration)
+        - [Email confirmation after registration](#2-email-confirmation-after-registration)
+        - [Login and password authorization](#3-login-and-password-authorization)
+        - [Authorization by refresh token](#4-authorization-by-refresh-token)
+        - [Password Reset](#5-password-reset)
+        - [Changing the mail](#6-changing-the-mail)
+        - [Confirmation of the mail after its change](#7-confirmation-of-the-mail-after-its-change)
+        - [Logout](#8-logout)
+    - [User Data Management Methods](#2-user-data-management-methods)
+        - [User](#user)
+        - [Mood tag](#mood-tag)
+        - [Mood entry](#mood-entry)
+4. [Additional links to documentation](#additional-links-to-documentation)
 
-## Зависимости
-Проект gateway-service использует следующие Maven зависимости для обеспечения функциональности:
+
+## Dependencies
+The gateway-service project uses the following Maven dependencies to provide functionality:
 
 ### Spring boot
-1. **Spring Boot Starter** - зависимость, обеспечивающая работу Spring
-2. **Spring boot starter test** - библиотека для работы с тестами
-3. **spring Web Flux** - фреймворк, использующийся для асинхронной и реактивной обработки веб-запросов
+1. **Spring Boot Starter** - the dependency that ensures the operation of Spring
+2. **Spring boot starter test** - library for working with tests
+3. **spring Web Flux** is a framework used for asynchronous and reactive processing of web requests
 
-### Безопасность
-1. **Spring boot starter security** - модуль, который обеспечивает систему безопасности в приложении: защищает маршруты и тем самым управляет доступом к различным микросервисам.
+### Security
+1. **Spring boot starter security** is a module that provides a security system in the application: protects routes and thereby controls access to various microservices.
 
-### Логирование
-1. **Logstash Logback Encoder** - библиотека для логирования данных в определенном формате
-2. **Logger** - модуль, реализующий работу кастомного логера. Данный логер добавляет к сообщениям состояние объекта
+### Logging
+1. **Logstash Logback Encoder** is a library for logging data in a specific format
+2. **Logger** is a module that implements the work of a custom logger. This logger adds the state of the object to the messages
 
-### Прочее
-1. **Lombok** - используется для уменьшения шаблонного кода
-2. **MapStruct** - фреймворк для маппинга разных моделей и сущностей, уменьшая количество кода и потенциальных ошибок при преобразовании данных
+### Other
+1. **Lombok** - used to reduce the template code
+2. **MapStruct** is a framework for mapping different models and entities, reducing the amount of code and potential errors when converting data
 
-### Вспомогательные модули
-1. **Domain** - модуль, содержащий основные модели и вспомогательные компоненты для функционирования микросервиса.
-2. **Layer connector** - модуль, который обеспечивает автоматический маппинг моделей между разными словями приложения
+### Auxiliary modules
+1. **Domain** is a module containing the main models and auxiliary components for the operation of a microservice.
+2. **Layer connector** is a module that provides automatic mapping of models between different layers of the application
 
-## Конфигурация
-### 1. Получение конфигурации
-В микросервисе есть возможность получения конфигурации из config service, поэтому вы можете указать имя сервиса и адрес, по которому будет отправлен запрос на получение конфигурации
+## Configuration
+###1. Getting the configuration
+In the microservice, it is possible to get the configuration from config service, so you can specify the name of the service and the address to which the configuration request will be sent
 ```yaml
 spring:
   application:
@@ -58,13 +58,12 @@ spring:
     import: configserver:[CONFIG_SERVER_ADDRESS]
 ```
 
-### 2. Логирование
-Так как в проекте используется кастомный логер: ObjectStateLogger, который логирует не только сообщение, но и состояние объекта, важно указать фабрику для генерации логера. А так же названия тех полей, которые логер должен маскировать при логировании состояния объекта
+### 2. Logging
+Since the project uses a custom logger: ObjectStateLogger, which logs not only the message, but also the state of the object, it is important to specify the factory for generating the logger. As well as the names of those fields that the logger must mask when logging the state of the object
 ```yaml
 org:
   slf4j:
     LoggerFactory: com.niksob.logger.object_state.factory.ObjectStateLoggerFactory
-
 logger:
   message:
     masked:
@@ -77,7 +76,7 @@ logger:
         - refresh
 ```
 
-### 3. Данные для подключения
+### 3. Connection data
 ```yaml
 microservice:
   connection:
@@ -86,14 +85,13 @@ microservice:
       hostname: [HOST]
       port: [PORT]
       path: /api/service/gateway
-
 server:
   port: ${microservice.connection.gateway.port}
   servlet:
     context-path: ${microservice.connection.gateway.path}
 ```
 
-### Настройка безопасности Spring secure
+### Configuring Spring secure security
 ```java
 @Configuration
 @AllArgsConstructor
@@ -103,9 +101,7 @@ public class WebSecurityConfig {
     private final ReactiveAuthenticationManager authenticationManager;
     @Qualifier("accessTokenFilter")
     private final AuthenticationWebFilter accessTokenFilter;
-
     private final SecurityContextRepository securityContextRepository;
-
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         http.csrf(ServerHttpSecurity.CsrfSpec::disable)
@@ -125,26 +121,25 @@ public class WebSecurityConfig {
     }
 }
 ```
-### Пояснения
-1. Отключается csrf-защита. В приложении она не нужна, поскольку авторизация происходит посредством передачи bearer в виде access token-а с каждым запросом
-2. Отключатся форма входа в систему, так как приложение реализует именно REST API, сервер не настроен на выдачу html страниц
-3. Запрещается доступ ко всем ресурсам, кроме сервисов регистрации и авторизации
-4. Отключается базовая аутентификация по http, поскольку функцию аутентификации реализует bearer, который приходит с каждым запросом клиента
-5. Добавляется менеджер авторизации, который производит авторизацию по access token
-6. Добавляется контекст безопасности для сохранения авторизованного пользователя после получения bearer 
-7. Добавляется фильтр AccessTokenFilter, который на основе bearer определяет, к каким ресурсам пользователь имеет доступ
+
+### Explanations
+1. CSRF protection is disabled. It is not needed in the application, since authorization occurs by transferring bearer in the form of an access token with each request
+2. The login form will be disabled, since the application implements the REST API, the server is not configured to output html pages
+3. Access to all resources is prohibited, except for registration and authorization services
+4. Basic http authentication is disabled, since the authentication function is implemented by bearer, which comes with each client request
+5. An authorization manager is added, which performs authorization using access token
+6. A security context is added to save the authorized user after receiving the bearer 
+7. The AccessTokenFilter filter is added, which determines which resources the user has access to based on bearer
 
 
-## REST методы
-Микросервис является точкой входа в приложение и отвечает за безопасность, фильтруя приходящий трафик
+## REST methods
+The microservice is the entry point to the application and is responsible for security by filtering incoming traffic
 
-## Управление учетной записью пользователя
-### 1. Регистрация
-### Пример запроса
-POST http://80.242.58.161:8082/api/auth/signup
-
-**Body:**
+## User Account Management
+### 1. Registration
+### Request example
 ```http request
+POST http://80.242.58.161:8082/api/auth/signup
 Content-Type: application/json
 
 {
@@ -153,9 +148,9 @@ Content-Type: application/json
   "password": "Very_secret0"
 }
 ```
-Требования к паролю: минимум одна буква в верхней регистре, минимум одна цифра. Длина пароля не менее 8 символов
+Password requirements: at least one letter in upper case, at least one digit. The password is at least 8 characters long
 
-### Успешный ответ
+### Successful response
 ```http request
 HTTP/1.1 201 Created
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
@@ -168,8 +163,8 @@ Referrer-Policy: no-referrer
 content-length: 0
 ```
 
-### Ошибки
-Указана почта в некорректном формате:
+### Errors
+The email is specified in an incorrect format:
 ```http request
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
@@ -191,7 +186,7 @@ Referrer-Policy: no-referrer
 }
 ```
 
-Указан пароль в некорректном формате:
+The password is specified in an incorrect format:
 ```http request
 HTTP/1.1 403 
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
@@ -216,7 +211,7 @@ Connection: keep-alive
 }
 ```
 
-По указанному email или username уже была произведена регистрация:
+Registration has already been made by the specified email or username:
 ```http request
 HTTP/1.1 400
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
@@ -240,13 +235,13 @@ Connection: close
 }
 ```
 
-### 2. Подтверждение почты после регистрации
-Для того чтобы завершить процесс регистрации, нужно зайти на почту и перейти по отправленной ссылке с кодом активации
+### 2. Email confirmation after registration
+In order to complete the registration process, you need to go to the email and click on the link sent with the activation code
 
-### Пример запроса
+### Request example
 GET http://80.242.58.161:8082/api/auth/signup/activate/0da79d34-f9f3-48a4-bee2-9a56019fabea
 
-### Успешный ответ
+### Successful response
 ```http request
 HTTP/1.1 200 OK
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
@@ -259,8 +254,8 @@ Referrer-Policy: no-referrer
 content-length: 0
 ```
 
-### Ошибки
-Повторный переход по ссылке:
+### Errors
+Clicking on the link again:
 ```http request
 HTTP/1.1 409 Conflict
 Content-Type: application/json
@@ -282,7 +277,7 @@ Referrer-Policy: no-referrer
 }
 ```
 
-Указан неверный код активации в ссылке:
+Invalid activation code is specified in the link:
 ```http request
 HTTP/1.1 409 Conflict
 Content-Type: application/json
@@ -304,24 +299,22 @@ Referrer-Policy: no-referrer
 }
 ```
 
-### 3. Авторизация по логину и паролю
-### Пример
-Процесс авторизации начинается с получения пары access-refresh токенов
+### 3. Login and password authorization
+### Example
+The authorization process begins with receiving a pair of access-refresh tokens
 
-POST http://80.242.58.161:8082/api/auth/token
-
-**Body:**
 ```http request
+POST http://80.242.58.161:8082/api/auth/token
 Content-Type: application/json
 
 {
-"username": "Ivan",
-"password": "Very_secret0",
-"device": "MY_DEVICE"
+  "username": "Ivan",
+  "password": "Very_secret0",
+  "device": "MY_DEVICE"
 }
 ```
 
-### Успешный ответ
+### Successful response
 ```http request
 HTTP/1.1 201 Created
 Content-Type: application/json
@@ -343,9 +336,8 @@ Referrer-Policy: no-referrer
 }
 ```
 
-### Ошибки
-
-Неверные username:
+### Errors
+Invalid username:
 ```http request
 HTTP/1.1 403 Forbidden
 Content-Type: application/json
@@ -367,7 +359,7 @@ Referrer-Policy: no-referrer
 }
 ```
 
-Неверный пароль:
+Invalid password:
 ```http request
 HTTP/1.1 403 Forbidden
 Content-Type: application/json
@@ -389,20 +381,18 @@ Referrer-Policy: no-referrer
 }
 ```
 
-### 4. Авторизация по refresh token
-### Пример
-POST http://80.242.58.161:8082:8082/api/auth/token/refresh
-
-**Body:**
+### 4. Authorization by refresh token
+### Example
 ```http request
+POST http://80.242.58.161:8082/api/auth/token/refresh
 Content-Type: application/json
 
 {
-"refresh_token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb20iLCJleHAiOjE3MTQ5OTQ2NjYsInVzZXJJZCI6IjQiLCJkZXYiOiJURVNUX0RFVklDRSJ9.ZY0feVssnWkPTJFIhyrXuyr6M0Oit9Zl2FOLwAHExFDVF5Rqp63CU6tWQW3yNRfng4hjkaLAX3C0OaUT3i8YKQ"
+  "refresh_token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb20iLCJleHAiOjE3MTQ5OTQ2NjYsInVzZXJJZCI6IjQiLCJkZXYiOiJURVNUX0RFVklDRSJ9.ZY0feVssnWkPTJFIhyrXuyr6M0Oit9Zl2FOLwAHExFDVF5Rqp63CU6tWQW3yNRfng4hjkaLAX3C0OaUT3i8YKQ"
 }
 ```
 
-### Успешный ответ
+### Successful response
 ```http request
 HTTP/1.1 201 Created
 Content-Type: application/json
@@ -424,8 +414,8 @@ Referrer-Policy: no-referrer
 }
 ```
 
-### Ошибки
-Устаревший или некорректный refresh token:
+### Errors
+Outdated or incorrect refresh token:
 ```http request
 Content-Type: application/json
 Content-Length: 131
@@ -445,10 +435,9 @@ Referrer-Policy: no-referrer
   "path": "/api/auth"
 }
 ```
+After receiving the access token, you can make other requests to the service by specifying the token as a Bearer in the authorization header.
 
-После получения access token можно выполнять остальные запросы к сервису, указывая токен в качестве Bearer в заголовке авторизации.
-
-**Если токен в запросе некоретный или устаревший:**
+**If the token in the request is non-specific or outdated:**
 ```http request
 HTTP/1.1 403 Forbidden
 Content-Type: application/json
@@ -470,9 +459,10 @@ Referrer-Policy: no-referrer
 }
 ```
 
-### 5. Сброс пароля
-Изменить пароль можно только отправив запрос со старым паролем для проверки и новым паролем для смены
-### Пример
+### 5. Password Reset
+You can change the password only by sending a request with the old password for verification and the new password for change
+
+### Example
 ```http request
 HTTP/1.1 204 No Content
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
@@ -483,11 +473,10 @@ X-Frame-Options: DENY
 X-XSS-Protection: 0
 Referrer-Policy: no-referrer
 ```
-Метод возвращает успешный статус: NO_CONTENT
+The method returns the successful status: NO_CONTENT
 
-
-### Ошибки
-Старый пароль не совпадает с зашифрованным паролем в системе:
+### Errors
+The old password does not match the encrypted password in the system:
 ```http request
 HTTP/1.1 403 Forbidden
 Content-Type: application/json
@@ -501,15 +490,15 @@ X-XSS-Protection: 0
 Referrer-Policy: no-referrer
 
 {
-"timestamp": "2024-05-30T11:20:19.030995",
-"status": 403,
-"error": "Forbidden",
-"message": "Incorrect password",
-"path": "/api/auth"
+  "timestamp": "2024-05-30T11:20:19.030995",
+  "status": 403,
+  "error": "Forbidden",
+  "message": "Incorrect password",
+  "path": "/api/auth"
 }
 ```
 
-Новый пароль не соответствует требованиям безопасности:
+The new password does not meet the security requirements:
 ```http request
 HTTP/1.1 403 Forbidden
 Content-Type: application/json
@@ -531,12 +520,13 @@ Referrer-Policy: no-referrer
 }
 ```
 
-### 6. Изменение почты
-Изменить почту можно только после подтверждения новой
-### Пример
-Запрос на подверждение почты:
+### 6. Changing the mail
+You can change your email only after confirming a new one
+
+### Example
+Request for confirmation of mail:
 ```http request
-POST http://80.242.58.161:8082:8082/api/auth/reset/email
+POST http://80.242.58.161:8082/api/auth/reset/email
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDU4NDk1LCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.OycPsjgFgHqSyXWKBk131jb1CH5jqrujzimJpR0krWBNEI5j0AMlwxV1XhcPyH2NYsCYeA0RbfUQ1FBaLsfMbQ
 Content-Type: application/json
 
@@ -545,7 +535,7 @@ Content-Type: application/json
 }
 ```
 
-### Успешный ответ
+### Successful response
 ```http request
 HTTP/1.1 204 No Content
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
@@ -557,11 +547,11 @@ X-XSS-Protection: 0
 Referrer-Policy: no-referrer
 ```
 
-### 7. Подтверждение почты после ее смены
-### Пример
-GET http://80.242.58.161:8082:8082/api/auth/reset/email/activate/35225058-e09b-4923-b0a8-de68514578b8
+### 7. Confirmation of the mail after its change
+### Example
+GET http://80.242.58.161:8082/api/auth/reset/email/activate/35225058-e09b-4923-b0a8-de68514578b8
 
-### Успешный ответ
+### Successful response
 ```http request
 HTTP/1.1 204 No Content
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
@@ -572,10 +562,10 @@ X-Frame-Options: DENY
 X-XSS-Protection: 0
 Referrer-Policy: no-referrer
 ```
-Метод возвращает успешный статус: NO_CONTENT
+The method returns the successful status: NO_CONTENT
 
-### Ошибки
-Код активации уже применен, но отправляется пользователем повторно:
+### Errors
+The activation code has already been applied, but is being sent by the user again:
 ```http request
 HTTP/1.1 409 Conflict
 Content-Type: application/json
@@ -597,15 +587,16 @@ Referrer-Policy: no-referrer
 }
 ```
 
-### 8. Выход из системы
-Данный метод удаляет пару access-refresh токенов для определенного устройства из системы. После этого они становятся недействительными
-### Пример
+### 8. Logout
+This method removes a pair of access-refresh tokens for a specific device from the system. After that, they become invalid
+
+### Example
 ```http request
 GET http://80.242.58.161:8082/api/auth/signout?device=MY_DEVICE
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE2NTYxNjgxLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxNCJ9.iX2qWbsnDlwHXTS3xHlo0UMV8VlHTScBYvYkgmfsCJfnfNzHPl5TADwt94ert8sa9-603GSSXPmNdNDv9sb8Ig
 ```
 
-### Успешный ответ
+### Successful response
 ```http request
 HTTP/1.1 204 No Content
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
@@ -617,7 +608,7 @@ X-XSS-Protection: 0
 Referrer-Policy: no-referrer
 ```
 
-### Ошибки
+### Errors
 ```http request
 HTTP/1.1 403 Forbidden
 Content-Type: application/json
@@ -639,14 +630,14 @@ Referrer-Policy: no-referrer
 }
 ```
 
-Для удаления всех пар access-refresh токенов:
+To delete all access-refresh token pairs:
 ```http request
 GET http://80.242.58.161:8082:8092/api/auth/signout/all
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDU0NzY3LCJ1c2VySWQiOiIxIiwiZGV2IjoiTVlfREVWSUNFIn0.xwWPneNu9U7dO7IPDhYzAGmhArIYSKUQ-EjX8PEIx_vhl3yRuvFSk3SZomTMEk4Dn70sNrbJZEc_2WWx9BsdWA
 ```
 
-### Успешный ответ
-В ответе возвращается успешный статус: NO_CONTENT
+### Successful response
+The response returns the successful status: NO_CONTENT
 ```http request
 HTTP/1.1 204 No Content
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
@@ -658,8 +649,8 @@ X-XSS-Protection: 0
 Referrer-Policy: no-referrer
 ```
 
-### Ошибки
-Метод может возвращать ошибку только в случае повторного выхода из системы из-за того, что токен стал недействительным:
+### Errors
+The method can return an error only in case of repeated logout due to the fact that the token has become invalid:
 ```http request
 HTTP/1.1 403 Forbidden
 Content-Type: application/json
@@ -681,17 +672,18 @@ Referrer-Policy: no-referrer
 }
 ```
 
-## 2. Методы управления пользовательскими данными
+## 2. User data management methods
 ## User
-## 1. Получение пользователя
-### Пример
+
+## 1. Getting a user
+### Example
 ```http request
-GET http://80.242.58.161:8082:8082/api/user
+GET http://80.242.58.161:8082/api/user
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDU1OTY4LCJ1c2VySWQiOiIxIiwiZGV2IjoiTVlfREVWSUNFIn0.nCFLz-Z1V9OdkiVHUcKW81q4UsW8jmA1CHme9nnM6A3zG7G0gEUuiuoaKPvTgzqx-l7c62EmK_FIfGmnQNwtAA
 ```
 
-### Успешный ответ
-```
+### Successful response
+```http request
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Length: 130
@@ -711,15 +703,16 @@ Referrer-Policy: no-referrer
 }
 ```
 
-## 2. Получение полных данных о пользователе
-Метод возвращает пользователя вместе с состояниями настроения и тегами
-### Пример
+## 2. Getting complete user data
+The method returns the user along with the mood states and tags
+
+### Example
 ```http request
-GET http://80.242.58.161:8082:8082/api/user/full
+GET http://80.242.58.161:8082/api/user/full
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDU1OTY4LCJ1c2VySWQiOiIxIiwiZGV2IjoiTVlfREVWSUNFIn0.nCFLz-Z1V9OdkiVHUcKW81q4UsW8jmA1CHme9nnM6A3zG7G0gEUuiuoaKPvTgzqx-l7c62EmK_FIfGmnQNwtAA
 ```
 
-### Успешный ответ
+### Successful response
 ```http request
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -765,18 +758,17 @@ Referrer-Policy: no-referrer
   ]
 }
 ```
+## 2. Saving a new user
+Since saving a new user is related to the security system, saving is performed [with its help] (#registration-authentication-and-authorization-)
 
-## 2. Сохранение нового пользователя
-Так как сохранение нового пользователя связано с системой безопасности, то сохранение производится [с ее помощью](#регистрация-аутентификация-и-авторизация-)
+## 3. Changing the user
+Using this method, all user fields except email and password are subject to change. To reset the password, use the [special method](#5-reset-password). The same as for [mail change] (#6-mail change).
+The data of mood states and tags must also be changed using third-party methods.
 
-## 3. Изменение пользователя
-С помощью этого метода изменению подлежат все пользовательские поля, кроме email, password. Для сброса пароля нужно использовать [специальный метод](#5-сброс-пароля). Так же, как и для [изменения почты](#6-изменение-почты).
-Данные состояний настроения и тегов нужно изменять так же с помощью сторонних методов.
-
-### Пример
-Изменение _username_:
+### Example
+Changing the _username_:
 ```http request
-PUT http://80.242.58.161:8082:8082/api/user
+PUT http://80.242.58.161:8082/api/user
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDYzNDc1LCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.L0KHWJ2cepwUvDFbiZfX0-Z9vDD-Lo7PTqWDTpXhwGohsjr4_guZ1y99g-IgCOtilfEjtg4N_SImenQnDaqoUQ
 
@@ -785,7 +777,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDYzN
 }
 ```
 
-### Успешный ответ
+### Successful response
 ```http request
 HTTP/1.1 204 No Content
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
@@ -797,8 +789,8 @@ X-XSS-Protection: 0
 Referrer-Policy: no-referrer
 ```
 
-### Ошибки
-Пользователь отправил некорректные данные для изменения. Например, username уже существует:
+### Errors
+The user sent incorrect data for modification. For example, username already exists:
 ```http request
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
@@ -820,14 +812,14 @@ Referrer-Policy: no-referrer
 }
 ```
 
-## 4. Удаление пользователя
-### Пример
+## 4. Deleting a user
+### Example
 ```http request
-DELETE http://80.242.58.161:8082:8082/api/user
+DELETE http://80.242.58.161:8082/api/user
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDYzNDc1LCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.L0KHWJ2cepwUvDFbiZfX0-Z9vDD-Lo7PTqWDTpXhwGohsjr4_guZ1y99g-IgCOtilfEjtg4N_SImenQnDaqoUQ
 ```
 
-### Успешный ответ
+### Successful response
 ```http request
 HTTP/1.1 204 No Content
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
@@ -840,15 +832,16 @@ Referrer-Policy: no-referrer
 ```
 
 ## Mood tag
-## 1. Получение тега настроения
-### Пример
+## 1. Getting a mood tag
+
+### Example
 ```http request
-GET http://80.242.58.161:8082:8082/api/mood_tag
+GET http://80.242.58.161:8082/api/mood_tag
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY1MzUzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiI0In0.93im0syhNWJ8OOxUasa5MWqjfiTnIMkQkBnVfGV8CJJa87JSI18ZniWUasuZQp64HqAM6aj8KBgseT4TBjdpXw
 ```
 
-### Успешный ответ
-В ответе передается список всех тегов настроения пользователя:
+### Successful response
+The response contains a list of all the user's mood tags:
 ```http request
 HTTP/1.1 200 OK
 transfer-encoding: chunked
@@ -877,7 +870,7 @@ Referrer-Policy: no-referrer
 ]
 ```
 
-Если теги еще не были добавлены:
+If the tags have not been added yet:
 ```http request
 HTTP/1.1 204 No Content
 Content-Type: application/json
@@ -890,11 +883,10 @@ X-XSS-Protection: 0
 Referrer-Policy: no-referrer
 ```
 
-## 2. Добавление нового тега настроения
-### Пример
+## 2. Adding a new mood tag
+### Example
 ```http request
-### POST Request
-POST http://80.242.58.161:8082:8082/api/mood_tag
+POST http://80.242.58.161:8082/api/mood_tag
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY1MzUzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiI0In0.93im0syhNWJ8OOxUasa5MWqjfiTnIMkQkBnVfGV8CJJa87JSI18ZniWUasuZQp64HqAM6aj8KBgseT4TBjdpXw
 
@@ -904,7 +896,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY1M
 }
 ```
 
-### Успешный ответ
+### Successful response
 ```http request
 HTTP/1.1 201 Created
 Content-Type: application/json
@@ -925,8 +917,8 @@ Referrer-Policy: no-referrer
 }
 ```
 
-### Ошибки
-Повторное добавление тега с тем же именем и _user_id_:
+### Errors
+Re-adding a tag with the same name and _user_id_:
 ```http request
 HTTP/1.1 409 Conflict
 Content-Type: application/json
@@ -947,13 +939,14 @@ Referrer-Policy: no-referrer
   "path": "/api/mood_tag"
 }
 ```
-_user_id_ определяется по Bearer токену, который передается вместе с запросом
+_user_id_ is determined by the Bearer token that is passed along with the request
 
-## 3. Изменение определенного тега настроения
-### Пример
-Изменение степени настроения в теге с 3 до 4
+## 3. Changing a specific mood tag
+### Example
+Changing the degree of mood in the tag from 3 to 4
+
 ```http request
-PUT http://80.242.58.161:8082:8082/api/mood_tag
+PUT http://80.242.58.161:8082/api/mood_tag
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY1MzUzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiI0In0.93im0syhNWJ8OOxUasa5MWqjfiTnIMkQkBnVfGV8CJJa87JSI18ZniWUasuZQp64HqAM6aj8KBgseT4TBjdpXw
 
@@ -964,7 +957,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY1M
 }
 ```
 
-### Успешный ответ
+### Successful response
 ```http request
 HTTP/1.1 204 No Content
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
@@ -976,8 +969,8 @@ X-XSS-Protection: 0
 Referrer-Policy: no-referrer
 ```
 
-Был указан неверный id тега при изменении данных: 
-### Ошибки
+An invalid tag id was specified when the data was changed: 
+### Errors
 ```http request
 HTTP/1.1 404 Not Found
 Content-Type: application/json
@@ -999,14 +992,14 @@ Referrer-Policy: no-referrer
 }
 ```
 
-## 4. Удаление тега настроения
-### Пример
+## 4. Deleting a mood tag
+### Example
 ```http request
-DELETE http://80.242.58.161:8082:8082/api/mood_tag?id=1
+DELETE http://80.242.58.161:8082/api/mood_tag?id=1
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY3MjYzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.HE13E5tbLktTnYq7LGPWJNFwPJNuAcoR-f1BL1hWpWSDPrRTXBOXM8gZA7HrIteDFWwtV4SKyK2e0dTmtNiXlw
 ```
 
-### Успешный ответ
+### Successful response
 ```http request
 HTTP/1.1 204 No Content
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
@@ -1018,8 +1011,8 @@ X-XSS-Protection: 0
 Referrer-Policy: no-referrer
 ```
 
-### Ошибки
-Указан id несуществующего тега:
+### Errors
+The id of a nonexistent tag is specified:
 ```http request
 HTTP/1.1 404 Not Found
 Content-Type: application/json
@@ -1042,15 +1035,15 @@ Referrer-Policy: no-referrer
 ```
 
 ## Mood entry
-## 1. Получение состояния настроения
-### Пример
+## 1. Getting a mood state
+### Example
 ```http request
-GET http://80.242.58.161:8082:8082/api/mood_entry?start_date=2024-04-01&end_date=2024-04-18
+GET http://80.242.58.161:8082/api/mood_entry?start_date=2024-04-01&end_date=2024-04-18
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY3MjYzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.HE13E5tbLktTnYq7LGPWJNFwPJNuAcoR-f1BL1hWpWSDPrRTXBOXM8gZA7HrIteDFWwtV4SKyK2e0dTmtNiXlw
 ```
 
-### Успешные ответы
-По выбранному диапазону дат не найдены состояния настроения: 
+### Successful responses
+No mood states were found for the selected date range: 
 ```http request
 HTTP/1.1 204 No Content
 Content-Type: application/json
@@ -1062,9 +1055,9 @@ X-Frame-Options: DENY
 X-XSS-Protection: 0
 Referrer-Policy: no-referrer
 ```
-Данный метод возвращает успещный ответ со статусом: NO_CONTENT
+This method returns a successful response with the status: NO_CONTENT
 
-Состояния настроения по указаному диапазону найдены:
+Mood states for the specified range are found:
 ```http request
 HTTP/1.1 200 OK
 transfer-encoding: chunked
@@ -1101,13 +1094,13 @@ Referrer-Policy: no-referrer
 ]
 ```
 
-### Ошибки
+### Errors
+## 3. Maintaining a new mood state
+While saving the mood state, you can also add new tags or change old ones. To add new tags, simply specify the data that the user wants to save. To change the old ones, you need to specify the tag id and new data
 
-## 3. Сохранение нового состояния настроения
-Во время сохранения состояния настроения можно так же добавить новые теги или изменить старые. Для добавления новых тегов достаточно просто указать данные, которые пользователь хочет сохранить. Для изменения старых, нужно указать id тега и новые данные
-### Пример
+### Example
 ```http request
-POST http://80.242.58.161:8082:8082/api/mood_entry
+POST http://80.242.58.161:8082/api/mood_entry
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY3MjYzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.HE13E5tbLktTnYq7LGPWJNFwPJNuAcoR-f1BL1hWpWSDPrRTXBOXM8gZA7HrIteDFWwtV4SKyK2e0dTmtNiXlw
 
@@ -1128,7 +1121,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY3M
 }
 ```
 
-### Успешный ответ
+### Successful response
 ```http request
 HTTP/1.1 201 Created
 Content-Type: application/json
@@ -1163,8 +1156,8 @@ Referrer-Policy: no-referrer
 }
 ```
 
-### Ошибки
-Попытка добавить тег с названием, который уже существует. Или изменить тег, название которого конфликтует с другими:
+### Errors
+An attempt to add a tag with a name that already exists. Or change a tag whose name conflicts with others:
 ```http request
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
@@ -1186,12 +1179,13 @@ Referrer-Policy: no-referrer
 }
 ```
 
-## 3. Изменение тега настроения
-### Пример
-Для того чтобы изменить тег настроения, нужно указать его id и данные, которые нужно изменить. 
-Для изменения тегов нужно так же указать их id. Если необходимо добавить новый тег, то нужно указать данные для него без id
+## 3. Changing the mood tag
+### Example
+In order to change the mood tag, you need to specify its id and the data that you want to change. 
+To change tags, you also need to specify their id. If you need to add a new tag, you need to specify the data for it without an id
+
 ```http request
-PUT http://80.242.58.161:8082:8082/api/mood_entry
+PUT http://80.242.58.161:8082/api/mood_entry
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY3MjYzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.HE13E5tbLktTnYq7LGPWJNFwPJNuAcoR-f1BL1hWpWSDPrRTXBOXM8gZA7HrIteDFWwtV4SKyK2e0dTmtNiXlw
 
@@ -1217,7 +1211,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY3M
 }
 ```
 
-### Успешный ответ
+### Successful response
 ```http request
 HTTP/1.1 204 No Content
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
@@ -1228,10 +1222,10 @@ X-Frame-Options: DENY
 X-XSS-Protection: 0
 Referrer-Policy: no-referrer
 ```
-Метод возвращает успешный статус: NO_CONTENT
+The method returns the successful status: NO_CONTENT
 
-### Ошибки
-При попытке создать или изменить имя тега на то, которое уже существует у пользователя:
+### Errors
+When trying to create or change the tag name to one that already exists for the user:
 ```http request
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
@@ -1253,14 +1247,14 @@ Referrer-Policy: no-referrer
 }
 ```
 
-## 4. Удаление тега настроения
-### Пример
+## 4. Deleting a mood tag
+### Example
 ```http request
-DELETE http://80.242.58.161:8082:8082/api/mood_entry?id=1
+DELETE http://80.242.58.161:8082/api/mood_entry?id=1
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY3MjYzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.HE13E5tbLktTnYq7LGPWJNFwPJNuAcoR-f1BL1hWpWSDPrRTXBOXM8gZA7HrIteDFWwtV4SKyK2e0dTmtNiXlw
 ```
 
-### Успешный ответ
+### Successful response
 ```http request
 HTTP/1.1 204 No Content
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
@@ -1271,10 +1265,10 @@ X-Frame-Options: DENY
 X-XSS-Protection: 0
 Referrer-Policy: no-referrer
 ```
-Метод возвращает успешный статус: NO_CONTENT
+The method returns the successful status: NO_CONTENT
 
-### Ошибки
-При указании несуществующего _id_ состояния настроения:
+### Errors
+When specifying a non-existent _id_ mood state:
 ```http request
 HTTP/1.1 404 Not Found
 Content-Type: application/json
@@ -1296,8 +1290,8 @@ Referrer-Policy: no-referrer
 }
 ```
 
-### Дополнительные ссылки на документацию
-Для получения дополнительной информации, пожалуйста, ознакомьтесь со следующими разделами:
+### Additional links to documentation
+For more information, please refer to the following sections:
 
 * [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
 * [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/3.1.5/maven-plugin/reference/html/)
