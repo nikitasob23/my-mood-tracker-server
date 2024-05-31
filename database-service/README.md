@@ -11,7 +11,7 @@ This microservice provides a REST API for the Mood tracker application to intera
     - [User](#user)
     - [MoodTag](#moodtag)
     - [MoodEntry](#moodentry)
-4. [Documentation Links](#additional-documentation-links)
+4. [Documentation Links](#documentation-links)
 
 ## Dependencies
 The database-service project utilizes the following Maven dependencies to ensure functionality, database management, caching, logging, and other key aspects of the service:
@@ -1001,7 +1001,7 @@ Connection: keep-alive
   "path": "/api/service/database/mood_tag"
 }
 ```
-### Additional links to documentation
+### Documentation Links
 For more information, please refer to the following sections:
 
 * [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
