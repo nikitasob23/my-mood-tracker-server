@@ -8,4 +8,6 @@ public interface UserEntityUpdaterDao {
     UserEntity update(UserEntity userEntity);
 
     UserEntity delete(UserEntity user);
+
+    void deleteCacheByUsername(String username);
 }

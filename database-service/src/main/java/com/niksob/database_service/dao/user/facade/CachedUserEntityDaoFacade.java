@@ -73,6 +73,8 @@ public class CachedUserEntityDaoFacade implements UserEntityDaoFacade {
         if (!existsById(user.getId())) {
             throw exceptionHandler.createResourceNotFoundException(user.getEmail());
         }
+        final UserEntity oldUser = loaderDao.loadById(user.getId());
+        updaterDao.deleteCacheByUsername(oldUser.getUsername()); // Needed to update the cache if the username is being updated
         return updaterDao.update(user);
     }
 

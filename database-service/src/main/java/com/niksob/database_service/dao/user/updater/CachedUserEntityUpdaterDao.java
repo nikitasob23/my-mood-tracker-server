@@ -7,6 +7,7 @@ import com.niksob.domain.exception.resource.*;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Component;
@@ -76,5 +77,11 @@ public class CachedUserEntityUpdaterDao implements UserEntityUpdaterDao {
         log.info("User deleted from repository", user);
         log.info("Deleted user cache", user);
         return null;
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = UserCacheNames.USER_BY_USERNAME_CACHE_NAME, key = "#username")
+    public void deleteCacheByUsername(String username) {
     }
 }
