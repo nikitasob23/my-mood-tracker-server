@@ -2,6 +2,12 @@ FROM alpine:3.19.1
 
 RUN apk add openjdk17
 RUN mkdir app
-COPY my-mood-tracker-server/database-service/database-service-1.0.0.jar app/database-service-1.0.0.jar
 
-ENTRYPOINT ["java", "-jar", "app/database-service-1.0.0.jar"]
+RUN apk update && apk add curl
+
+COPY database-service/target/database-service-1.0.0.jar app/database-service-1.0.0.jar
+COPY scripts/start_container_app.sh app/start_app.sh
+
+RUN chmod +x /app/start_app.sh
+
+ENTRYPOINT ["app/start_app.sh", "app/database-service-1.0.0.jar"]

@@ -2,17 +2,11 @@ version: '3.4'
 services:
   db-sql:
     image: niksob/my-mood-tracker:db-sql-1.0.0
-    #    command: --default-authentication-plugin=mysql_native_password
     restart: always
     ports:
       - '9196:3306'
     volumes:
       - db_data:/var/lib/mysql
-    environment:
-      #      MYSQL_USER: server_user
-      #      MYSQL_PASSWORD: iosk2LV4gh
-      MYSQL_ROOT_PASSWORD: jkr367sk9Kn
-      MYSQL_DATABASE: mood_tracker_db
 
   adminer-sql:
     image: adminer

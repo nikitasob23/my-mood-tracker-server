@@ -36,6 +36,18 @@
             <artifactId>spring-cloud-config-server</artifactId>
             <version>4.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+            <version>3.0.4</version>
+        </dependency>
+
+        <!-- Secret encryption -->
+        <dependency>
+            <groupId>com.github.ulisesbocchio</groupId>
+            <artifactId>jasypt-spring-boot-starter</artifactId>
+            <version>3.0.5</version>
+        </dependency>
 
         <!-- Git connector -->
         <dependency>

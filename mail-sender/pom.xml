@@ -71,6 +71,13 @@
             <version>4.1.0</version>
         </dependency>
 
+        <!-- Secret encryption -->
+        <dependency>
+            <groupId>com.github.ulisesbocchio</groupId>
+            <artifactId>jasypt-spring-boot-starter</artifactId>
+            <version>3.0.5</version>
+        </dependency>
+
     </dependencies>
 
     <build>
