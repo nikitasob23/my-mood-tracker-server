@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Build microservice's jars
-. scripts/build_microservice_jars.sh
+. scripts/jars/build_microservice_jars.sh
 
 echo "Building Docker images for linux/amd64 and pushing to Docker Hub"
 #echo "\n\nStart building database sql docker file"          && docker buildx build --platform linux/amd64 -f database-service/docker/db_sql/Dockerfile . -t niksob/my-mood-tracker:db-redis-cache-1.0.0 --push
@@ -25,4 +25,4 @@ ssh -p 65001 root@80.242.58.161 '
     echo "PULLING GATEWAY SERVICE DOCKER FILE: "       && docker pull niksob/my-mood-tracker:gateway-service-1.0.0
 '
 
-scp -P 65001 /Users/nickworker/Documents/Repo/my-mood-tracker-server/compose-env.yml root@80.242.58.161:/root/my-mood-tracker-server
+scp -P 65001 compose-env.yml root@80.242.58.161:/root/my-mood-tracker-server

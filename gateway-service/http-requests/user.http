@@ -1,13 +1,13 @@
 ### GET Request
-GET http://localhost:8082/api/user
+GET http://80.242.58.161:8082/api/user
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY1MDgwLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIzIn0.ee6hJZ-IrqLsZNNlTIjPpGlZXxi87YCA60iFw2s3eG5rixipPct4QDWyGSE2VD35vKmB6xSlEAJ0tnqxxrDIKw
 
 ### GET Request
-GET http://localhost:8082/api/user/full?username=Ivan
+GET http://80.242.58.161:8082/api/user/full?username=Ivan
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY1MDgwLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIzIn0.ee6hJZ-IrqLsZNNlTIjPpGlZXxi87YCA60iFw2s3eG5rixipPct4QDWyGSE2VD35vKmB6xSlEAJ0tnqxxrDIKw
 
 ### PUT Request
-PUT http://localhost:8082/api/user
+PUT http://80.242.58.161:8082/api/user
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY1MDgwLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIzIn0.ee6hJZ-IrqLsZNNlTIjPpGlZXxi87YCA60iFw2s3eG5rixipPct4QDWyGSE2VD35vKmB6xSlEAJ0tnqxxrDIKw
 
@@ -16,5 +16,5 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY1M
 }
 
 ### DELETE Request
-DELETE http://localhost:8082/api/user
+DELETE http://80.242.58.161:8082/api/user
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY1MDgwLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIzIn0.ee6hJZ-IrqLsZNNlTIjPpGlZXxi87YCA60iFw2s3eG5rixipPct4QDWyGSE2VD35vKmB6xSlEAJ0tnqxxrDIKw

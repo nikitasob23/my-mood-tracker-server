@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Build base modules
-. scripts/build_base_modules.sh
+. scripts/jars/build_base_modules.sh
 
 # Build microservices
 echo "\n\n\nStart building config service"        && mvn -f config-service/pom.xml clean package -Dmaven.test.skip=true        && echo "Config service was build"

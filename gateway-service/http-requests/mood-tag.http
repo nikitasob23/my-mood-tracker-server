@@ -1,9 +1,9 @@
 ### GET Request
-GET http://localhost:8082/api/mood_tag
+GET http://80.242.58.161:8082/api/mood_tag
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw
 
 ### POST Request
-POST http://localhost:8082/api/mood_tag
+POST http://80.242.58.161:8082/api/mood_tag
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw
 
@@ -13,7 +13,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4N
 }
 
 ### PUT Request
-PUT http://localhost:8082/api/mood_tag
+PUT http://80.242.58.161:8082/api/mood_tag
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw
 
@@ -24,5 +24,5 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4N
 }
 
 ### DELETE Request
-DELETE http://localhost:8082/api/mood_tag?id=3
+DELETE http://80.242.58.161:8082/api/mood_tag?id=3
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw

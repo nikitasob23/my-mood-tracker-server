@@ -17,3 +17,8 @@ spring:
       server:
         native:
           search-locations: file:///${repo.local.config.path}
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_SECRET}
+    algorithm: PBEWithMD5AndDES
