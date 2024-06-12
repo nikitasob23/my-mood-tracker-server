@@ -1,5 +1,5 @@
 ### POST Request
-POST http://localhost:8092/api/service/auth/token/signup
+POST http://127.0.0.1:8092/api/service/auth/token/signup
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 }
 
 ### POST Request
-POST http://localhost:8092/api/service/auth/token/refresh
+POST http://127.0.0.1:8092/api/service/auth/token/refresh
 Content-Type: application/json
 
 {

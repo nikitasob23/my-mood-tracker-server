@@ -1,8 +1,8 @@
 ### GET Request
-GET http://localhost:8081/api/service/database/mood_entry?user_id=4&start_date=2024-04-01&end_date=2024-04-16
+GET http://127.0.0.1:8081/api/service/database/mood_entry?user_id=4&start_date=2024-04-01&end_date=2024-04-16
 
 ### POST Request
-POST http://localhost:8081/api/service/database/mood_entry
+POST http://127.0.0.1:8081/api/service/database/mood_entry
 Content-Type: application/json
 
 {
@@ -25,7 +25,7 @@ Content-Type: application/json
 }
 
 ### PUT Request
-PUT http://localhost:8081/api/service/database/mood_entry
+PUT http://127.0.0.1:8081/api/service/database/mood_entry
 Content-Type: application/json
 
 {
@@ -55,4 +55,4 @@ Content-Type: application/json
 
 
 ### DELETE Request
-DELETE http://localhost:8081/api/service/database/mood_entry?id=4
+DELETE http://127.0.0.1:8081/api/service/database/mood_entry?id=4

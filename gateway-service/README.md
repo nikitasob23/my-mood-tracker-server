@@ -139,7 +139,7 @@ The microservice is the entry point to the application and is responsible for se
 ### 1. Registration
 ### Request example
 ```http request
-POST http://80.242.58.161:8082/api/auth/signup
+POST https://moodtracker.ru/api/auth/signup
 Content-Type: application/json
 
 {
@@ -239,7 +239,7 @@ Connection: close
 In order to complete the registration process, you need to go to the email and click on the link sent with the activation code
 
 ### Request example
-GET http://80.242.58.161:8082/api/auth/signup/activate/0da79d34-f9f3-48a4-bee2-9a56019fabea
+GET https://moodtracker.ru/api/auth/signup/activate/0da79d34-f9f3-48a4-bee2-9a56019fabea
 
 ### Successful response
 ```http request
@@ -304,7 +304,7 @@ Referrer-Policy: no-referrer
 The authorization process begins with receiving a pair of access-refresh tokens
 
 ```http request
-POST http://80.242.58.161:8082/api/auth/token
+POST https://moodtracker.ru/api/auth/token
 Content-Type: application/json
 
 {
@@ -384,7 +384,7 @@ Referrer-Policy: no-referrer
 ### 4. Authorization by refresh token
 ### Example
 ```http request
-POST http://80.242.58.161:8082/api/auth/token/refresh
+POST https://moodtracker.ru/api/auth/token/refresh
 Content-Type: application/json
 
 {
@@ -526,7 +526,7 @@ You can change your email only after confirming a new one
 ### Example
 Request for confirmation of mail:
 ```http request
-POST http://80.242.58.161:8082/api/auth/reset/email
+POST https://moodtracker.ru/api/auth/reset/email
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDU4NDk1LCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.OycPsjgFgHqSyXWKBk131jb1CH5jqrujzimJpR0krWBNEI5j0AMlwxV1XhcPyH2NYsCYeA0RbfUQ1FBaLsfMbQ
 Content-Type: application/json
 
@@ -549,7 +549,7 @@ Referrer-Policy: no-referrer
 
 ### 7. Confirmation of the mail after its change
 ### Example
-GET http://80.242.58.161:8082/api/auth/reset/email/activate/35225058-e09b-4923-b0a8-de68514578b8
+GET https://moodtracker.ru/api/auth/reset/email/activate/35225058-e09b-4923-b0a8-de68514578b8
 
 ### Successful response
 ```http request
@@ -592,7 +592,7 @@ This method removes a pair of access-refresh tokens for a specific device from t
 
 ### Example
 ```http request
-GET http://80.242.58.161:8082/api/auth/signout?device=MY_DEVICE
+GET https://moodtracker.ru/api/auth/signout?device=MY_DEVICE
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE2NTYxNjgxLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxNCJ9.iX2qWbsnDlwHXTS3xHlo0UMV8VlHTScBYvYkgmfsCJfnfNzHPl5TADwt94ert8sa9-603GSSXPmNdNDv9sb8Ig
 ```
 
@@ -632,7 +632,7 @@ Referrer-Policy: no-referrer
 
 To delete all access-refresh token pairs:
 ```http request
-GET http://80.242.58.161:8082:8092/api/auth/signout/all
+GET https://moodtracker.ru:8092/api/auth/signout/all
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDU0NzY3LCJ1c2VySWQiOiIxIiwiZGV2IjoiTVlfREVWSUNFIn0.xwWPneNu9U7dO7IPDhYzAGmhArIYSKUQ-EjX8PEIx_vhl3yRuvFSk3SZomTMEk4Dn70sNrbJZEc_2WWx9BsdWA
 ```
 
@@ -678,7 +678,7 @@ Referrer-Policy: no-referrer
 ## 1. Getting a user
 ### Example
 ```http request
-GET http://80.242.58.161:8082/api/user
+GET https://moodtracker.ru/api/user
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDU1OTY4LCJ1c2VySWQiOiIxIiwiZGV2IjoiTVlfREVWSUNFIn0.nCFLz-Z1V9OdkiVHUcKW81q4UsW8jmA1CHme9nnM6A3zG7G0gEUuiuoaKPvTgzqx-l7c62EmK_FIfGmnQNwtAA
 ```
 
@@ -708,7 +708,7 @@ The method returns the user along with the mood states and tags
 
 ### Example
 ```http request
-GET http://80.242.58.161:8082/api/user/full
+GET https://moodtracker.ru/api/user/full
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDU1OTY4LCJ1c2VySWQiOiIxIiwiZGV2IjoiTVlfREVWSUNFIn0.nCFLz-Z1V9OdkiVHUcKW81q4UsW8jmA1CHme9nnM6A3zG7G0gEUuiuoaKPvTgzqx-l7c62EmK_FIfGmnQNwtAA
 ```
 
@@ -768,7 +768,7 @@ The data of mood states and tags must also be changed using third-party methods.
 ### Example
 Changing the _username_:
 ```http request
-PUT http://80.242.58.161:8082/api/user
+PUT https://moodtracker.ru/api/user
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDYzNDc1LCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.L0KHWJ2cepwUvDFbiZfX0-Z9vDD-Lo7PTqWDTpXhwGohsjr4_guZ1y99g-IgCOtilfEjtg4N_SImenQnDaqoUQ
 
@@ -815,7 +815,7 @@ Referrer-Policy: no-referrer
 ## 4. Deleting a user
 ### Example
 ```http request
-DELETE http://80.242.58.161:8082/api/user
+DELETE https://moodtracker.ru/api/user
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDYzNDc1LCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.L0KHWJ2cepwUvDFbiZfX0-Z9vDD-Lo7PTqWDTpXhwGohsjr4_guZ1y99g-IgCOtilfEjtg4N_SImenQnDaqoUQ
 ```
 
@@ -836,7 +836,7 @@ Referrer-Policy: no-referrer
 
 ### Example
 ```http request
-GET http://80.242.58.161:8082/api/mood_tag
+GET https://moodtracker.ru/api/mood_tag
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY1MzUzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiI0In0.93im0syhNWJ8OOxUasa5MWqjfiTnIMkQkBnVfGV8CJJa87JSI18ZniWUasuZQp64HqAM6aj8KBgseT4TBjdpXw
 ```
 
@@ -886,7 +886,7 @@ Referrer-Policy: no-referrer
 ## 2. Adding a new mood tag
 ### Example
 ```http request
-POST http://80.242.58.161:8082/api/mood_tag
+POST https://moodtracker.ru/api/mood_tag
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY1MzUzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiI0In0.93im0syhNWJ8OOxUasa5MWqjfiTnIMkQkBnVfGV8CJJa87JSI18ZniWUasuZQp64HqAM6aj8KBgseT4TBjdpXw
 
@@ -946,7 +946,7 @@ _user_id_ is determined by the Bearer token that is passed along with the reques
 Changing the degree of mood in the tag from 3 to 4
 
 ```http request
-PUT http://80.242.58.161:8082/api/mood_tag
+PUT https://moodtracker.ru/api/mood_tag
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY1MzUzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiI0In0.93im0syhNWJ8OOxUasa5MWqjfiTnIMkQkBnVfGV8CJJa87JSI18ZniWUasuZQp64HqAM6aj8KBgseT4TBjdpXw
 
@@ -995,7 +995,7 @@ Referrer-Policy: no-referrer
 ## 4. Deleting a mood tag
 ### Example
 ```http request
-DELETE http://80.242.58.161:8082/api/mood_tag?id=1
+DELETE https://moodtracker.ru/api/mood_tag?id=1
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY3MjYzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.HE13E5tbLktTnYq7LGPWJNFwPJNuAcoR-f1BL1hWpWSDPrRTXBOXM8gZA7HrIteDFWwtV4SKyK2e0dTmtNiXlw
 ```
 
@@ -1038,7 +1038,7 @@ Referrer-Policy: no-referrer
 ## 1. Getting a mood state
 ### Example
 ```http request
-GET http://80.242.58.161:8082/api/mood_entry?start_date=2024-04-01&end_date=2024-04-18
+GET https://moodtracker.ru/api/mood_entry?start_date=2024-04-01&end_date=2024-04-18
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY3MjYzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.HE13E5tbLktTnYq7LGPWJNFwPJNuAcoR-f1BL1hWpWSDPrRTXBOXM8gZA7HrIteDFWwtV4SKyK2e0dTmtNiXlw
 ```
 
@@ -1100,7 +1100,7 @@ While saving the mood state, you can also add new tags or change old ones. To ad
 
 ### Example
 ```http request
-POST http://80.242.58.161:8082/api/mood_entry
+POST https://moodtracker.ru/api/mood_entry
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY3MjYzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.HE13E5tbLktTnYq7LGPWJNFwPJNuAcoR-f1BL1hWpWSDPrRTXBOXM8gZA7HrIteDFWwtV4SKyK2e0dTmtNiXlw
 
@@ -1185,7 +1185,7 @@ In order to change the mood tag, you need to specify its id and the data that yo
 To change tags, you also need to specify their id. If you need to add a new tag, you need to specify the data for it without an id
 
 ```http request
-PUT http://80.242.58.161:8082/api/mood_entry
+PUT https://moodtracker.ru/api/mood_entry
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY3MjYzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.HE13E5tbLktTnYq7LGPWJNFwPJNuAcoR-f1BL1hWpWSDPrRTXBOXM8gZA7HrIteDFWwtV4SKyK2e0dTmtNiXlw
 
@@ -1250,7 +1250,7 @@ Referrer-Policy: no-referrer
 ## 4. Deleting a mood tag
 ### Example
 ```http request
-DELETE http://80.242.58.161:8082/api/mood_entry?id=1
+DELETE https://moodtracker.ru/api/mood_entry?id=1
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY3MjYzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.HE13E5tbLktTnYq7LGPWJNFwPJNuAcoR-f1BL1hWpWSDPrRTXBOXM8gZA7HrIteDFWwtV4SKyK2e0dTmtNiXlw
 ```
 

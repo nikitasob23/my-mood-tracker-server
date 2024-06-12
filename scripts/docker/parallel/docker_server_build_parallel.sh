@@ -27,4 +27,4 @@ ssh -p 65001 root@80.242.58.161 '
     wait
 '
 
-scp -P 65001 ~/my-mood-tracker-server/compose-env.yml root@80.242.58.161:/root/my-mood-tracker-server
+scp -P 65001 compose-env.yml root@80.242.58.161:/root/my-mood-tracker-server

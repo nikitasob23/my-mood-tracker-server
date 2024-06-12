@@ -208,7 +208,7 @@ false
 ## 2. Retrieve User
 ### Request Example
 
-GET http://80.242.58.161:8081/api/service/database/user?username=Ivan
+GET http://127.0.0.1:8081/api/service/database/user?username=Ivan
 
 ### Successful Response
 ```http request
@@ -249,7 +249,7 @@ Connection: keep-alive
 ## 3. Retrieve Full User with Mood States and Tags
 
 ### Request Example
-GET http://80.242.58.161:8081/api/service/database/user/full?username=Ivan
+GET http://127.0.0.1:8081/api/service/database/user/full?username=Ivan
 
 ### Successful Response
 ```http request
@@ -315,7 +315,7 @@ Connection: keep-alive
 ## 4. Add New User:
 
 ### Request Example
-POST http://80.242.58.161:8081/api/service/database/user
+POST http://127.0.0.1:8081/api/service/database/user
 
 **Body:**
 ```http request
@@ -385,7 +385,7 @@ Connection: close
 
 ## 5. Update User:
 ### Request Example
-PUT http://80.242.58.161:8081/api/service/database/user
+PUT http://127.0.0.1:8081/api/service/database/user
 
 **Body:**
 ```http request
@@ -447,7 +447,7 @@ Connection: close
 ## 6. Delete User:
 ### Request Example
 
-DELETE http://80.242.58.161:8081/api/service/database/user?username=Ivan
+DELETE http://127.0.0.1:8081/api/service/database/user?username=Ivan
 
 ### Successful Response
 This request returns a successful status: NO_CONTENT with an empty response body
@@ -480,7 +480,7 @@ Connection: keep-alive
 
 ###1. Getting a mood tag
 ### Request example
-GET http://80.242.58.161:8081/api/service/database/mood_tag?user_id=9
+GET http://127.0.0.1:8081/api/service/database/mood_tag?user_id=9
 ### Successful response
 ```http request
 HTTP/1.1 200 
@@ -531,7 +531,7 @@ Connection: keep-alive
 ```
 ###2. Adding a new mood tag
 ### Request example
-POST http://80.242.58.161:8081/api/service/database/mood_tag
+POST http://127.0.0.1:8081/api/service/database/mood_tag
 **body:**
 ```http request
 Content-Type: application/json
@@ -591,7 +591,7 @@ Connection: keep-alive
 ```
 ###3. Updating the mood tag
 ### Request example
-PUT http://80.242.58.161:8081/api/service/database/mood_tag
+PUT http://127.0.0.1:8081/api/service/database/mood_tag
 **body:**
 ```http request
 Content-Type: application/json
@@ -645,7 +645,7 @@ Connection: keep-alive
 ```
 ### 3. Deleting a mood tag
 ### Request example
-DELETE http://80.242.58.161:8081/api/service/database/mood_tag?id=8&user_id=12
+DELETE http://127.0.0.1:8081/api/service/database/mood_tag?id=8&user_id=12
 ### Successful response
 In case of a successful attempt to update the tag, the successful status is returned: NO_CONTENT with an empty response body
 ```http request
@@ -692,7 +692,7 @@ Connection: keep-alive
 
 ###1. Getting a mood tag
 ### Request example
-GET http://80.242.58.161:8081/api/service/database/mood_entry?user_id=4&start_date=2024-05-01&end_date=2024-05-23
+GET http://127.0.0.1:8081/api/service/database/mood_entry?user_id=4&start_date=2024-05-01&end_date=2024-05-23
 ### Successful response
 ```http request
 HTTP/1.1 200 
@@ -743,7 +743,7 @@ Connection: keep-alive
 ```
 ###2. Adding a new mood state
 ### Request example
-POST http://80.242.58.161:8081/api/service/database/mood_entry
+POST http://127.0.0.1:8081/api/service/database/mood_entry
 **body:**
 ```
 Content-Type: application/json
@@ -772,7 +772,7 @@ Connection: keep-alive
 You can also add a new mood tag or edit an old one with the state.
 If you need to attach an old tag and update it, then you need to specify the tag id in the request along with the rest of the data.
 If you need to add a new tag, it is enough to specify only the required fields: _name_, _user id_
-POST http://80.242.58.161:8081/api/service/database/mood_entry
+POST http://127.0.0.1:8081/api/service/database/mood_entry
 **body:**
 ```
 Content-Type: application/json
@@ -873,7 +873,7 @@ Connection: keep-alive
 ```
 ###3. Mood Status Update
 ### Request example
-PUT http://80.242.58.161:8081/api/service/database/mood_entry
+PUT http://127.0.0.1:8081/api/service/database/mood_entry
 **body:**
 ```
 Content-Type: application/json
@@ -974,7 +974,7 @@ Connection: close
 ```
 ### 3. Deleting a mood state
 ### Request example
-DELETE http://80.242.58.161:8081/api/service/database/mood_entry?id=9
+DELETE http://127.0.0.1:8081/api/service/database/mood_entry?id=9
 ### Successful response
 In case of a successful attempt to update the mood state, the successful status is returned: NO_CONTENT with an empty response body
 ```http request

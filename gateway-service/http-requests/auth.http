@@ -1,13 +1,13 @@
 ### GET Request
-GET http://80.242.58.161:8082/api/auth/signout?device=MY_DEVICE
+GET https://moodtracker.ru/api/auth/signout?device=MY_DEVICE
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDYxNjI5LCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.IvG63DYXuIAKMz5bFET0RVP2O0qDU8yX9n7z0xQEnLUJosq1YPdxFpAZ4hNgzsjgWs--ZlTPizq7FvET7xFDqw
 
 ### GET Request
-GET http://80.242.58.161:8082/api/auth/signout/all
+GET https://moodtracker.ru/api/auth/signout/all
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDYxNjI5LCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.IvG63DYXuIAKMz5bFET0RVP2O0qDU8yX9n7z0xQEnLUJosq1YPdxFpAZ4hNgzsjgWs--ZlTPizq7FvET7xFDqw
 
 ### Signup request
-POST http://80.242.58.161:8082/api/auth/signup
+POST https://moodtracker.ru/api/auth/signup
 Content-Type: application/json
 
 {
@@ -17,10 +17,10 @@ Content-Type: application/json
 }
 
 ### Signup confirmation
-GET http://80.242.58.161:8082/api/auth/signup/activate/6afb1594-e451-4802-a953-37a85546553b
+GET https://moodtracker.ru/api/auth/signup/activate/6afb1594-e451-4802-a953-37a85546553b
 
 ### Reset email
-POST http://80.242.58.161:8082/api/auth/reset/email
+POST https://moodtracker.ru/api/auth/reset/email
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDYxNjI5LCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.IvG63DYXuIAKMz5bFET0RVP2O0qDU8yX9n7z0xQEnLUJosq1YPdxFpAZ4hNgzsjgWs--ZlTPizq7FvET7xFDqw
 Content-Type: application/json
 
@@ -29,10 +29,10 @@ Content-Type: application/json
 }
 
 ### Email resetting confirmation
-GET http://80.242.58.161:8082/api/auth/reset/email/activate/35225058-e09b-4923-b0a8-de68514578b8
+GET https://moodtracker.ru/api/auth/reset/email/activate/35225058-e09b-4923-b0a8-de68514578b8
 
 ### Reset password
-POST http://80.242.58.161:8082/api/auth/reset/password
+POST https://moodtracker.ru/api/auth/reset/password
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDYxNjI5LCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.IvG63DYXuIAKMz5bFET0RVP2O0qDU8yX9n7z0xQEnLUJosq1YPdxFpAZ4hNgzsjgWs--ZlTPizq7FvET7xFDqw
 Content-Type: application/json
 

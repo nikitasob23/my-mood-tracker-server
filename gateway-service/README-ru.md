@@ -141,7 +141,7 @@ public class WebSecurityConfig {
 ## Управление учетной записью пользователя
 ### 1. Регистрация
 ### Пример запроса
-POST http://80.242.58.161:8082/api/auth/signup
+POST https://moodtracker.ru/api/auth/signup
 
 **Body:**
 ```http request
@@ -244,7 +244,7 @@ Connection: close
 Для того чтобы завершить процесс регистрации, нужно зайти на почту и перейти по отправленной ссылке с кодом активации
 
 ### Пример запроса
-GET http://80.242.58.161:8082/api/auth/signup/activate/0da79d34-f9f3-48a4-bee2-9a56019fabea
+GET https://moodtracker.ru/api/auth/signup/activate/0da79d34-f9f3-48a4-bee2-9a56019fabea
 
 ### Успешный ответ
 ```http request
@@ -308,7 +308,7 @@ Referrer-Policy: no-referrer
 ### Пример
 Процесс авторизации начинается с получения пары access-refresh токенов
 
-POST http://80.242.58.161:8082/api/auth/token
+POST https://moodtracker.ru/api/auth/token
 
 **Body:**
 ```http request
@@ -391,7 +391,7 @@ Referrer-Policy: no-referrer
 
 ### 4. Авторизация по refresh token
 ### Пример
-POST http://80.242.58.161:8082:8082/api/auth/token/refresh
+POST https://moodtracker.ru:8082/api/auth/token/refresh
 
 **Body:**
 ```http request
@@ -536,7 +536,7 @@ Referrer-Policy: no-referrer
 ### Пример
 Запрос на подверждение почты:
 ```http request
-POST http://80.242.58.161:8082:8082/api/auth/reset/email
+POST https://moodtracker.ru:8082/api/auth/reset/email
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDU4NDk1LCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.OycPsjgFgHqSyXWKBk131jb1CH5jqrujzimJpR0krWBNEI5j0AMlwxV1XhcPyH2NYsCYeA0RbfUQ1FBaLsfMbQ
 Content-Type: application/json
 
@@ -559,7 +559,7 @@ Referrer-Policy: no-referrer
 
 ### 7. Подтверждение почты после ее смены
 ### Пример
-GET http://80.242.58.161:8082:8082/api/auth/reset/email/activate/35225058-e09b-4923-b0a8-de68514578b8
+GET https://moodtracker.ru:8082/api/auth/reset/email/activate/35225058-e09b-4923-b0a8-de68514578b8
 
 ### Успешный ответ
 ```http request
@@ -601,7 +601,7 @@ Referrer-Policy: no-referrer
 Данный метод удаляет пару access-refresh токенов для определенного устройства из системы. После этого они становятся недействительными
 ### Пример
 ```http request
-GET http://80.242.58.161:8082/api/auth/signout?device=MY_DEVICE
+GET https://moodtracker.ru/api/auth/signout?device=MY_DEVICE
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE2NTYxNjgxLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxNCJ9.iX2qWbsnDlwHXTS3xHlo0UMV8VlHTScBYvYkgmfsCJfnfNzHPl5TADwt94ert8sa9-603GSSXPmNdNDv9sb8Ig
 ```
 
@@ -641,7 +641,7 @@ Referrer-Policy: no-referrer
 
 Для удаления всех пар access-refresh токенов:
 ```http request
-GET http://80.242.58.161:8082:8092/api/auth/signout/all
+GET https://moodtracker.ru:8092/api/auth/signout/all
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDU0NzY3LCJ1c2VySWQiOiIxIiwiZGV2IjoiTVlfREVWSUNFIn0.xwWPneNu9U7dO7IPDhYzAGmhArIYSKUQ-EjX8PEIx_vhl3yRuvFSk3SZomTMEk4Dn70sNrbJZEc_2WWx9BsdWA
 ```
 
@@ -686,7 +686,7 @@ Referrer-Policy: no-referrer
 ## 1. Получение пользователя
 ### Пример
 ```http request
-GET http://80.242.58.161:8082:8082/api/user
+GET https://moodtracker.ru:8082/api/user
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDU1OTY4LCJ1c2VySWQiOiIxIiwiZGV2IjoiTVlfREVWSUNFIn0.nCFLz-Z1V9OdkiVHUcKW81q4UsW8jmA1CHme9nnM6A3zG7G0gEUuiuoaKPvTgzqx-l7c62EmK_FIfGmnQNwtAA
 ```
 
@@ -715,7 +715,7 @@ Referrer-Policy: no-referrer
 Метод возвращает пользователя вместе с состояниями настроения и тегами
 ### Пример
 ```http request
-GET http://80.242.58.161:8082:8082/api/user/full
+GET https://moodtracker.ru:8082/api/user/full
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDU1OTY4LCJ1c2VySWQiOiIxIiwiZGV2IjoiTVlfREVWSUNFIn0.nCFLz-Z1V9OdkiVHUcKW81q4UsW8jmA1CHme9nnM6A3zG7G0gEUuiuoaKPvTgzqx-l7c62EmK_FIfGmnQNwtAA
 ```
 
@@ -776,7 +776,7 @@ Referrer-Policy: no-referrer
 ### Пример
 Изменение _username_:
 ```http request
-PUT http://80.242.58.161:8082:8082/api/user
+PUT https://moodtracker.ru:8082/api/user
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDYzNDc1LCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.L0KHWJ2cepwUvDFbiZfX0-Z9vDD-Lo7PTqWDTpXhwGohsjr4_guZ1y99g-IgCOtilfEjtg4N_SImenQnDaqoUQ
 
@@ -823,7 +823,7 @@ Referrer-Policy: no-referrer
 ## 4. Удаление пользователя
 ### Пример
 ```http request
-DELETE http://80.242.58.161:8082:8082/api/user
+DELETE https://moodtracker.ru:8082/api/user
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDYzNDc1LCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.L0KHWJ2cepwUvDFbiZfX0-Z9vDD-Lo7PTqWDTpXhwGohsjr4_guZ1y99g-IgCOtilfEjtg4N_SImenQnDaqoUQ
 ```
 
@@ -843,7 +843,7 @@ Referrer-Policy: no-referrer
 ## 1. Получение тега настроения
 ### Пример
 ```http request
-GET http://80.242.58.161:8082:8082/api/mood_tag
+GET https://moodtracker.ru:8082/api/mood_tag
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY1MzUzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiI0In0.93im0syhNWJ8OOxUasa5MWqjfiTnIMkQkBnVfGV8CJJa87JSI18ZniWUasuZQp64HqAM6aj8KBgseT4TBjdpXw
 ```
 
@@ -894,7 +894,7 @@ Referrer-Policy: no-referrer
 ### Пример
 ```http request
 ### POST Request
-POST http://80.242.58.161:8082:8082/api/mood_tag
+POST https://moodtracker.ru:8082/api/mood_tag
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY1MzUzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiI0In0.93im0syhNWJ8OOxUasa5MWqjfiTnIMkQkBnVfGV8CJJa87JSI18ZniWUasuZQp64HqAM6aj8KBgseT4TBjdpXw
 
@@ -953,7 +953,7 @@ _user_id_ определяется по Bearer токену, который пе
 ### Пример
 Изменение степени настроения в теге с 3 до 4
 ```http request
-PUT http://80.242.58.161:8082:8082/api/mood_tag
+PUT https://moodtracker.ru:8082/api/mood_tag
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY1MzUzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiI0In0.93im0syhNWJ8OOxUasa5MWqjfiTnIMkQkBnVfGV8CJJa87JSI18ZniWUasuZQp64HqAM6aj8KBgseT4TBjdpXw
 
@@ -1002,7 +1002,7 @@ Referrer-Policy: no-referrer
 ## 4. Удаление тега настроения
 ### Пример
 ```http request
-DELETE http://80.242.58.161:8082:8082/api/mood_tag?id=1
+DELETE https://moodtracker.ru:8082/api/mood_tag?id=1
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY3MjYzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.HE13E5tbLktTnYq7LGPWJNFwPJNuAcoR-f1BL1hWpWSDPrRTXBOXM8gZA7HrIteDFWwtV4SKyK2e0dTmtNiXlw
 ```
 
@@ -1045,7 +1045,7 @@ Referrer-Policy: no-referrer
 ## 1. Получение состояния настроения
 ### Пример
 ```http request
-GET http://80.242.58.161:8082:8082/api/mood_entry?start_date=2024-04-01&end_date=2024-04-18
+GET https://moodtracker.ru:8082/api/mood_entry?start_date=2024-04-01&end_date=2024-04-18
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY3MjYzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.HE13E5tbLktTnYq7LGPWJNFwPJNuAcoR-f1BL1hWpWSDPrRTXBOXM8gZA7HrIteDFWwtV4SKyK2e0dTmtNiXlw
 ```
 
@@ -1107,7 +1107,7 @@ Referrer-Policy: no-referrer
 Во время сохранения состояния настроения можно так же добавить новые теги или изменить старые. Для добавления новых тегов достаточно просто указать данные, которые пользователь хочет сохранить. Для изменения старых, нужно указать id тега и новые данные
 ### Пример
 ```http request
-POST http://80.242.58.161:8082:8082/api/mood_entry
+POST https://moodtracker.ru:8082/api/mood_entry
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY3MjYzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.HE13E5tbLktTnYq7LGPWJNFwPJNuAcoR-f1BL1hWpWSDPrRTXBOXM8gZA7HrIteDFWwtV4SKyK2e0dTmtNiXlw
 
@@ -1191,7 +1191,7 @@ Referrer-Policy: no-referrer
 Для того чтобы изменить тег настроения, нужно указать его id и данные, которые нужно изменить. 
 Для изменения тегов нужно так же указать их id. Если необходимо добавить новый тег, то нужно указать данные для него без id
 ```http request
-PUT http://80.242.58.161:8082:8082/api/mood_entry
+PUT https://moodtracker.ru:8082/api/mood_entry
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY3MjYzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.HE13E5tbLktTnYq7LGPWJNFwPJNuAcoR-f1BL1hWpWSDPrRTXBOXM8gZA7HrIteDFWwtV4SKyK2e0dTmtNiXlw
 
@@ -1256,7 +1256,7 @@ Referrer-Policy: no-referrer
 ## 4. Удаление тега настроения
 ### Пример
 ```http request
-DELETE http://80.242.58.161:8082:8082/api/mood_entry?id=1
+DELETE https://moodtracker.ru:8082/api/mood_entry?id=1
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDY3MjYzLCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.HE13E5tbLktTnYq7LGPWJNFwPJNuAcoR-f1BL1hWpWSDPrRTXBOXM8gZA7HrIteDFWwtV4SKyK2e0dTmtNiXlw
 ```
 

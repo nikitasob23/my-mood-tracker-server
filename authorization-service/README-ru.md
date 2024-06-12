@@ -166,7 +166,7 @@ public class SignOutDetails {
 
 ### 1. Регистрация
 ### Пример запроса
-POST http://80.242.58.161:8092/api/service/auth/signup
+POST http://127.0.0.1:8092/api/service/auth/signup
 
 **Body:**
 ```
@@ -203,8 +203,8 @@ Connection: keep-alive
 После отправки регистрационных данных, на почту приходит ссылка с кодом активации
 
 ### Пример
-```
-https://80.242.58.161:8082/api/auth/signup/activate/2e288b77-2705-4719-9478-f99cc9bce21d
+```http request
+https://moodtracker.ru/api/auth/signup/activate/2e288b77-2705-4719-9478-f99cc9bce21d
 ```
 После перехода по этой ссылке, микросервис создает объект пользователя и сохраняет его в базе данных.
 
@@ -212,7 +212,7 @@ https://80.242.58.161:8082/api/auth/signup/activate/2e288b77-2705-4719-9478-f99c
 ### Пример
 Процесс авторизации начинается с получения пары access-refresh токенов  
 
-GET http://localhost:8092/api/service/auth/signout?userId=13&device=MY_DEVICE
+GET http://127.0.0.1:8092/api/service/auth/signout?userId=13&device=MY_DEVICE
 
 ### Успешный ответ
 ```
@@ -272,7 +272,7 @@ Connection: keep-alive
 
 ### 4. Авторизация по refresh token
 
-POST http://80.242.58.161:8092/api/service/auth/token/refresh
+POST http://127.0.0.1:8092/api/service/auth/token/refresh
 
 **Body:**
 ```
@@ -323,7 +323,7 @@ Connection: keep-alive
 ### 4. Выход из системы
 Данный метод удаляет пару access-refresh токенов для определенного устройства из базы данных. После этого они становятся недействительными 
 ### Пример
-GET http://80.242.58.161:8092/api/service/auth/signout?userId=13&device=MY_DEVICE
+GET http://127.0.0.1:8092/api/service/auth/signout?userId=13&device=MY_DEVICE
 
 **_Параметры:_**
 - userId - идентификатор пользователя
@@ -360,7 +360,7 @@ Connection: keep-alive
 ### 5. Выход из системы со всех устройств
 Данный метод удаляет пары access-refresh токенов для всех устройств из базы данных. После этого они становятся недействительными
 ### Пример
-GET http://80.242.58.161:8092/api/service/auth/signout/all?userId=13
+GET http://127.0.0.1:8092/api/service/auth/signout/all?userId=13
 
 ### Успешный ответ
 ```

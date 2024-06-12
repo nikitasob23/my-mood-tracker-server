@@ -166,7 +166,7 @@ The microservice deals exclusively with user registration, authorization and aut
 ### 1. Registration
 ### Request example
 ```http request
-POST http://80.242.58.161:8092/api/service/auth/signup
+POST http://127.0.0.1:8092/api/service/auth/signup
 Content-Type: application/json
 
 {
@@ -207,7 +207,9 @@ Connection: close
 After sending the registration data, a link with an activation code is sent to the mail
 
 ### Example
-GET https://80.242.58.161:8082/api/auth/signup/activate/2e288b77-2705-4719-9478-f99cc9bce21d
+```http request
+https://moodtracker.ru/api/auth/signup/activate/2e288b77-2705-4719-9478-f99cc9bce21d
+```
 
 After clicking on this link, the microservice creates a user object and stores it in the database.
 
@@ -215,7 +217,7 @@ After clicking on this link, the microservice creates a user object and stores i
 ### Example
 The authorization process begins with receiving a pair of access-refresh tokens  
 
-GET http://localhost:8092/api/service/auth/signout?userId=13&device=MY_DEVICE
+GET http://127.0.0.1:8092/api/service/auth/signout?userId=13&device=MY_DEVICE
 ### Successful response
 ```http request
 HTTP/1.1 201
@@ -275,7 +277,7 @@ Connection: keep-alive
 
 ### 4. Authorization by refresh token
 ```http request
-POST http://80.242.58.161:8092/api/service/auth/token/refresh
+POST http://127.0.0.1:8092/api/service/auth/token/refresh
 Content-Type: application/json
 
 {
@@ -323,7 +325,7 @@ Connection: keep-alive
 ### 4. Log out of the system
 This method removes a pair of access-refresh tokens for a specific device from the database. After that, they become invalid 
 ### Example
-GET http://80.242.58.161:8092/api/service/auth/signout?userId=13&device=MY_DEVICE
+GET http://127.0.0.1:8092/api/service/auth/signout?userId=13&device=MY_DEVICE
 
 **_parameters:_**
 - userId - user ID
@@ -361,7 +363,7 @@ Connection: keep-alive
 This method removes access-refresh token pairs for all devices from the database. After that, they become invalid
 
 ### Example
-GET http://80.242.58.161:8092/api/service/auth/signout/all?userId=13
+GET http://127.0.0.1:8092/api/service/auth/signout/all?userId=13
 ### Successful response
 ```http request
 HTTP/1.1 204

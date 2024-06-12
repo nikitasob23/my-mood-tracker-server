@@ -1,8 +1,8 @@
 ### GET Request
-GET http://localhost:8081/api/service/database/mood_tag?user_id=4
+GET http://127.0.0.1:8081/api/service/database/mood_tag?user_id=4
 
 ### POST Request
-POST http://localhost:8081/api/service/database/mood_tag
+POST http://127.0.0.1:8081/api/service/database/mood_tag
 Content-Type: application/json
 
 {
@@ -12,7 +12,7 @@ Content-Type: application/json
 }
 
 ### PUT Request
-PUT http://localhost:8081/api/service/database/mood_tag
+PUT http://127.0.0.1:8081/api/service/database/mood_tag
 Content-Type: application/json
 
 {
@@ -23,4 +23,4 @@ Content-Type: application/json
 }
 
 ### DELETE Request
-DELETE http://localhost:8081/api/service/database/mood_tag?id=6&user_id=4
+DELETE http://127.0.0.1:8081/api/service/database/mood_tag?id=6&user_id=4

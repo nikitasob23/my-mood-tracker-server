@@ -1,5 +1,5 @@
 ### User exists request
-POST http://localhost:8081/api/service/database/user/email
+POST http://127.0.0.1:8081/api/service/database/user/email
 Content-Type: application/json
 
 {
@@ -7,13 +7,13 @@ Content-Type: application/json
 }
 
 ### GET Request
-GET http://localhost:8081/api/service/database/user?username=TEST_USERNAME
+GET http://127.0.0.1:8081/api/service/database/user?username=TEST_USERNAME
 
 ### GET Request
-GET http://localhost:8081/api/service/database/user/full?username=TEST_USERNAME
+GET http://127.0.0.1:8081/api/service/database/user/full?username=TEST_USERNAME
 
 ### POST Request
-POST http://localhost:8081/api/service/database/user
+POST http://127.0.0.1:8081/api/service/database/user
 Content-Type: application/json
 
 {
@@ -24,7 +24,7 @@ Content-Type: application/json
 }
 
 ### PUT Request
-PUT http://localhost:8081/api/service/database/user
+PUT http://127.0.0.1:8081/api/service/database/user
 Content-Type: application/json
 
 {
@@ -36,4 +36,4 @@ Content-Type: application/json
 }
 
 ### DELETE Request
-DELETE http://localhost:8081/api/service/database/user?username=TEST_USERNAME
+DELETE http://127.0.0.1:8081/api/service/database/user?username=TEST_USERNAME

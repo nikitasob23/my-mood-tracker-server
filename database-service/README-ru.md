@@ -203,7 +203,7 @@ false
 ## 2. Получение пользователя
 ### Пример запроса
 
-GET http://80.242.58.161:8081/api/service/database/user?username=Ivan
+GET http://127.0.0.1:8081/api/service/database/user?username=Ivan
 
 ### Успешный ответ
 ```
@@ -244,7 +244,7 @@ Connection: keep-alive
 ## 3. Получение полного пользователя с состояниями и тегами настроения
 
 ### Пример запроса
-GET http://80.242.58.161:8081/api/service/database/user/full?username=Ivan
+GET http://127.0.0.1:8081/api/service/database/user/full?username=Ivan
 
 ### Успешный ответ
 ```
@@ -310,7 +310,7 @@ Connection: keep-alive
 ## 4. Добавление нового пользователя:
 
 ### Пример запроса
-POST http://80.242.58.161:8081/api/service/database/user
+POST http://127.0.0.1:8081/api/service/database/user
 
 **Body:**
 ```
@@ -380,7 +380,7 @@ Connection: close
 
 ## 5. Изменение пользователя:
 ### Пример запроса
-PUT http://80.242.58.161:8081/api/service/database/user
+PUT http://127.0.0.1:8081/api/service/database/user
 
 **Body:**
 ```
@@ -442,7 +442,7 @@ Connection: close
 ## 6. Удаление пользователя:
 ### Пример запроса
 
-DELETE http://80.242.58.161:8081/api/service/database/user?username=Ivan
+DELETE http://127.0.0.1:8081/api/service/database/user?username=Ivan
 
 ### Успешный ответ
 На данный запрос возвращается успешный статус: NO_CONTENT с пустым телом ответа 
@@ -475,7 +475,7 @@ Connection: keep-alive
 
 ### 1. Получение тега настроения
 ### Пример запроса
-GET http://80.242.58.161:8081/api/service/database/mood_tag?user_id=9
+GET http://127.0.0.1:8081/api/service/database/mood_tag?user_id=9
 
 ### Успешный ответ
 ```
@@ -532,7 +532,7 @@ Connection: keep-alive
 
 ### 2. Добавление нового тега настроения
 ### Пример запроса
-POST http://80.242.58.161:8081/api/service/database/mood_tag
+POST http://127.0.0.1:8081/api/service/database/mood_tag
 
 **body:**
 ```
@@ -601,7 +601,7 @@ Connection: keep-alive
 
 ### 3. Обновление тега настроения
 ### Пример запроса
-PUT http://80.242.58.161:8081/api/service/database/mood_tag
+PUT http://127.0.0.1:8081/api/service/database/mood_tag
 
 **body:**
 ```
@@ -663,7 +663,7 @@ Connection: keep-alive
 
 ### 3. Удаление тега настроения
 ### Пример запроса
-DELETE http://80.242.58.161:8081/api/service/database/mood_tag?id=8&user_id=12
+DELETE http://127.0.0.1:8081/api/service/database/mood_tag?id=8&user_id=12
 
 ### Успешный ответ
 В случае удачной попытки обновления тега, возвращается успешный статус: NO_CONTENT
@@ -715,7 +715,7 @@ Connection: keep-alive
 
 ### 1. Получение тега настроения
 ### Пример запроса
-GET http://80.242.58.161:8081/api/service/database/mood_entry?user_id=4&start_date=2024-05-01&end_date=2024-05-23
+GET http://127.0.0.1:8081/api/service/database/mood_entry?user_id=4&start_date=2024-05-01&end_date=2024-05-23
 
 ### Успешный ответ
 ```
@@ -772,7 +772,7 @@ Connection: keep-alive
 
 ### 2. Добавление нового состояния настроения
 ### Пример запроса
-POST http://80.242.58.161:8081/api/service/database/mood_entry
+POST http://127.0.0.1:8081/api/service/database/mood_entry
 
 **body:**
 ```
@@ -807,7 +807,7 @@ Connection: keep-alive
 Если нужно прикрепить старый тег и обновить его, то нужно указать id тега в запросе вместе с остальными данными. 
 Если нужно добавить новый тег, то достаточно указать только обязательные поля: _name_, _user id_ 
 
-POST http://80.242.58.161:8081/api/service/database/mood_entry
+POST http://127.0.0.1:8081/api/service/database/mood_entry
 
 **body:**
 ```
@@ -919,7 +919,7 @@ Connection: keep-alive
 
 ### 3. Обновление состояния настроения
 ### Пример запроса
-PUT http://80.242.58.161:8081/api/service/database/mood_entry
+PUT http://127.0.0.1:8081/api/service/database/mood_entry
 
 **body:**
 ```
@@ -1032,7 +1032,7 @@ Connection: close
 
 ### 3. Удаление состояния настроения
 ### Пример запроса
-DELETE http://80.242.58.161:8081/api/service/database/mood_entry?id=9
+DELETE http://127.0.0.1:8081/api/service/database/mood_entry?id=9
 
 ### Успешный ответ
 В случае удачной попытки обновления состояния настроения, возвращается успешный статус: NO_CONTENT

@@ -76,7 +76,7 @@ mail:
 ### 1. Отправка кода активации для регистрации
 ### Пример запроса
 ```http request
-POST http://localhost:8095/api/service/mail_sender/active_code/signup
+POST http://127.0.0.1:8081/api/service/mail_sender/active_code/signup
 Content-Type: application/json
 
 {
@@ -98,7 +98,7 @@ Connection: keep-alive
 ### 2. Отправка кода активации для подтверждения изменения электронной почты 
 ### Пример запроса
 ```http request
-POST http://localhost:8095/api/service/mail_sender/active_code/reset/email
+POST http://127.0.0.1:8081/api/service/mail_sender/active_code/reset/email
 Content-Type: application/json
 
 {

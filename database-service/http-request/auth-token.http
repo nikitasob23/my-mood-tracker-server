@@ -1,11 +1,11 @@
 ### GET Request
-GET http://localhost:8081/api/service/database/auth/token?userId=1&device=TEST_DEVICE
+GET http://127.0.0.1:8081/api/service/database/auth/token?userId=1&device=TEST_DEVICE
 
 ### GET Request
-GET http://localhost:8081/api/service/database/auth/token/exists?userId=1&device=TEST_DEVICE
+GET http://127.0.0.1:8081/api/service/database/auth/token/exists?userId=1&device=TEST_DEVICE
 
 ### POST Request
-POST http://localhost:8081/api/service/database/auth/token
+POST http://127.0.0.1:8081/api/service/database/auth/token
 Content-Type: application/json
 
 {
@@ -16,7 +16,7 @@ Content-Type: application/json
 }
 
 ### PUT Request
-PUT http://localhost:8081/api/service/database/auth/token
+PUT http://127.0.0.1:8081/api/service/database/auth/token
 Content-Type: application/json
 
 {
@@ -27,7 +27,7 @@ Content-Type: application/json
 }
 
 ### DELETE Request
-DELETE http://localhost:8081/api/service/database/auth/token?userId=1&device=TEST_DEVICE
+DELETE http://127.0.0.1:8081/api/service/database/auth/token?userId=1&device=TEST_DEVICE
 
 ### DELETE Request
-DELETE http://localhost:8081/api/service/database/auth/token/all?userId=1
+DELETE http://127.0.0.1:8081/api/service/database/auth/token/all?userId=1

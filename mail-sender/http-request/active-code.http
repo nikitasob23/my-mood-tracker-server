@@ -1,5 +1,5 @@
 ### Signup conformation
-POST http://localhost:8095/api/service/mail_sender/active_code/signup
+POST http://127.0.0.1:8095/api/service/mail_sender/active_code/signup
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 }
 
 ### Resetting email conformation
-POST http://localhost:8095/api/service/mail_sender/active_code/reset/email
+POST http://127.0.0.1:8095/api/service/mail_sender/active_code/reset/email
 Content-Type: application/json
 
 {

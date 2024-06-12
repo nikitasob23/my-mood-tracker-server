@@ -9,7 +9,7 @@ Content-Type: application/json
 }
 
 ### POST Request
-POST http://80.242.58.161:8082/api/auth/token/refresh
+POST https://moodtracker.ru/api/auth/token/refresh
 Content-Type: application/json
 
 {

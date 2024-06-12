@@ -1,11 +1,11 @@
 ### GET Request
-GET http://80.242.58.161:8082/api/mood_tag
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw
+GET https://moodtracker.ru/api/mood_tag
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJOaWsiLCJleHAiOjE3MTgxNDY3MjYsImRldiI6Ik1ZX0RFVklDRSIsInVzZXJJZCI6IjIifQ.wM-9q9lpWPlNNaZXgCZZiWYsP0pWXFkWWi_LK84GlKmCRt_yujkpttNQ19CKvF7YNszyqjuuyitwVVD-WUikGQ
 
 ### POST Request
-POST http://80.242.58.161:8082/api/mood_tag
+POST https://moodtracker.ru/api/mood_tag
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJOaWsiLCJleHAiOjE3MTgxNDY3MjYsImRldiI6Ik1ZX0RFVklDRSIsInVzZXJJZCI6IjIifQ.wM-9q9lpWPlNNaZXgCZZiWYsP0pWXFkWWi_LK84GlKmCRt_yujkpttNQ19CKvF7YNszyqjuuyitwVVD-WUikGQ
 
 {
   "name": "home",
@@ -13,9 +13,9 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4N
 }
 
 ### PUT Request
-PUT http://80.242.58.161:8082/api/mood_tag
+PUT https://moodtracker.ru/api/mood_tag
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJOaWsiLCJleHAiOjE3MTgxNDY3MjYsImRldiI6Ik1ZX0RFVklDRSIsInVzZXJJZCI6IjIifQ.wM-9q9lpWPlNNaZXgCZZiWYsP0pWXFkWWi_LK84GlKmCRt_yujkpttNQ19CKvF7YNszyqjuuyitwVVD-WUikGQ
 
 {
   "id": 1,
@@ -24,5 +24,5 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4N
 }
 
 ### DELETE Request
-DELETE http://80.242.58.161:8082/api/mood_tag?id=3
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWsiLCJleHAiOjE3MTY4ODg4NzQsImRldiI6IlRFU1RfREVWSUNFIiwidXNlcklkIjoiMSJ9._UsjZqwPPFHwl77vgY3LU2HP55hBTkGpzMYCuej2sLjgUR7SCQyfWxA_BeTSCc_9J_b7nKj29L2-uz1u6AEdpw
+DELETE https://moodtracker.ru/api/mood_tag?id=4
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJOaWsiLCJleHAiOjE3MTgxNDY3MjYsImRldiI6Ik1ZX0RFVklDRSIsInVzZXJJZCI6IjIifQ.wM-9q9lpWPlNNaZXgCZZiWYsP0pWXFkWWi_LK84GlKmCRt_yujkpttNQ19CKvF7YNszyqjuuyitwVVD-WUikGQ
