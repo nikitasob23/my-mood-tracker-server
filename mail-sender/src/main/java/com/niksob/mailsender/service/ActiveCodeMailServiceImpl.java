@@ -30,7 +30,7 @@ public class ActiveCodeMailServiceImpl implements ActiveCodeMailService {
     @Value("${mail.sending.activation-code.confirmation.path.hostname}")
     private String hostname;
 
-    @Value("${mail.sending.activation-code.confirmation.path.port}")
+    @Value("${mail.sending.activation-code.confirmation.path.port:}")
     private String port;
 
     @Value("${mail.sending.activation-code.confirmation.path.base-path}")
@@ -61,7 +61,7 @@ public class ActiveCodeMailServiceImpl implements ActiveCodeMailService {
         return MESSAGE_TEMPLATE.formatted(username)
                 + protocol
                 + "://" + hostname
-                + ":" + port
+                + (port.isEmpty() ? "" : ":" + port)
                 + basePath
                 + controllerPath
                 + "/" + activeCodeSendingInfo.getActiveCode().value();
