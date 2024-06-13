@@ -14,5 +14,7 @@ public interface MoodEntryEntityRepository extends JpaRepository<MoodEntryEntity
             "AND (entries.dateTime BETWEEN :#{#dateRange.startDateTime} AND :#{#dateRange.endDateTime}))")
     Set<MoodEntryEntity> loadByDateRange(UserEntryDateRangeDaoDto dateRange);
 
+    void deleteByIdAndUserId(Long id, Long userId);
+
     void deleteAllByUserId(Long userId);
 }

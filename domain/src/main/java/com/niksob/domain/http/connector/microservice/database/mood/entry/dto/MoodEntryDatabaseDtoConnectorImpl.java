@@ -2,8 +2,8 @@ package com.niksob.domain.http.connector.microservice.database.mood.entry.dto;
 
 import com.niksob.domain.config.properties.microservice.database.DatabaseConnectionProperties;
 import com.niksob.domain.dto.mood.entry.MoodEntryDto;
-import com.niksob.domain.dto.mood.entry.MoodEntryIdDto;
 import com.niksob.domain.dto.mood.entry.UserEntryDateRangeDto;
+import com.niksob.domain.dto.mood.entry.UserMoodEntryIdDto;
 import com.niksob.domain.http.client.HttpClient;
 import com.niksob.domain.http.connector.base.BaseConnector;
 import com.niksob.domain.http.connector.microservice.database.error.handler.DatabaseDtoConnectorErrorHandler;
@@ -67,11 +67,11 @@ public class MoodEntryDatabaseDtoConnectorImpl extends BaseConnector implements 
     }
 
     @Override
-    public Mono<Void> deleteById(MoodEntryIdDto id) {
-        final Map<String, String> params = moodEntryGetParamsMapper.getHttpParams(id);
+    public Mono<Void> deleteByIdAndUserId(UserMoodEntryIdDto userEntryId) {
+        final Map<String, String> params = moodEntryGetParamsMapper.getHttpParams(userEntryId);
         final String uri = getWithParams(MoodEntryControllerPaths.BASE_URI, params);
         return httpClient.sendDeleteRequest(uri, Void.class)
-                .onErrorResume(throwable -> errorHandler.createUpdatingError(throwable, id));
+                .onErrorResume(throwable -> errorHandler.createDeletionError(throwable, userEntryId));
     }
 
     private Publisher<? extends MoodEntryDto> loadAndCreateEmptyMono(UserEntryDateRangeDto userEntryDateRangeDto) {

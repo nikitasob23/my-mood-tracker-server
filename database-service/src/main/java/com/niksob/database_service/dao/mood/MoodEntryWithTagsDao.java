@@ -4,7 +4,7 @@ import com.niksob.database_service.mapper.entity.mood.entry.DateRangeDaoDtoMappe
 import com.niksob.database_service.mapper.entity.mood.entry.MoodEntryEntityMapper;
 import com.niksob.domain.model.mood.entry.UserEntryDateRange;
 import com.niksob.domain.model.mood.entry.MoodEntry;
-import com.niksob.domain.model.mood.entry.MoodEntryId;
+import com.niksob.domain.model.mood.entry.UserMoodEntryId;
 import com.niksob.layer_connector.annotation.LayerConnector;
 
 import java.util.Set;
@@ -22,5 +22,5 @@ public interface MoodEntryWithTagsDao {
 
     void updateEntryWithTags(MoodEntry moodEntry);
 
-    void deleteById(MoodEntryId id);
+    void deleteByIdAndUserId(UserMoodEntryId userEntryId);
 }

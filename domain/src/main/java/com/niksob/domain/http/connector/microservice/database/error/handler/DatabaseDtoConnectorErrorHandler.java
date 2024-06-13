@@ -72,8 +72,8 @@ public class DatabaseDtoConnectorErrorHandler {
             return createInternalServerException(throwable, state);
         }
         if (httpClientException.getHttpStatus().compareTo(HttpStatus.BAD_REQUEST) == 0) {
-            logSavingError(state);
-            return Mono.error(new ResourceUpdatingException(
+            logDeletingError(state);
+            return Mono.error(new ResourceDeletionException(
                     "%s was not delete from the database".formatted(entityName), throwable, state)
             );
         }
@@ -85,7 +85,7 @@ public class DatabaseDtoConnectorErrorHandler {
             return createInternalServerException(throwable, state);
         }
         if (httpClientException.getHttpStatus().compareTo(HttpStatus.BAD_REQUEST) == 0) {
-            logSavingError(state);
+            logDeletingError(state);
             return Mono.error(new ResourceUpdatingException(
                     "All %ss was not delete by user id from the database".formatted(entityName), throwable, state)
             );
@@ -93,7 +93,9 @@ public class DatabaseDtoConnectorErrorHandler {
         return checkNotFoundResponse(httpClientException, throwable, state);
     }
 
-    private <T> Mono<T> checkNotFoundResponse(HttpClientException httpClientException, Throwable throwable, Object state) {
+    private <T> Mono<T> checkNotFoundResponse(
+            HttpClientException httpClientException, Throwable throwable, Object state
+    ) {
         if (httpClientException.getHttpStatus().compareTo(HttpStatus.NOT_FOUND) == 0) {
             logLoadingError(state);
             return Mono.error(new ResourceNotFoundException(
@@ -111,6 +113,10 @@ public class DatabaseDtoConnectorErrorHandler {
 
     private void logSavingError(Object state) {
         log.error("Failed to save %s to the database".formatted(entityName), null, state);
+    }
+
+    private void logDeletingError(Object state) {
+        log.error("Failed to delete %s to the database".formatted(entityName), null, state);
     }
 
     private <T> Mono<T> createInternalServerException(Throwable throwable, Object state) {

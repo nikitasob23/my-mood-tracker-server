@@ -1,8 +1,9 @@
 package com.niksob.gateway_service.controller.mood.entry;
 
 import com.niksob.domain.dto.mood.entry.MoodEntryDto;
-import com.niksob.domain.dto.mood.entry.MoodEntryIdDto;
 import com.niksob.domain.dto.mood.entry.UserEntryDateRangeDto;
+import com.niksob.domain.dto.mood.entry.UserMoodEntryIdDto;
+import com.niksob.domain.dto.user.UserIdDto;
 import com.niksob.domain.http.controller.handler.mood.entry.ResourceControllerErrorUtil;
 import com.niksob.gateway_service.model.user.security.UserSecurityDetails;
 import com.niksob.gateway_service.path.controller.mood.entry.MoodEntryControllerPaths;
@@ -55,13 +56,6 @@ public class MoodEntryController {
                 .onErrorResume(controllerUtil::createSavingError);
     }
 
-    private void setUserId(MoodEntryDto moodEntryDto, Long id) {
-        moodEntryDto.setUserId(id);
-        for (var tag : moodEntryDto.getMoodTags()) {
-            tag.setUserId(id);
-        }
-    }
-
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> update(
@@ -77,10 +71,20 @@ public class MoodEntryController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> deleteById(@RequestParam("id") MoodEntryIdDto id) {
-        return moodEntryControllerService.deleteById(id)
-                .doOnSuccess(ignore -> log.debug("Successful mood entry deletion", id))
+    public Mono<Void> deleteByIdAndUserId(
+            @RequestParam("id") UserIdDto id, @AuthenticationPrincipal UserSecurityDetails userDetails
+    ) {
+        var userEntryId = new UserMoodEntryIdDto(Long.parseLong(id.getValue()), userDetails.getId());
+        return moodEntryControllerService.deleteByIdAndUserId(userEntryId)
+                .doOnSuccess(ignore -> log.debug("Successful mood entry deletion", userEntryId))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
                 .onErrorResume(controllerUtil::createDeleteError);
+    }
+
+    private void setUserId(MoodEntryDto moodEntryDto, Long id) {
+        moodEntryDto.setUserId(id);
+        for (var tag : moodEntryDto.getMoodTags()) {
+            tag.setUserId(id);
+        }
     }
 }

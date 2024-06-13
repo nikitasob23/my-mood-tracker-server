@@ -46,9 +46,8 @@ public class MoodEntryWithTagsEntityDaoImpl extends MoodEntryEntityDaoImpl imple
         final Set<String> entryTagNames = entry.getMoodTags().stream()
                 .map(MoodTagEntity::getName)
                 .collect(Collectors.toSet());
-        final Set<MoodTagEntity> entityTags = tags.stream()
+        return tags.stream()
                 .filter(mergedTag -> entryTagNames.contains(mergedTag.getName()))
                 .collect(Collectors.toSet());
-        return entityTags;
     }
 }

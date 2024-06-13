@@ -1,5 +1,6 @@
 package com.niksob.database_service.dao.mood;
 
+import com.niksob.database_service.entity.mood.entry.UserMoodEntryEntityId;
 import com.niksob.database_service.model.mood.entry.date.UserEntryDateRangeDaoDto;
 import com.niksob.database_service.entity.mood.entry.MoodEntryEntity;
 
@@ -16,5 +17,5 @@ public interface MoodEntryWithTagsEntityDao {
 
     void updateEntryWithTags(MoodEntryEntity moodEntry);
 
-    void deleteById(Long moodEntryId);
+    void deleteByIdAndUserId(UserMoodEntryEntityId userEntryId);
 }

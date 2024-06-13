@@ -1,5 +1,5 @@
 ### POST Request
-POST http://80.242.58.161:8082/api/auth/token
+POST https://moodtracker.ru/api/auth/token
 Content-Type: application/json
 
 {

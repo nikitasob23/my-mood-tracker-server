@@ -5,7 +5,7 @@ import com.niksob.database_service.service.user.existence.UserExistenceService;
 import com.niksob.database_service.util.async.MonoAsyncUtil;
 import com.niksob.domain.model.mood.entry.UserEntryDateRange;
 import com.niksob.domain.model.mood.entry.MoodEntry;
-import com.niksob.domain.model.mood.entry.MoodEntryId;
+import com.niksob.domain.model.mood.entry.UserMoodEntryId;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
@@ -50,8 +50,8 @@ public class MoodEntryServiceImpl implements MoodEntryService {
     }
 
     @Override
-    public Mono<Void> deleteById(MoodEntryId id) {
-        return MonoAsyncUtil.create(() -> moodEntryWithTagsDao.deleteById(id))
-                .doOnSuccess(ignore -> log.debug("Delete mood entry from DAO", id));
+    public Mono<Void> deleteByIdAndUserId(UserMoodEntryId userEntryId) {
+        return MonoAsyncUtil.create(() -> moodEntryWithTagsDao.deleteByIdAndUserId(userEntryId))
+                .doOnSuccess(ignore -> log.debug("Delete mood entry from DAO", userEntryId));
     }
 }

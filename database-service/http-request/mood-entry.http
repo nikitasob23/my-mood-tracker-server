@@ -55,4 +55,4 @@ Content-Type: application/json
 
 
 ### DELETE Request
-DELETE http://127.0.0.1:8081/api/service/database/mood_entry?id=4
+DELETE http://127.0.0.1:8081/api/service/database/mood_entry?id=1&userId=1

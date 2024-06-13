@@ -2,7 +2,7 @@ package com.niksob.database_service.service.mood.entry;
 
 import com.niksob.domain.model.mood.entry.UserEntryDateRange;
 import com.niksob.domain.model.mood.entry.MoodEntry;
-import com.niksob.domain.model.mood.entry.MoodEntryId;
+import com.niksob.domain.model.mood.entry.UserMoodEntryId;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -13,5 +13,5 @@ public interface MoodEntryService {
 
     Mono<Void> update(MoodEntry moodEntry);
 
-    Mono<Void> deleteById(MoodEntryId id);
+    Mono<Void> deleteByIdAndUserId(UserMoodEntryId userEntryId);
 }

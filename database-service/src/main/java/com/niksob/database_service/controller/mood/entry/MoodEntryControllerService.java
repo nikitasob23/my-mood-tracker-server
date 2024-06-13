@@ -1,10 +1,10 @@
 package com.niksob.database_service.controller.mood.entry;
 
+import com.niksob.domain.dto.mood.entry.UserMoodEntryIdDto;
 import com.niksob.domain.mapper.dto.mood.entry.UserEntryDateRangeDtoMapper;
 import com.niksob.database_service.service.mood.entry.MoodEntryService;
 import com.niksob.domain.dto.mood.entry.UserEntryDateRangeDto;
 import com.niksob.domain.dto.mood.entry.MoodEntryDto;
-import com.niksob.domain.dto.mood.entry.MoodEntryIdDto;
 import com.niksob.domain.mapper.dto.mood.entry.MoodEntryDtoMapper;
 import com.niksob.layer_connector.annotation.LayerConnector;
 import reactor.core.publisher.Flux;
@@ -18,5 +18,5 @@ interface MoodEntryControllerService {
 
     Mono<Void> update(MoodEntryDto moodEntry);
 
-    Mono<Void> deleteById(MoodEntryIdDto id);
+    Mono<Void> deleteByIdAndUserId(UserMoodEntryIdDto userEntryId);
 }

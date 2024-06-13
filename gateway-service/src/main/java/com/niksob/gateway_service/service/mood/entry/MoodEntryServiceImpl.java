@@ -2,8 +2,8 @@ package com.niksob.gateway_service.service.mood.entry;
 
 import com.niksob.domain.http.connector.microservice.database.mood.entry.MoodEntryDatabaseConnector;
 import com.niksob.domain.model.mood.entry.MoodEntry;
-import com.niksob.domain.model.mood.entry.MoodEntryId;
 import com.niksob.domain.model.mood.entry.UserEntryDateRange;
+import com.niksob.domain.model.mood.entry.UserMoodEntryId;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
 import lombok.AllArgsConstructor;
@@ -40,9 +40,9 @@ public class MoodEntryServiceImpl implements MoodEntryService {
     }
 
     @Override
-    public Mono<Void> deleteById(MoodEntryId id) {
-        return moodEntryDatabaseConnector.deleteById(id)
-                .doOnSuccess(ignore -> log.info("Successful mood entry deletion", null, id))
-                .doOnError(throwable -> log.error("Failure mood entry deletion", throwable, id));
+    public Mono<Void> deleteByIdAndUserId(UserMoodEntryId userEntryId) {
+        return moodEntryDatabaseConnector.deleteByIdAndUserId(userEntryId)
+                .doOnSuccess(ignore -> log.info("Successful mood entry deletion", null, userEntryId))
+                .doOnError(throwable -> log.error("Failure mood entry deletion", throwable, userEntryId));
     }
 }

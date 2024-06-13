@@ -1,9 +1,9 @@
 package com.niksob.database_service.controller.mood.entry;
 
+import com.niksob.domain.dto.mood.entry.UserMoodEntryIdDto;
 import com.niksob.domain.http.controller.handler.mood.entry.ResourceControllerErrorUtil;
 import com.niksob.domain.dto.mood.entry.UserEntryDateRangeDto;
 import com.niksob.domain.dto.mood.entry.MoodEntryDto;
-import com.niksob.domain.dto.mood.entry.MoodEntryIdDto;
 import com.niksob.domain.path.controller.database_service.mood.entry.MoodEntryControllerPaths;
 import com.niksob.logger.object_state.ObjectStateLogger;
 import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
@@ -61,9 +61,9 @@ public class MoodEntryController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> deleteById(@RequestParam("id") MoodEntryIdDto id) {
-        return moodEntryControllerService.deleteById(id)
-                .doOnSuccess(ignore -> log.debug("Successful mood entry deletion", id))
+    public Mono<Void> deleteByIdAndUserId(UserMoodEntryIdDto userEntryId) {
+        return moodEntryControllerService.deleteByIdAndUserId(userEntryId)
+                .doOnSuccess(ignore -> log.debug("Successful mood entry deletion", userEntryId))
                 .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
                 .onErrorResume(controllerUtil::createDeleteError);
     }

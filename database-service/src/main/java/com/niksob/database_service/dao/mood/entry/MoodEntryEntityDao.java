@@ -1,6 +1,7 @@
 package com.niksob.database_service.dao.mood.entry;
 
 import com.niksob.database_service.entity.mood.entry.MoodEntryEntity;
+import com.niksob.database_service.entity.mood.entry.UserMoodEntryEntityId;
 import com.niksob.database_service.model.mood.entry.date.UserEntryDateRangeDaoDto;
 
 import java.util.Set;
@@ -12,7 +13,7 @@ public interface MoodEntryEntityDao {
 
     void update(MoodEntryEntity moodEntry);
 
-    void deleteById(Long moodEntryId);
+    void deleteByIdAndUserId(UserMoodEntryEntityId userEntryId);
 
     void deleteAllByUserId(Long userId);
 }

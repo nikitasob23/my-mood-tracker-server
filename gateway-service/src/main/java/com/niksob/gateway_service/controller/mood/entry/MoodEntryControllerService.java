@@ -1,8 +1,8 @@
 package com.niksob.gateway_service.controller.mood.entry;
 
 import com.niksob.domain.dto.mood.entry.MoodEntryDto;
-import com.niksob.domain.dto.mood.entry.MoodEntryIdDto;
 import com.niksob.domain.dto.mood.entry.UserEntryDateRangeDto;
+import com.niksob.domain.dto.mood.entry.UserMoodEntryIdDto;
 import com.niksob.domain.mapper.dto.mood.entry.MoodEntryDtoMapper;
 import com.niksob.domain.mapper.dto.mood.entry.UserEntryDateRangeDtoMapper;
 import com.niksob.gateway_service.service.mood.entry.MoodEntryService;
@@ -18,6 +18,6 @@ public interface MoodEntryControllerService {
 
     Mono<Void> update(MoodEntryDto moodEntryDto);
 
-    Mono<Void> deleteById(MoodEntryIdDto id);
+    Mono<Void> deleteByIdAndUserId(UserMoodEntryIdDto userEntryId);
 
 }

@@ -1,5 +1,6 @@
 package com.niksob.database_service.dao.mood.entry;
 
+import com.niksob.database_service.entity.mood.entry.UserMoodEntryEntityId;
 import com.niksob.database_service.model.mood.entry.date.UserEntryDateRangeDaoDto;
 import com.niksob.database_service.entity.mood.entry.MoodEntryEntity;
 import com.niksob.database_service.repository.mood.entry.MoodEntryEntityRepository;
@@ -68,17 +69,19 @@ public class MoodEntryEntityDaoImpl implements MoodEntryEntityDao {
 
     @Override
     @Transactional
-    public void deleteById(Long moodEntryId) {
-        log.debug("Start deleting mood entry entity from repository", moodEntryId);
-        if (!moodEntryRepository.existsById(moodEntryId)) {
-            throw createResourceNotFoundException(moodEntryId);
+    public void deleteByIdAndUserId(UserMoodEntryEntityId userEntryId) {
+        log.debug("Start deleting mood entry entity from repository", userEntryId);
+        if (!moodEntryRepository.existsById(userEntryId.getId())) {
+            throw createResourceNotFoundException(userEntryId);
         }
         try {
-            moodEntryRepository.deleteById(moodEntryId);
-            log.debug("Mood entry entity deleted from repository", moodEntryId);
+            moodEntryRepository.deleteByIdAndUserId(userEntryId.getId(), userEntryId.getUserId());
+            log.debug("Mood entry entity deleted from repository", userEntryId);
         } catch (Exception e) {
-            log.error("Failed deleting mood entry entity by id from repository", null, moodEntryId);
-            throw new ResourceDeletionException("The mood entry entity was not deleted", e, moodEntryId);
+            log.error(
+                    "Failed deleting mood entry entity by id and user id from repository", null, userEntryId
+            );
+            throw new ResourceDeletionException("The mood entry entity was not deleted", e, userEntryId);
         }
     }
 
