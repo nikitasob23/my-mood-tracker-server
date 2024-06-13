@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -64,18 +63,15 @@ public class CachedTagUpdaterDao implements TagEntityUpdaterDao {
         if (nonPresentInRepoById(tag, storedTags)) {
             throw createResourceNotFoundException(tag);
         }
-        if (presentInRepoByUserIdAndName(tag, storedTags)) {
-            throw createAlreadyExistsException(tag);
-        }
         final MoodTagEntity updated;
         try {
             updated = moodTagRepository.save(tag);
+            moodTagRepository.flush(); // For immediate invocation of save() and throwing an exception in the try-catch block
             log.info("Mood tag entity updated", updated);
         } catch (Exception e) {
             log.error("Failed updating mood tag entity in repository", null, tag);
             throw new ResourceUpdatingException("Mood tag entity has not updated", e, tag.getId());
         }
-
         storedTags.put(updated);
         log.info("Mood tag entity cache updated", storedTags);
         return storedTags;
@@ -144,12 +140,6 @@ public class CachedTagUpdaterDao implements TagEntityUpdaterDao {
         return storedTags.getTags().stream()
                 .map(MoodTagEntity::getId)
                 .noneMatch(moodTag.getId()::equals);
-    }
-
-    private boolean presentInRepoByUserIdAndName(MoodTagEntity moodTag, UserMoodTagEntities storedTags) {
-        return storedTags.getTags().stream()
-                .filter(tag -> Objects.equals(tag.getUserId(), moodTag.getUserId()))
-                .anyMatch(tag -> tag.getName().equals(moodTag.getName()));
     }
 
     private Long extractSingleUserId(Collection<MoodTagEntity> moodTags) {
