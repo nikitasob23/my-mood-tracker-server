@@ -4,7 +4,7 @@
 . scripts/jars/parallel/build_microservice_jars_parallel.sh
 
 echo "Building docker images for linux/amd64 and pushing to Docker Hub"
-docker buildx build --platform linux/amd64 -f database-service/docker/db_sql/Dockerfile . -t niksob/my-mood-tracker:db-redis-cache-1.0.0 --push &
+docker buildx build --platform linux/amd64 -f database-service/docker/db_sql/Dockerfile . -t niksob/my-mood-tracker:db-sql-1.0.0 --push &
 docker buildx build --platform linux/amd64 -f database-service/docker/redis_db_cache/Dockerfile . -t niksob/my-mood-tracker:db-redis-cache-1.0.0 --push &
 docker buildx build --platform linux/amd64 -f authorization-service/docker/redis_cache/Dockerfile . -t niksob/my-mood-tracker:auth-redis-cache-1.0.0 --push &
 docker buildx build --platform linux/amd64 -f config-service/Dockerfile . -t niksob/my-mood-tracker:config-service-1.0.0 --push &
