@@ -3,20 +3,24 @@
 # Build microservice's jars
 . scripts/jars/parallel/build_microservice_jars_parallel.sh
 
-echo "Building docker images for linux/amd64 and pushing to Docker Hub"
-docker buildx build --platform linux/amd64 -f database-service/docker/db_sql/Dockerfile . -t niksob/my-mood-tracker:db-sql-1.0.0 --push &
-docker buildx build --platform linux/amd64 -f database-service/docker/redis_db_cache/Dockerfile . -t niksob/my-mood-tracker:db-redis-cache-1.0.0 --push &
-docker buildx build --platform linux/amd64 -f authorization-service/docker/redis_cache/Dockerfile . -t niksob/my-mood-tracker:auth-redis-cache-1.0.0 --push &
-docker buildx build --platform linux/amd64 -f config-service/Dockerfile . -t niksob/my-mood-tracker:config-service-1.0.0 --push &
-docker buildx build --platform linux/amd64 -f database-service/docker/Dockerfile . -t niksob/my-mood-tracker:database-service-1.0.0 --push &
-docker buildx build --platform linux/amd64 -f authorization-service/docker/Dockerfile . -t niksob/my-mood-tracker:authorization-service-1.0.0 --push &
-docker buildx build --platform linux/amd64 -f mail-sender/Dockerfile . -t niksob/my-mood-tracker:mail-sender-1.0.0 --push &
-docker buildx build --platform linux/amd64 -f gateway-service/Dockerfile . -t niksob/my-mood-tracker:gateway-service-1.0.0 --push &
+# Определим общие переменные для репозитория и тега
+DOCKER_REPO="niksob/my-mood-tracker"
+
+# Сборка и публикация образов с явным указанием репозитория и тега
+docker buildx build --platform linux/amd64 -f database-service/docker/db_sql/Dockerfile . -t ${DOCKER_REPO}:db-sql-1.0.0 --push &
+docker buildx build --platform linux/amd64 -f database-service/docker/adminer/Dockerfile . -t ${DOCKER_REPO}:adminer-1.0.0 --push &
+docker buildx build --platform linux/amd64 -f database-service/docker/redis_db_cache/Dockerfile . -t ${DOCKER_REPO}:db-redis-cache-1.0.0 --push &
+docker buildx build --platform linux/amd64 -f authorization-service/docker/redis_cache/Dockerfile . -t ${DOCKER_REPO}:auth-redis-cache-1.0.0 --push &
+docker buildx build --platform linux/amd64 -f config-service/Dockerfile . -t ${DOCKER_REPO}:config-service-1.0.0 --push &
+docker buildx build --platform linux/amd64 -f database-service/docker/Dockerfile . -t ${DOCKER_REPO}:database-service-1.0.0 --push &
+docker buildx build --platform linux/amd64 -f authorization-service/docker/Dockerfile . -t ${DOCKER_REPO}:authorization-service-1.0.0 --push &
+docker buildx build --platform linux/amd64 -f mail-sender/Dockerfile . -t ${DOCKER_REPO}:mail-sender-1.0.0 --push &
+docker buildx build --platform linux/amd64 -f gateway-service/Dockerfile . -t ${DOCKER_REPO}:gateway-service-1.0.0 --push &
 wait
 
-echo "Downloading docker images to the server"
 ssh -p 65001 root@80.242.58.161 '
     docker pull niksob/my-mood-tracker:db-sql-1.0.0 &
+    docker pull niksob/my-mood-tracker:adminer-1.0.0 &
     docker pull niksob/my-mood-tracker:db-redis-cache-1.0.0 &
     docker pull niksob/my-mood-tracker:auth-redis-cache-1.0.0 &
     docker pull niksob/my-mood-tracker:config-service-1.0.0 &

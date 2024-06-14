@@ -4,7 +4,8 @@
 . scripts/jars/build_microservice_jars.sh
 
 echo "Building Docker images for linux/amd64 and pushing to Docker Hub"
-#echo "\n\nStart building database sql docker file"          && docker buildx build --platform linux/amd64 -f database-service/docker/db_sql/Dockerfile . -t niksob/my-mood-tracker:db-redis-cache-1.0.0 --push
+echo "\n\nStart building database sql docker file"          && docker buildx build --platform linux/amd64 -f database-service/docker/db_sql/Dockerfile . -t niksob/my-mood-tracker:db-sql-1.0.0 --push
+echo "\n\nStart building database sql adminer docker file"  && docker buildx build --platform linux/amd64 -f database-service/docker/adminer/Dockerfile . -t niksob/my-mood-tracker:adminer-1.0.0 --push
 echo "\n\nStart building database cache docker file"        && docker buildx build --platform linux/amd64 -f database-service/docker/redis_db_cache/Dockerfile . -t niksob/my-mood-tracker:db-redis-cache-1.0.0 --push
 echo "\n\nStart building authorization cache docker file"   && docker buildx build --platform linux/amd64 -f authorization-service/docker/redis_cache/Dockerfile . -t niksob/my-mood-tracker:auth-redis-cache-1.0.0 --push
 echo "\n\nStart building config service docker file"        && docker buildx build --platform linux/amd64 -f config-service/Dockerfile . -t niksob/my-mood-tracker:config-service-1.0.0 --push
@@ -15,7 +16,8 @@ echo "\n\nStart building gateway service docker file"       && docker buildx bui
 
 # Downloading Docker images to the server
 ssh -p 65001 root@80.242.58.161 '
-#    echo "PULLING DATABASE SQL DOCKER FILE: "          && docker pull niksob/my-mood-tracker:db-sql-1.0.0
+    echo "PULLING DATABASE SQL DOCKER FILE: "          && docker pull niksob/my-mood-tracker:db-sql-1.0.0
+    echo "PULLING DATABASE SQL ADMINER DOCKER FILE: "  && docker pull niksob/my-mood-tracker:adminer-1.0.0
     echo "PULLING DATABASE CACHE DOCKER FILE: "        && docker pull niksob/my-mood-tracker:db-redis-cache-1.0.0
     echo "PULLING AUTHORIZATION CACHE DOCKER FILE: "   && docker pull niksob/my-mood-tracker:auth-redis-cache-1.0.0
     echo "PULLING CONFIG SERVICE DOCKER FILE: "        && docker pull niksob/my-mood-tracker:config-service-1.0.0
