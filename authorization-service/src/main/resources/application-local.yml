@@ -24,5 +24,5 @@ auth:
       access: 30
       refresh: 21600
     secret-key:
-      access: "qBTmv4oX6FR2GwjezDJ4t6fsIUIUxhXqlktXjldkcyXgs8nPVEwMfo29VDRRepYDVV5IkIxBMzr7OEHXEHd37w=="
-      refresh: "zL1HB3Pch05AvfyBovxrf/kpF9t2m4NC9KJUjEp27s9J2jEz3ifiKCGylaZ8fDeoONSTJP/wAzKawB8F9rOMNg=="
+      access: "SECRET"
+      refresh: "SECRET"

@@ -22,9 +22,9 @@ public class GitConfigLoaderTestConfig {
     @Bean
     public GitConfigLoader getGitConfigLoader() {
         final GitRemoteRepoConfig gitRemoteRepoTestConfig = new GitRemoteRepoConfig()
-                .setUri("https://github.com/nikitasob23/my-mood-tracker-config.git")
-                .setUsername("nikitasob23")
-                .setPassword("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");
+                .setUri("TEST_URI")
+                .setUsername("TEST_USERNAME")
+                .setPassword("TEST_PASSWORD");
         return new GitConfigLoaderImpl(fileUtil, gitRemoteRepoTestConfig, LOCAL_REPO_URI);
     }
 }

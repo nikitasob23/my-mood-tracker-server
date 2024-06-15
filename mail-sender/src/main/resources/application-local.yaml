@@ -10,7 +10,7 @@ spring:
     debug: true
     host: smtp.yandex.ru
     username: moodtracker@yandex.ru
-    password: bcavnzftmwawgroq
+    password: SECRET
     port: 465
     protocol: smtps
 

@@ -31,7 +31,7 @@ repo:
     git:
       uri: https://github.com/nikitasob23/my-mood-tracker-config.git
       username: nikitasob23
-      password: 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
+      password: [PASSWORD]
       properties-file: merge_properties
   local:
     git:

@@ -65,7 +65,7 @@ mail:
       confirmation:
         path:
           protocol: ${microservice.connection.gateway.protocol}
-          hostname: 80.242.58.161
+          hostname: [HOSTNAME]
           port: ${microservice.connection.gateway.port}
           base-path: ${microservice.connection.gateway.path}
 ```
