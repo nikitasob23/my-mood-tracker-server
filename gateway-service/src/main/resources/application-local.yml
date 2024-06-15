@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: gateway-service
+  config:
+    import:
+      - configserver:http://localhost:9191/logger
+      - configserver:http://localhost:9191/database-connection
+      - configserver:http://localhost:9191/authorization-connection
+      - configserver:http://localhost:9191/gateway-connection
+
+  webflux:
+    base-path: ${microservice.connection.gateway.path}
+server:
+  address: ${microservice.connection.gateway.hostname}
+  port: ${microservice.connection.gateway.port}

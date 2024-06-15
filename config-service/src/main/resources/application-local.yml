@@ -1,0 +1,19 @@
+server:
+  port: 9191
+
+spring:
+#  profiles:
+#    active:
+#      - local
+#      - dev
+#      - native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations:
+            - file:///Users/nickworker/Documents/Repo/my-mood-tracker-server/logger/src/main/resources/common-config
+            - file:///Users/nickworker/Documents/Repo/my-mood-tracker-server/database-service/src/main/resources/common-config
+            - file:///Users/nickworker/Documents/Repo/my-mood-tracker-server/authorization-service/src/main/resources/common-config
+            - file:///Users/nickworker/Documents/Repo/my-mood-tracker-server/gateway-service/src/main/resources/common-config
+            - file:///Users/nickworker/Documents/Repo/my-mood-tracker-server/mail-sender/src/main/resources/common-config

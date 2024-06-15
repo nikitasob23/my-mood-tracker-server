@@ -1,0 +1,17 @@
+### POST Request
+POST https://moodtracker.ru/api/auth/token
+Content-Type: application/json
+
+{
+  "username": "Ivan",
+  "password": "Very_secret0",
+  "device": "MY_DEVICE"
+}
+
+### POST Request
+POST https://moodtracker.ru/api/auth/token/refresh
+Content-Type: application/json
+
+{
+  "refresh_token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaWtpdG9zMDAyM0BnbWFpbC5jb20iLCJleHAiOjE3MTQ5OTQ2NjYsInVzZXJJZCI6IjQiLCJkZXYiOiJURVNUX0RFVklDRSJ9.ZY0feVssnWkPTJFIhyrXuyr6M0Oit9Zl2FOLwAHExFDVF5Rqp63CU6tWQW3yNRfng4hjkaLAX3C0OaUT3i8YKQ"
+}

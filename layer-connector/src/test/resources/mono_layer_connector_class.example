@@ -1,0 +1,67 @@
+package com.niksob.layer_connector.dao.user;
+
+@javax.annotation.processing.Generated(
+    value = "com.niksob.layer_connector.processor.LayerConnectorProcessor",
+    date = "2024-01-16T12:11:03+0300",
+    comments = "comments = version: 0.0.1-SNAPSHOT, compiler: javac, environment: Java 17"
+)
+@org.springframework.stereotype.Component
+public class UserDaoLayerConnector implements com.niksob.layer_connector.dao.user.UserDao {
+    private final com.niksob.layer_connector.mapper.user.UserEntityMapper userEntityMapper;
+    private final com.niksob.layer_connector.mapper.user.UserEntityMapper2 userEntityMapper2;
+    private final com.niksob.layer_connector.dao.user.UserEntityDaoImpl source;
+
+    public UserDaoMappingWrapper(
+        com.niksob.layer_connector.mapper.user.UserEntityMapper userEntityMapper,
+        com.niksob.layer_connector.mapper.user.UserEntityMapper2 userEntityMapper2,
+        com.niksob.layer_connector.dao.user.UserEntityDaoImpl source
+    ) {
+        this.userEntityMapper = userEntityMapper;
+        this.userEntityMapper2 = userEntityMapper2;
+        this.source = source;
+    }
+
+    @Override
+    public reactor.core.publisher.Mono<com.niksob.domain.model.user.UserInfo> load(com.niksob.domain.model.user.Username value) {
+        java.lang.String mapped = userEntityMapper.toEntityUsername(value);
+        reactor.core.publisher.Mono<com.niksob.layer_connector.entity.user.UserEntity> result = source.load(mapped);
+        reactor.core.publisher.Mono<com.niksob.domain.model.user.UserInfo> mappedResult = userEntityMapper.fromMonoEntity(result);
+        return mappedResult;
+    }
+
+    @Override
+    public void save(com.niksob.domain.model.user.UserInfo value) {
+        com.niksob.layer_connector.entity.user.UserEntity mapped = userEntityMapper2.toEntity(value);
+        source.save(mapped);
+    }
+
+    @Override
+    public reactor.core.publisher.Mono<com.niksob.domain.model.user.UserInfo> update(com.niksob.domain.model.user.UserInfo value) {
+        com.niksob.layer_connector.entity.user.UserEntity mapped = userEntityMapper2.toEntity(value);
+        reactor.core.publisher.Mono<com.niksob.layer_connector.entity.user.UserEntity> result = source.update(mapped);
+        reactor.core.publisher.Mono<com.niksob.domain.model.user.UserInfo> mappedResult = userEntityMapper.fromMonoEntity(result);
+        return mappedResult;
+    }
+
+    @Override
+    public reactor.core.publisher.Mono<com.niksob.domain.model.user.UserInfo> getCurrentUser() {
+        reactor.core.publisher.Mono<com.niksob.layer_connector.entity.user.UserEntity> result = source.getCurrentUser();
+        reactor.core.publisher.Mono<com.niksob.domain.model.user.UserInfo> mappedResult = userEntityMapper.fromMonoEntity(result);
+        return mappedResult;
+    }
+
+    @Override
+    public reactor.core.publisher.Mono<com.niksob.domain.model.user.UserInfo> delete(com.niksob.domain.model.user.Username value) {
+        java.lang.String mapped = userEntityMapper.toEntityUsername(value);
+        reactor.core.publisher.Mono<com.niksob.layer_connector.entity.user.UserEntity> result = source.delete(mapped);
+        reactor.core.publisher.Mono<com.niksob.domain.model.user.UserInfo> mappedResult = userEntityMapper.fromMonoEntity(result);
+        return mappedResult;
+    }
+
+    @Override
+    public java.lang.String get(java.lang.String value) {
+        java.lang.String result = source.get(value);
+        return result;
+    }
+
+}

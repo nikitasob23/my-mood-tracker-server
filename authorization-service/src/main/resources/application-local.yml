@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: authorization-service
+  config:
+    import:
+      - configserver:http://localhost:9191/logger
+      - configserver:http://localhost:9191/database-connection
+      - configserver:http://localhost:9191/authorization-connection
+      - configserver:http://localhost:9191/mail-sender-connection
+
+  data:
+    redis:
+      host: localhost
+      port: 9004
+
+server:
+  port: ${microservice.connection.authorization.port}
+  servlet:
+    context-path: ${microservice.connection.authorization.path}
+
+auth:
+  token:
+    expiration-in-minutes:
+      access: 30
+      refresh: 21600
+    secret-key:
+      access: "SECRET"
+      refresh: "SECRET"

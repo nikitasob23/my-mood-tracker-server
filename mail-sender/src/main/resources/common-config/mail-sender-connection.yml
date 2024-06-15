@@ -1,0 +1,7 @@
+microservice:
+  connection:
+    mail-sender:
+      protocol: http
+      hostname: localhost
+      port: 8095
+      path: /api/service/mail_sender

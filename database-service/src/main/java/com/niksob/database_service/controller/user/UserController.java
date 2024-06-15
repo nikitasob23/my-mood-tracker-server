@@ -1,76 +1,83 @@
 package com.niksob.database_service.controller.user;
 
-import com.niksob.domain.exception.rest.controller.response.ControllerResponseException;
-import com.niksob.domain.exception.user.data.access.IllegalUserAccessException;
-import com.niksob.domain.path.controller.database_service.signup.UserControllerPaths;
-import com.niksob.database_service.service.user.UserService;
-import com.niksob.domain.dto.user.UserInfoDto;
-import com.niksob.domain.dto.user.UsernameDto;
-import com.niksob.domain.mapper.user.UserInfoDtoMapper;
-import com.niksob.domain.mapper.user.UsernameDtoMapper;
-import jakarta.persistence.EntityNotFoundException;
+import com.niksob.domain.dto.user.*;
+import com.niksob.domain.http.controller.handler.mood.entry.ResourceControllerErrorUtil;
+import com.niksob.domain.path.controller.database_service.user.UserControllerPaths;
+import com.niksob.logger.object_state.ObjectStateLogger;
+import com.niksob.logger.object_state.factory.ObjectStateLoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import reactor.core.publisher.Mono;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(UserControllerPaths.BASE_URI)
 public class UserController {
+    private final UserControllerService userControllerService;
 
-    private final UserService userService;
+    @Qualifier("userControllerUtil")
+    private final ResourceControllerErrorUtil controllerErrorUtil;
 
-    private final UsernameDtoMapper usernameDtoMapper;
+    private final ObjectStateLogger log = ObjectStateLoggerFactory.getLogger(UserController.class);
 
-    private final UserInfoDtoMapper userInfoDtoMapper;
+    @PostMapping(UserControllerPaths.EMAIL)
+    public Mono<Boolean> existsByEmail(@RequestBody EmailDto email) {
+        return userControllerService.existsByEmail(email)
+                .doOnSuccess(ignore -> log.debug("Successful check user existence by email", email))
+                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
+                .onErrorResume(controllerErrorUtil::createLoadingErrorMono);
+    }
 
-    @Value("${server.servlet.context-path}")
-    private String contextPath;
+    @GetMapping(UserControllerPaths.ID)
+    public Mono<UserInfoDto> loadById(@RequestParam("userId") UserIdDto userId) {
+        return userControllerService.loadById(userId)
+                .doOnSuccess(ignore -> log.debug("Successful user loading", userId))
+                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
+                .onErrorResume(controllerErrorUtil::createLoadingErrorMono);
+    }
 
     @GetMapping
-    public Mono<UserInfoDto> load(@RequestParam("username") UsernameDto usernameDto) {
-        return Mono.just(usernameDto)
-                .map(usernameDtoMapper::fromDto)
-                .map(userService::load)
-                .map(userInfoDtoMapper::toDto)
-                .onErrorResume(this::createLoadingError);
+    public Mono<UserDto> load(@RequestParam("username") UsernameDto usernameDto) {
+        return userControllerService.loadByUsername(usernameDto)
+                .doOnSuccess(ignore -> log.debug("Successful user loading", usernameDto))
+                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
+                .onErrorResume(controllerErrorUtil::createLoadingErrorMono);
+    }
+
+    @GetMapping(UserControllerPaths.FULL_USER)
+    public Mono<FullUserInfoDto> loadFull(@RequestParam("username") UsernameDto usernameDto) {
+        return userControllerService.loadFullByUsername(usernameDto)
+                .doOnSuccess(ignore -> log.debug("Successful full user loading", usernameDto))
+                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.OK))
+                .onErrorResume(controllerErrorUtil::createLoadingErrorMono);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Void> save(@RequestBody UserInfoDto userInfoDto) {
-        return Mono.just(userInfoDto)
-                .map(userInfoDtoMapper::fromDto)
-                .doOnNext(userService::save)
-                .then()
-                .onErrorResume(this::createSavingError);
+    public Mono<UserInfoDto> save(@RequestBody UserInfoDto userInfoDto) {
+        return userControllerService.save(userInfoDto)
+                .doOnNext(u -> log.debug("Successful user saving", u.getUsername()))
+                .doOnNext(ignore -> log.debug("Controller returning success status", HttpStatus.CREATED))
+                .onErrorResume(controllerErrorUtil::createSavingError);
     }
 
-    private Mono<UserInfoDto> createLoadingError(Throwable throwable) {
-        if (throwable instanceof IllegalUserAccessException) {
-            return Mono.error(new ControllerResponseException(
-                    throwable, HttpStatus.FORBIDDEN,
-                    String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)
-            ));
-        } else if (throwable instanceof EntityNotFoundException) {
-            return Mono.error(new ControllerResponseException(
-                    throwable, HttpStatus.NOT_FOUND,
-                    String.format("%s%s", contextPath, UserControllerPaths.BASE_URI)
-            ));
-        }
-        return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+    @PutMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> update(@RequestBody UserInfoDto userInfoDto) {
+        return userControllerService.update(userInfoDto)
+                .doOnSuccess(ignore -> log.debug("Successful user updating", userInfoDto))
+                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
+                .onErrorResume(controllerErrorUtil::createUpdatingError);
     }
 
-    private Mono<Void> createSavingError(Throwable throwable) {
-        if (throwable instanceof IllegalArgumentException) {
-            return Mono.error(new ControllerResponseException(
-                    throwable, HttpStatus.BAD_REQUEST,
-                    String.format("%s/%s", contextPath, UserControllerPaths.BASE_URI)
-            ));
-        }
-        return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> delete(@RequestParam("username") UsernameDto usernameDto) {
+        return userControllerService.delete(usernameDto)
+                .doOnSuccess(ignore -> log.debug("Successful user deletion", usernameDto))
+                .doOnSuccess(ignore -> log.debug("Controller returning success status", HttpStatus.NO_CONTENT))
+                .onErrorResume(controllerErrorUtil::createDeleteError);
     }
 }

@@ -1,0 +1,24 @@
+repo:
+  remote:
+    git:
+      uri: https://github.com/nikitasob23/my-mood-tracker-config.git
+      username: nikitasob23
+      password: ENC(qhP5vdGfJGBAsCpkoZLLRsty3EMzpyowWVkNi+j9ngfQfmKDs9cdCyZ3DcWfVhMD8FSaMxo3a82FZkfVgA4g8Q==)
+      properties-file: merge_properties
+  local:
+    git:
+      path: app/git_configs
+    config:
+      path: app/service_configs
+
+spring:
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: file:///${repo.local.config.path}
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_SECRET}
+    algorithm: PBEWithMD5AndDES

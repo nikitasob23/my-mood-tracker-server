@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: database-service
+  config:
+    import:
+      - configserver:http://localhost:9191/logger
+      - configserver:http://localhost:9191/database-connection
+
+#  profiles:
+#    active:
+#      - dev
+#      - local
+
+  data:
+    redis:
+      host: localhost
+      port: 9003
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    generate-ddl: false
+    show-sql: false
+
+  datasource:
+    url: jdbc:mysql://localhost:9196/mood_tracker_db
+    username: root
+    password: SECRET
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+#    database-init-enable: true
+#    database-init-resource-file: db/dml/data_insertion.sql
+#  flyway:
+#    baseline-on-migrate: true
+#    clean-on-validation-error: true
+#    clean-disabled: false
+
+server:
+  port: ${microservice.connection.database.port}
+  servlet:
+    context-path: ${microservice.connection.database.path}
+
+service:
+  loading:
+    mood-entry:
+      def-date-interval-days: 15

@@ -1,0 +1,40 @@
+### GET Request
+GET http://127.0.0.1:8092/api/service/auth/signout?userId=4&device=TEST_DEVICE
+
+### GET Request
+GET http://127.0.0.1:8092/api/service/auth/signout/all?user_id=4
+
+### Signup request
+POST http://127.0.0.1:8092/api/service/auth/signup
+Content-Type: application/json
+
+{
+  "email": "TEST_EMAIL@mail.com",
+  "username": "TEST_USERNAME",
+  "password": "test_PASSWORD1"
+}
+
+### Signup confirmation
+GET http://127.0.0.1:8092/api/service/auth/signup/activate?active_code=1297d330-2ec1-4c89-b1f8-9350489565bf
+
+### Resetting email
+POST http://127.0.0.1:8092/api/service/auth/reset/email
+Content-Type: application/json
+
+{
+  "user_id":  "1",
+  "email":  "TEST_EMAIL@mail.com"
+}
+
+### Resetting email confirmation
+GET http://127.0.0.1:8092/api/service/auth/reset/email/activation?active_code=e9c8f897-6aad-46b2-a0ac-648f3ea11b72
+
+### Reset password
+POST http://127.0.0.1:8092/api/service/auth/reset/password
+Content-Type: application/json
+
+{
+  "user_id":  "1",
+  "old_password":  "test_PASSWORD1",
+  "new_password":  "very_SECRET1"
+}

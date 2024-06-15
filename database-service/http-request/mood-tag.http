@@ -1,0 +1,26 @@
+### GET Request
+GET http://127.0.0.1:8081/api/service/database/mood_tag?user_id=4
+
+### POST Request
+POST http://127.0.0.1:8081/api/service/database/mood_tag
+Content-Type: application/json
+
+{
+  "name": "home",
+  "degree": 3,
+  "userId": 4
+}
+
+### PUT Request
+PUT http://127.0.0.1:8081/api/service/database/mood_tag
+Content-Type: application/json
+
+{
+  "id": 6,
+  "name": "home",
+  "degree": 0,
+  "userId": 4
+}
+
+### DELETE Request
+DELETE http://127.0.0.1:8081/api/service/database/mood_tag?id=6&user_id=4

@@ -1,0 +1,42 @@
+### GET Request
+GET https://moodtracker.ru/api/auth/signout?device=MY_DEVICE
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDYxNjI5LCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.IvG63DYXuIAKMz5bFET0RVP2O0qDU8yX9n7z0xQEnLUJosq1YPdxFpAZ4hNgzsjgWs--ZlTPizq7FvET7xFDqw
+
+### GET Request
+GET https://moodtracker.ru/api/auth/signout/all
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDYxNjI5LCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.IvG63DYXuIAKMz5bFET0RVP2O0qDU8yX9n7z0xQEnLUJosq1YPdxFpAZ4hNgzsjgWs--ZlTPizq7FvET7xFDqw
+
+### Signup request
+POST https://moodtracker.ru/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "IvanIvanov2@mail.com",
+  "username": "Ivan",
+  "password": "Very_secret0"
+}
+
+### Signup confirmation
+GET https://moodtracker.ru/api/auth/signup/activate/6afb1594-e451-4802-a953-37a85546553b
+
+### Reset email
+POST https://moodtracker.ru/api/auth/reset/email
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDYxNjI5LCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.IvG63DYXuIAKMz5bFET0RVP2O0qDU8yX9n7z0xQEnLUJosq1YPdxFpAZ4hNgzsjgWs--ZlTPizq7FvET7xFDqw
+Content-Type: application/json
+
+{
+  "email": "IvanIvanov2@mail.com"
+}
+
+### Email resetting confirmation
+GET https://moodtracker.ru/api/auth/reset/email/activate/35225058-e09b-4923-b0a8-de68514578b8
+
+### Reset password
+POST https://moodtracker.ru/api/auth/reset/password
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJJdmFuIiwiZXhwIjoxNzE3MDYxNjI5LCJkZXYiOiJNWV9ERVZJQ0UiLCJ1c2VySWQiOiIxIn0.IvG63DYXuIAKMz5bFET0RVP2O0qDU8yX9n7z0xQEnLUJosq1YPdxFpAZ4hNgzsjgWs--ZlTPizq7FvET7xFDqw
+Content-Type: application/json
+
+{
+  "old_password": "Very_secret0",
+  "new_password": "Very_secret123"
+}

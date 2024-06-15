@@ -1,0 +1,20 @@
+### GET Request
+GET https://moodtracker.ru/api/user
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJOaWsiLCJleHAiOjE3MTgxNDY3MjYsImRldiI6Ik1ZX0RFVklDRSIsInVzZXJJZCI6IjIifQ.wM-9q9lpWPlNNaZXgCZZiWYsP0pWXFkWWi_LK84GlKmCRt_yujkpttNQ19CKvF7YNszyqjuuyitwVVD-WUikGQ
+
+### GET Request
+GET https://moodtracker.ru/api/user/full
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJOaWsiLCJleHAiOjE3MTgxNDY3MjYsImRldiI6Ik1ZX0RFVklDRSIsInVzZXJJZCI6IjIifQ.wM-9q9lpWPlNNaZXgCZZiWYsP0pWXFkWWi_LK84GlKmCRt_yujkpttNQ19CKvF7YNszyqjuuyitwVVD-WUikGQ
+
+### PUT Request
+PUT https://moodtracker.ru/api/user
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJOaWsiLCJleHAiOjE3MTgxNDY3MjYsImRldiI6Ik1ZX0RFVklDRSIsInVzZXJJZCI6IjIifQ.wM-9q9lpWPlNNaZXgCZZiWYsP0pWXFkWWi_LK84GlKmCRt_yujkpttNQ19CKvF7YNszyqjuuyitwVVD-WUikGQ
+
+{
+  "username": "Ivan"
+}
+
+### DELETE Request
+DELETE https://moodtracker.ru/api/user
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJOaWsiLCJleHAiOjE3MTgxNDY3MjYsImRldiI6Ik1ZX0RFVklDRSIsInVzZXJJZCI6IjIifQ.wM-9q9lpWPlNNaZXgCZZiWYsP0pWXFkWWi_LK84GlKmCRt_yujkpttNQ19CKvF7YNszyqjuuyitwVVD-WUikGQ

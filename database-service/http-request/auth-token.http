@@ -1,0 +1,33 @@
+### GET Request
+GET http://127.0.0.1:8081/api/service/database/auth/token?userId=1&device=TEST_DEVICE
+
+### GET Request
+GET http://127.0.0.1:8081/api/service/database/auth/token/exists?userId=1&device=TEST_DEVICE
+
+### POST Request
+POST http://127.0.0.1:8081/api/service/database/auth/token
+Content-Type: application/json
+
+{
+  "user_id": "1",
+  "encoded_access_token": "TEST_ACCESS_TOKEN",
+  "encoded_refresh_token": "TEST_REFRESH_TOKEN",
+  "device": "TEST_DEVICE"
+}
+
+### PUT Request
+PUT http://127.0.0.1:8081/api/service/database/auth/token
+Content-Type: application/json
+
+{
+  "user_id": "1",
+  "encoded_access_token": "0000",
+  "encoded_refresh_token": "TEST_REFRESH_TOKEN",
+  "device": "TEST_DEVICE"
+}
+
+### DELETE Request
+DELETE http://127.0.0.1:8081/api/service/database/auth/token?userId=1&device=TEST_DEVICE
+
+### DELETE Request
+DELETE http://127.0.0.1:8081/api/service/database/auth/token/all?userId=1

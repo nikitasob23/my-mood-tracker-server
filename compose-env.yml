@@ -1,0 +1,116 @@
+version: '3.4'
+services:
+  db-sql:
+    image: niksob/my-mood-tracker:db-sql-1.0.0
+    networks:
+      - db-network
+    volumes:
+      - db_data:/var/lib/mysql
+
+  adminer-sql:
+    image: niksob/my-mood-tracker:adminer-1.0.0
+    ports:
+      - '9197:8080'
+    networks:
+      - db-network
+
+  db-service-cache:
+    image: niksob/my-mood-tracker:db-redis-cache-1.0.0
+    networks:
+      - db-network
+    command:
+      - 'redis-server'
+      - '--maxmemory 2gb'
+      - '--maxmemory-policy allkeys-random'
+
+  auth-service-cache:
+    image: niksob/my-mood-tracker:auth-redis-cache-1.0.0
+    networks:
+      - auth-network
+    command:
+      - 'redis-server'
+      - '--maxmemory 2gb'
+      - '--maxmemory-policy allkeys-random'
+
+  config-service:
+    image: niksob/my-mood-tracker:config-service-1.0.0
+    secrets:
+      - jasypt_secret
+    networks:
+      - config-network
+      - db-network
+    environment:
+      SPRING_PROFILES_ACTIVE: prod,native
+
+  db-service:
+    image: niksob/my-mood-tracker:database-service-1.0.0
+    secrets:
+      - jasypt_secret
+    networks:
+      - config-network
+      - db-network
+    deploy:
+      replicas: 2
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+    entrypoint: [ "/bin/sh", "-c", "until curl -f http://config-service:9191/database_service/default; do echo 'Waiting for config-service'; sleep 5; done; app/start_app.sh app/database-service-1.0.0.jar"]
+
+  auth-service:
+    image: niksob/my-mood-tracker:authorization-service-1.0.0
+    secrets:
+      - jasypt_secret
+    networks:
+      - config-network
+      - auth-network
+      - gateway-network
+    deploy:
+      replicas: 2
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+    entrypoint: [ "/bin/sh", "-c", "until curl -f http://config-service:9191/authorization_service/default; do echo 'Waiting for config-service'; sleep 6; done; app/start_app.sh app/authorization-service-1.0.0.jar"]
+
+  mail-sender:
+    image: niksob/my-mood-tracker:mail-sender-1.0.0
+    secrets:
+      - jasypt_secret
+    networks:
+      - config-network
+      - auth-network
+      - gateway-network
+    deploy:
+      replicas: 2
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+    entrypoint: [ "/bin/sh", "-c", "until curl -f http://config-service:9191/mail_sender/default; do echo 'Waiting for config-service'; sleep 7; done; app/start_app.sh app/mail-sender-1.0.0.jar"]
+
+  gateway-service:
+    image: niksob/my-mood-tracker:gateway-service-1.0.0
+    secrets:
+      - jasypt_secret
+    ports:
+      - '8082:8082'
+    networks:
+      - config-network
+      - gateway-network
+    deploy:
+      replicas: 2
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+    entrypoint: [ "/bin/sh", "-c", "until curl -f http://config-service:9191/gateway_service/default; do echo 'Waiting for config-service'; sleep 8; done; app/start_app.sh app/gateway-service-1.0.0.jar"]
+
+volumes:
+  db_data:
+
+secrets:
+  jasypt_secret:
+    external: true
+
+networks:
+  config-network:
+    driver: overlay
+  db-network:
+    driver: overlay
+  auth-network:
+    driver: overlay
+  gateway-network:
+    driver: overlay

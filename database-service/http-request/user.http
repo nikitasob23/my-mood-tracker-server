@@ -1,0 +1,39 @@
+### User exists request
+POST http://127.0.0.1:8081/api/service/database/user/email
+Content-Type: application/json
+
+{
+  "email": "TEST_EMAIL@gmail.com"
+}
+
+### GET Request
+GET http://127.0.0.1:8081/api/service/database/user?username=TEST_USERNAME
+
+### GET Request
+GET http://127.0.0.1:8081/api/service/database/user/full?username=TEST_USERNAME
+
+### POST Request
+POST http://127.0.0.1:8081/api/service/database/user
+Content-Type: application/json
+
+{
+  "email": "TEST_EMAIL@gmail.com",
+  "username": "TEST_USERNAME",
+  "nickname": "TEST_NICKNAME",
+  "password": "TEST_PASSWORD"
+}
+
+### PUT Request
+PUT http://127.0.0.1:8081/api/service/database/user
+Content-Type: application/json
+
+{
+  "id": 4,
+  "email": "TEST_EMAIL@gmail.com",
+  "username": "TEST_USERNAME",
+  "nickname": "TEST_NICKNAME",
+  "password": "0000"
+}
+
+### DELETE Request
+DELETE http://127.0.0.1:8081/api/service/database/user?username=TEST_USERNAME

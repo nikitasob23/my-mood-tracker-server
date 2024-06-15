@@ -1,0 +1,55 @@
+### GET Request
+GET https://moodtracker.ru/api/mood_entry?start_date=2024-04-01&end_date=2024-04-18
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJOaWsiLCJleHAiOjE3MTgxNDY3MjYsImRldiI6Ik1ZX0RFVklDRSIsInVzZXJJZCI6IjIifQ.wM-9q9lpWPlNNaZXgCZZiWYsP0pWXFkWWi_LK84GlKmCRt_yujkpttNQ19CKvF7YNszyqjuuyitwVVD-WUikGQ
+
+### POST Request
+POST https://moodtracker.ru/api/mood_entry
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJOaWsiLCJleHAiOjE3MTgxNDY3MjYsImRldiI6Ik1ZX0RFVklDRSIsInVzZXJJZCI6IjIifQ.wM-9q9lpWPlNNaZXgCZZiWYsP0pWXFkWWi_LK84GlKmCRt_yujkpttNQ19CKvF7YNszyqjuuyitwVVD-WUikGQ
+
+{
+  "degree": 1,
+  "date_time": "2024-05-28T11:23:51",
+  "mood_tags": [
+    {
+      "id": 4,
+      "name": "home",
+      "degree": 3
+    },
+    {
+      "name": "sleep",
+      "degree": 0
+    }
+  ]
+}
+
+### PUT Request
+PUT https://moodtracker.ru/api/mood_entry
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJOaWsiLCJleHAiOjE3MTgxNDY3MjYsImRldiI6Ik1ZX0RFVklDRSIsInVzZXJJZCI6IjIifQ.wM-9q9lpWPlNNaZXgCZZiWYsP0pWXFkWWi_LK84GlKmCRt_yujkpttNQ19CKvF7YNszyqjuuyitwVVD-WUikGQ
+
+{
+  "id": 3,
+  "degree": 3,
+  "date_time": "2024-05-28T12:01:02",
+  "mood_tags": [
+    {
+      "name": "impro",
+      "degree": 3
+    },
+    {
+      "id": 9,
+      "name": "sleep",
+      "degree": 1
+    },
+    {
+      "name": "friends",
+      "degree": 4
+    }
+  ]
+}
+
+
+### DELETE Request
+DELETE https://moodtracker.ru/api/mood_entry?id=1
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJOaWsiLCJleHAiOjE3MTgxNDY3MjYsImRldiI6Ik1ZX0RFVklDRSIsInVzZXJJZCI6IjIifQ.wM-9q9lpWPlNNaZXgCZZiWYsP0pWXFkWWi_LK84GlKmCRt_yujkpttNQ19CKvF7YNszyqjuuyitwVVD-WUikGQ

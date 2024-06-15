@@ -1,0 +1,28 @@
+### GET Request
+GET https://moodtracker.ru/api/mood_tag
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJOaWsiLCJleHAiOjE3MTgxNDY3MjYsImRldiI6Ik1ZX0RFVklDRSIsInVzZXJJZCI6IjIifQ.wM-9q9lpWPlNNaZXgCZZiWYsP0pWXFkWWi_LK84GlKmCRt_yujkpttNQ19CKvF7YNszyqjuuyitwVVD-WUikGQ
+
+### POST Request
+POST https://moodtracker.ru/api/mood_tag
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJOaWsiLCJleHAiOjE3MTgxNDY3MjYsImRldiI6Ik1ZX0RFVklDRSIsInVzZXJJZCI6IjIifQ.wM-9q9lpWPlNNaZXgCZZiWYsP0pWXFkWWi_LK84GlKmCRt_yujkpttNQ19CKvF7YNszyqjuuyitwVVD-WUikGQ
+
+{
+  "name": "home",
+  "degree": 3
+}
+
+### PUT Request
+PUT https://moodtracker.ru/api/mood_tag
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJOaWsiLCJleHAiOjE3MTgxNDY3MjYsImRldiI6Ik1ZX0RFVklDRSIsInVzZXJJZCI6IjIifQ.wM-9q9lpWPlNNaZXgCZZiWYsP0pWXFkWWi_LK84GlKmCRt_yujkpttNQ19CKvF7YNszyqjuuyitwVVD-WUikGQ
+
+{
+  "id": 1,
+  "name": "home",
+  "degree": 0
+}
+
+### DELETE Request
+DELETE https://moodtracker.ru/api/mood_tag?id=4
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJOaWsiLCJleHAiOjE3MTgxNDY3MjYsImRldiI6Ik1ZX0RFVklDRSIsInVzZXJJZCI6IjIifQ.wM-9q9lpWPlNNaZXgCZZiWYsP0pWXFkWWi_LK84GlKmCRt_yujkpttNQ19CKvF7YNszyqjuuyitwVVD-WUikGQ
