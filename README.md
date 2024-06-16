@@ -3,6 +3,8 @@
 ## Overview
 This application serves as the backend for the mobile app _Good Mood_, a mental health tracker. Users log their mood states multiple times a day, rating them and tagging influences, such as family or friends. The server's tasks include user registration, authentication, data storage, and serving as an interface for data operations.
 
+**Description of the REST methods of the server:** _gateway-service/README-en.md_
+
 ## Microservices
 My Mood Tracker Server is composed of several microservices that together fulfill the application's requirements.
 
